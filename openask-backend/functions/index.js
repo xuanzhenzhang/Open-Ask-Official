@@ -37,28 +37,28 @@ const {
 } = require("./handlers/answers");
 
 app.get("/questions", getAllQuestions);
-app.get("/questions-purchased", FBAuth, getAllQuestionPurhcasedByUser);
-app.get("/questions-by-price", getAllQuestionsByDescPrice);
-app.get("/questions-for/:uid", getAllQuestionsForUser);
-app.get("/questions-by/:uid", getAllQuestionsByUser);
+// app.get("/questions-purchased", FBAuth, getAllQuestionPurhcasedByUser);
+// app.get("/questions-by-price", getAllQuestionsByDescPrice);
+// app.get("/questions-for/:uid", getAllQuestionsForUser);
+// app.get("/questions-by/:uid", getAllQuestionsByUser);
 // app.post("/question", FBAuth, postOneQuestion);
-app.get("/question/:questionId", getQuestion);
-app.post("/question", FBAuth, postUnactivatedQuestion);
-app.put("/question/:contractAddress", FBAuth, updateActivateQuestion);
+// app.get("/question/:questionId", getQuestion);
+// app.post("/question", FBAuth, postUnactivatedQuestion);
+// app.put("/question/:contractAddress", FBAuth, updateActivateQuestion);
 
-app.get("/user/:uid", getUser);
-app.post("/login", FBAuth, createUserIfNotExist);
-app.get("/users", getAllUsers);
-app.get("/users-by-followers", getAllUsersByFollowers);
-app.get("/user-wallet/:userId", getUserWallet);
-app.post("/user-wallet", FBAuth, setCurrentUserWallet);
-app.get("/user-wallet", FBAuth, getCurrentUserWallet);
+// app.get("/user/:uid", getUser);
+// app.post("/login", FBAuth, createUserIfNotExist);
+// app.get("/users", getAllUsers);
+// app.get("/users-by-followers", getAllUsersByFollowers);
+// app.get("/user-wallet/:userId", getUserWallet);
+// app.post("/user-wallet", FBAuth, setCurrentUserWallet);
+// app.get("/user-wallet", FBAuth, getCurrentUserWallet);
 
-app.get("/answer/:answerId", FBAuth, getAnswer);
-app.get("/answer-to-question/:questionId", FBAuth, getAnswerToQuestion);
-app.get("/answers-by-user/:userId", FBAuth, getAllAnswersByUser);
-app.post("/answer/:questionId", FBAuth, postAnswerToQuestion);
-app.put("/answer/payment/:answerId", FBAuth, purchaseAnswer);
+// app.get("/answer/:answerId", FBAuth, getAnswer);
+// app.get("/answer-to-question/:questionId", FBAuth, getAnswerToQuestion);
+// app.get("/answers-by-user/:userId", FBAuth, getAllAnswersByUser);
+// app.post("/answer/:questionId", FBAuth, postAnswerToQuestion);
+// app.put("/answer/payment/:answerId", FBAuth, purchaseAnswer);
 
 // app.post("/signup", (req, res) => {
 //   const newUser = {
@@ -111,11 +111,11 @@ app.put("/answer/payment/:answerId", FBAuth, purchaseAnswer);
 //     .catch((err) => console.error(err));
 // });
 
-const { twClient } = require("./util/client");
-twClient
-  .get(
-    "https://api.twitter.com/2/users/1504363325886328835?user.fields=description,profile_image_url,public_metrics"
-  )
-  .then((res) => console.log(res));
+// const { twClient } = require("./util/client");
+// twClient
+//   .get(
+//     "https://api.twitter.com/2/users/1504363325886328835?user.fields=description,profile_image_url,public_metrics"
+//   )
+//   .then((res) => console.log(res));
 
 exports.api = functions.https.onRequest(app);
