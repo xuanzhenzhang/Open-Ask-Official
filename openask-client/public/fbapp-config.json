@@ -1,0 +1,6 @@
+{
+  "mini_apps": {
+    "mini_apps_app_type": "CHECKOUT",
+    "base_url" : "https://travel-mini-app.web.app"
+  }
+}
