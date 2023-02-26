@@ -1,13 +1,13 @@
 const admin = require("firebase-admin");
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBxzkOmWASUN7LnXqvFgC40Qrc1pffKxdI",
-  authDomain: "fir-quickask.firebaseapp.com",
-  projectId: "fir-quickask",
-  storageBucket: "fir-quickask.appspot.com",
-  messagingSenderId: "990063199875",
-  appId: "1:990063199875:web:08a54ce8833256da53fdb6",
-  measurementId: "G-4CZB3NP94L",
+  apiKey: "AIzaSyDT15ZSVlGn7LeiKfZ1aT_U47bVgx4DiEw",
+  authDomain: "open-ask-dbbe2.firebaseapp.com",
+  projectId: "open-ask-dbbe2",
+  storageBucket: "open-ask-dbbe2.appspot.com",
+  messagingSenderId: "295827151242",
+  appId: "1:295827151242:web:2e44d60787c08ca18b1073",
+  measurementId: "G-K8X4BV069M",
 };
 admin.initializeApp(firebaseConfig);
 const db = admin.firestore();
