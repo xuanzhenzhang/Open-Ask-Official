@@ -1,0 +1,266 @@
+{
+  "_format": "hh-sol-cache-2",
+  "files": {
+    "/Users/ray/Projects/Open-Ask-Official/ethereum/contracts/BountiesMetaTxRelayer.sol": {
+      "lastModificationDate": 1677445380964,
+      "contentHash": "a1f9f94d0b2e56931178946b74545ea5",
+      "sourceName": "contracts/BountiesMetaTxRelayer.sol",
+      "solcConfig": {
+        "version": "0.5.12",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./StandardBounties.sol"
+      ],
+      "versionPragmas": [
+        "0.5.12"
+      ],
+      "artifacts": [
+        "BountiesMetaTxRelayer"
+      ]
+    },
+    "/Users/ray/Projects/Open-Ask-Official/ethereum/contracts/StandardBounties.sol": {
+      "lastModificationDate": 1677445380989,
+      "contentHash": "b5a1e5238cfdcf84737401325f789989",
+      "sourceName": "contracts/StandardBounties.sol",
+      "solcConfig": {
+        "version": "0.5.12",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./inherited/ERC20Token.sol",
+        "./inherited/ERC721Basic.sol"
+      ],
+      "versionPragmas": [
+        "0.5.12"
+      ],
+      "artifacts": [
+        "StandardBounties"
+      ]
+    },
+    "/Users/ray/Projects/Open-Ask-Official/ethereum/contracts/inherited/ERC20Token.sol": {
+      "lastModificationDate": 1677445380984,
+      "contentHash": "c93b4c799fc8ecde6f96434090edde03",
+      "sourceName": "contracts/inherited/ERC20Token.sol",
+      "solcConfig": {
+        "version": "0.5.12",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./Token.sol"
+      ],
+      "versionPragmas": [
+        "0.5.12"
+      ],
+      "artifacts": [
+        "ERC20Token"
+      ]
+    },
+    "/Users/ray/Projects/Open-Ask-Official/ethereum/contracts/inherited/ERC721Basic.sol": {
+      "lastModificationDate": 1677445380985,
+      "contentHash": "e81c38f1c9c253fc50dc7a39dc2cb6b3",
+      "sourceName": "contracts/inherited/ERC721Basic.sol",
+      "solcConfig": {
+        "version": "0.5.12",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "0.5.12"
+      ],
+      "artifacts": [
+        "AddressUtils",
+        "ERC165",
+        "ERC721Basic",
+        "ERC721BasicToken",
+        "ERC721BasicTokenMock",
+        "ERC721Receiver",
+        "SafeMath",
+        "SupportsInterfaceWithLookup"
+      ]
+    },
+    "/Users/ray/Projects/Open-Ask-Official/ethereum/contracts/inherited/Token.sol": {
+      "lastModificationDate": 1677445380984,
+      "contentHash": "8f258e0391daee7b69b1c34bbd83d73f",
+      "sourceName": "contracts/inherited/Token.sol",
+      "solcConfig": {
+        "version": "0.5.12",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "0.5.12"
+      ],
+      "artifacts": [
+        "Token"
+      ]
+    },
+    "/Users/ray/Projects/Open-Ask-Official/ethereum/contracts/inherited/HumanStandardToken.sol": {
+      "lastModificationDate": 1677445380985,
+      "contentHash": "6bb7bb0ddf7728a22a9c0407b7c5757c",
+      "sourceName": "contracts/inherited/HumanStandardToken.sol",
+      "solcConfig": {
+        "version": "0.5.12",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../inherited/ERC20Token.sol"
+      ],
+      "versionPragmas": [
+        "0.5.12"
+      ],
+      "artifacts": [
+        "HumanStandardToken"
+      ]
+    },
+    "/Users/ray/Projects/Open-Ask-Official/ethereum/contracts/inherited/Migrations.sol": {
+      "lastModificationDate": 1677445380984,
+      "contentHash": "bdcfdcf2edd0fb0be521889d89a50171",
+      "sourceName": "contracts/inherited/Migrations.sol",
+      "solcConfig": {
+        "version": "0.5.12",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "0.5.12"
+      ],
+      "artifacts": [
+        "Migrations"
+      ]
+    }
+  }
+}
