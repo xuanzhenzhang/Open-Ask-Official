@@ -1,13 +1,33 @@
 const hre = require("hardhat");
+const { ethers } = require("ethers");
 require('dotenv').config();
 
 async function main() {
-    const [deployer] = await hre.ethers.getSigners();
-//   const privateKey = process.env.PRIVATE_KEY;
-    const contractFactory = await hre.ethers.getContractFactory("StandardBounties");
-    const contract = await contractFactory.deploy();
-    await contract.deployed();
-//   const contract = await contractFactory.connect(new ethers.Wallet(privateKey)).deploy();
+
+  // Load your custom private key
+  const customPrivateKey = process.env.PRIVATE_KEY;
+  const customSigner = new hre.ethers.Wallet(customPrivateKey, hre.ethers.provider);
+
+  // load wallet with 1000 eth if network is "development"
+  if (hre.network.name === "development") {
+      const [defaultAccount] = await hre.ethers.getSigners();
+      const balance = await defaultAccount.getBalance();
+      console.log("Default account balance:", ethers.utils.formatEther(balance));
+
+      const tx = await defaultAccount.sendTransaction({
+          to: customSigner.address,
+          value: ethers.utils.parseEther("1000.0")
+      });
+      await tx.wait();
+      console.log("Deployer balance:", ethers.utils.formatEther(await customSigner.getBalance()));
+  }
+  // Use the custom signer as the deployer
+  const deployer = customSigner;
+
+  // Get the contract factory and deploy the contract using the deployer
+  const contractFactory = await hre.ethers.getContractFactory("StandardBounties");
+  const contract = await contractFactory.connect(deployer).deploy();
+  await contract.deployed();
 
   console.log("Contract deployed to address:", contract.address);
 }
