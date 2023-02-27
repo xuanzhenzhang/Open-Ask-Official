@@ -9,7 +9,7 @@ import { AppHeader } from "./components/AppHeader";
 import Sensei from "./components/Sensei";
 import Feed from "./components/Feed";
 import Sidebar from "./components/Sidebar";
-import QuestionsAsked from "./components/QuestionsAsked";
+import Questions from "./components/Questions";
 import QuestionsAnswered from "./components/QuestionsAnswered";
 import SenseiDetails from "./components/SenseiDetails";
 import QuestionsPurchased from "./components/QuestionsPurchased";
@@ -130,15 +130,11 @@ function App() {
             accessError={accessError}
           />
         )}
-        {/* <AppHeader
-        onAvatarClick={onAvatarClick}
-        userInfo={userInfo}
-        accessToken={accessToken}
-        setAccessError={setAccessError}
-      /> */}
         {window.location.pathname !== "/" && (
           <Sidebar
             userInfo={userInfo}
+            accessToken={accessToken}
+            setAccessError={setAccessError}
             onAvatarClick={onAvatarClick}
             mobileOpen={mobileOpen}
             setMobileOpen={setMobileOpen}
@@ -165,7 +161,7 @@ function App() {
               />
             }
           />
-          <Route
+          {/* <Route
             path="/sensei/ask"
             element={
               <AskPage
@@ -174,46 +170,17 @@ function App() {
                 setAccessError={setAccessError}
               />
             }
-          />
+          /> */}
           <Route
             exact
             path="/sensei"
             element={<Sensei userInfo={userInfo} />}
           />
           <Route
-            path="/questions_asked"
+            path="/questions"
             element={
-              <QuestionsAsked
+              <Questions
                 userInfo={userInfo}
-                accessToken={accessToken}
-                setAccessError={setAccessError}
-              />
-            }
-          />
-          <Route
-            path="/questions_answered"
-            element={
-              <QuestionsAnswered
-                userInfo={userInfo}
-                accessToken={accessToken}
-                setAccessError={setAccessError}
-              />
-            }
-          />
-          <Route
-            path="/questions_purchased"
-            element={
-              <QuestionsPurchased
-                userInfo={userInfo}
-                accessToken={accessToken}
-                setAccessError={setAccessError}
-              />
-            }
-          />
-          <Route
-            path="/answer_question"
-            element={
-              <AnswerQuestion
                 accessToken={accessToken}
                 setAccessError={setAccessError}
               />
@@ -239,7 +206,7 @@ function App() {
               />
             }
           />
-          <Route path="/testing" element={<Testing />} />
+          {/* <Route path="/testing" element={<Testing />} /> */}
         </Routes>
       </Container>
     </>
