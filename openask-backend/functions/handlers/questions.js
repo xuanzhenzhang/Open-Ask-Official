@@ -140,6 +140,7 @@ exports.postUnactivatedQuestion = async (req, res) => {
     createdAt: new Date().toISOString(),
     contractAddress: null,
     answerId: null,
+    answerTimestamp: null,
     rewardTokenType: req.body.rewardTokenType,
     rewardTokenAmount: req.body.rewardTokenAmount,
     purchasePrice: 0,

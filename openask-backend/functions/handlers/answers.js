@@ -34,7 +34,10 @@ exports.postAnswerToQuestion = (req, res) => {
     .then((doc) => {
       resAnswer = answer;
       resAnswer.answerId = doc.id;
-      return question.ref.update({ answerId: resAnswer.answerId });
+      return question.ref.update({
+        answerId: resAnswer.answerId,
+        answerTimestamp: resAnswer.createdAt,
+      });
     })
     .then(() => {
       return res.status(200).json(resAnswer);
