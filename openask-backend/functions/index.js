@@ -34,6 +34,7 @@ const {
   getAnswer,
   getAnswerToQuestion,
   getAllAnswersByUser,
+  updateAnswerTxHash,
 } = require("./handlers/answers");
 
 app.get("/questions", getAllQuestions);
@@ -59,6 +60,7 @@ app.get("/answer-to-question/:questionId", FBAuth, getAnswerToQuestion);
 app.get("/answers-by-user/:userId", FBAuth, getAllAnswersByUser);
 app.post("/answer/:questionId", FBAuth, postAnswerToQuestion);
 app.put("/answer/payment/:answerId", FBAuth, purchaseAnswer);
+app.put("/answer/tx/:answerId", FBAuth, updateAnswerTxHash);
 
 // app.post("/signup", (req, res) => {
 //   const newUser = {
