@@ -417,9 +417,6 @@ body {
   border-radius: 16px;
   margin-left: 8px;
 }
-.sensei-details-paper {
-  padding: 10px;
-}
 .sensei-details-input input {
   margin-left: 5px;
   padding: 0;
@@ -602,7 +599,23 @@ body {
 }
 .ask-question-loader {
   display: flex;
+  flex-direction: column;
+  gap: 10px;
   justify-content: center;
   align-items: center;
   min-height: 371px;
+}
+/* Sensei Details */
+.sensei-details-header {
+  padding: 12px 12px 12px 12px;
+  border-radius: 12px 12px 0px 0px;
+  background-color: var(--white);
+  display: flex;
+  justify-content: flex-start;
+  gap: 10px;
+}
+.sensei-details-body {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
 }

@@ -166,165 +166,159 @@ const SenseiDetails = ({ accessToken, setAccessError, userInfo }) => {
 
   return (
     <Container
+      className="main-container"
       sx={{
         width: { md: `calc(100% - 300px)` },
-        ml: { md: `300px` },
-        mt: "84px",
+        mr: { md: `276px` },
+        mt: "24px",
       }}
     >
       {loading ? (
         <Loader />
       ) : (
         <>
-          <Grid container spacing={2}>
-            <Grid item xs={12} md={6}>
-              <Paper elevation={2} className="sensei-details-paper">
-                <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                  <Avatar
-                    alt={profile && profile[0]?.twitterDisplayName}
-                    src={profile && profile[0]?.twitterPFPUrl}
-                    sx={{ width: 150, height: 150, mb: "10px" }}
-                  />
-                  {!myPage && (
-                    <Button
-                      sx={{ height: "100%" }}
-                      variant="contained"
-                      size="large"
-                      onClick={onBtnClick}
-                    >
-                      Ask
-                    </Button>
-                  )}
-                </Box>
-                <Typography variant="h5">
-                  {profile && profile[0]?.twitterDisplayName}
-                </Typography>
-                <Link
-                  href={`https://twitter.com/${twitter}`}
-                  target="_blank"
-                  rel="noreferrer"
-                  variant="body2"
-                  underline="none"
-                  sx={{
-                    width: "100%",
-                    display: "block",
-                  }}
+        {/* Header */}
+          <Box className="sensei-details-header">
+            {userInfo.twitterDisplayName}
+          </Box>
+        {/* Content */}
+          <Box
+            className="content-container"
+            sx={{ height: "calc(100vh - 104.5px)" }}
+          >
+            <Box className="sensei-details-body">
+              <Avatar
+                alt={profile && profile[0]?.twitterDisplayName}
+                src={profile && profile[0]?.twitterPFPUrl}
+                sx={{ width: 150, height: 150, mb: "10px" }}
+              />
+              {!myPage && (
+                <Button
+                  sx={{ height: "100%" }}
+                  variant="contained"
+                  size="large"
+                  onClick={onBtnClick}
                 >
-                  @{twitter}
-                </Link>
-                <Typography variant="caption" color="text.secondary">
-                  {profile &&
-                    profile[0]?.publicMetrics?.followers_count?.toLocaleString()}{" "}
-                  Followers
-                </Typography>
-                <br />
-                <Typography>About Me:</Typography>
-                <Typography>
-                  {profile && profile[0]?.twitterDescription}
-                </Typography>
-              </Paper>
-              {/* <Box
-                sx={{ display: "flex", justifyContent: "center", mt: "20px" }}
-              >
-                <Button variant="contained" size="large" onClick={onBtnClick}>
                   Ask
                 </Button>
-              </Box> */}
-              <Box sx={{ mt: "12px", mb: "12px", padding: "5px" }}>
-                <Typography variant="h6">
-                  Total Profit: ${profit.toFixed(2)}
-                </Typography>
-              </Box>
+              )}
+            </Box>
+            <Typography variant="h5">
+              {profile && profile[0]?.twitterDisplayName}
+            </Typography>
+            <Link
+              href={`https://twitter.com/${twitter}`}
+              target="_blank"
+              rel="noreferrer"
+              variant="body2"
+              underline="none"
+              sx={{
+                width: "100%",
+                display: "block",
+              }}
+            >
+              @{twitter}
+            </Link>
+            <Typography variant="caption" color="text.secondary">
+              {profile &&
+                profile[0]?.publicMetrics?.followers_count?.toLocaleString()}{" "}
+              Followers
+            </Typography>
+            <br />
+            <Typography>About Me:</Typography>
+            <Typography>{profile && profile[0]?.twitterDescription}</Typography>
 
-              <Box
-              // sx={{ mt: "12px" }}
-              >
-                <Box
-                  sx={{ display: "flex", alignItems: "center", gap: "10px" }}
-                >
-                  {/* <Typography variant="body">Minimum Ask Price:</Typography> */}
-                  <TextField
-                    disabled={!myPage}
-                    sx={{ flexGrow: "1" }}
-                    variant="outlined"
-                    label="Minimum Ask Price"
-                    size="small"
-                    type="number"
-                    value={tokenAmount}
-                    onChange={handleTokenAmountChange}
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">ETH</InputAdornment>
-                      ),
-                      inputProps: {
-                        step: 0.01,
-                      },
-                    }}
-                  />
-                  {myPage === true && <Button>Save</Button>}
-                </Box>
-              </Box>
+            <Box sx={{ mt: "12px", mb: "12px", padding: "5px" }}>
+              <Typography variant="h6">
+                Total Profit: ${profit.toFixed(2)}
+              </Typography>
+            </Box>
 
-              <Box
-                sx={{ mt: "12px", display: "flex", flexDirection: "column" }}
-              >
+            <Box
+            // sx={{ mt: "12px" }}
+            >
+              <Box sx={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                {/* <Typography variant="body">Minimum Ask Price:</Typography> */}
                 <TextField
-                  className="sensei-details-input"
                   disabled={!myPage}
-                  sx={{
-                    backgroundColor: "white",
-                    borderRadius: "10px",
-                    padding: "10px",
-                    mb: "10px",
-                  }}
-                  variant="standard"
+                  sx={{ flexGrow: "1" }}
+                  variant="outlined"
+                  label="Minimum Ask Price"
                   size="small"
-                  type="text"
-                  value={twitter}
-                  placeholder="Twitter"
-                  // onChange={handleTokenAmountChange}
+                  type="number"
+                  value={tokenAmount}
+                  onChange={handleTokenAmountChange}
                   InputProps={{
-                    startAdornment: (
-                      <TwitterIcon
-                        className="sensei-details-twitter"
-                        position="start"
-                      />
+                    endAdornment: (
+                      <InputAdornment position="end">ETH</InputAdornment>
                     ),
-                    endAdornment: myPage === true && <Button>Save</Button>,
-                    disableUnderline: true,
-                    sx: { mr: "5px" },
+                    inputProps: {
+                      step: 0.01,
+                    },
                   }}
                 />
-                <TextField
-                  className="sensei-details-input"
-                  disabled={!myPage}
-                  sx={{
-                    backgroundColor: "white",
-                    borderRadius: "10px",
-                    padding: "10px",
-                    mb: "10px",
-                  }}
-                  variant="standard"
-                  size="small"
-                  type="text"
-                  value={telegram}
-                  placeholder="Telegram"
-                  onChange={(event) => setTelegram(event.target.value)}
-                  InputProps={{
-                    startAdornment: (
-                      <TelegramIcon sx={{ color: "black" }} position="start" />
-                    ),
-                    endAdornment: myPage === true && <Button>Save</Button>,
-                    disableUnderline: true,
-                    sx: { mr: "5px" },
-                  }}
-                />
+                {myPage === true && <Button>Save</Button>}
               </Box>
-            </Grid>
-            <Grid item xs={12} md={6}>
+            </Box>
+
+            <Box sx={{ mt: "12px", display: "flex", flexDirection: "column" }}>
+              <TextField
+                className="sensei-details-input"
+                disabled={!myPage}
+                sx={{
+                  backgroundColor: "white",
+                  borderRadius: "10px",
+                  padding: "10px",
+                  mb: "10px",
+                }}
+                variant="standard"
+                size="small"
+                type="text"
+                value={twitter}
+                placeholder="Twitter"
+                // onChange={handleTokenAmountChange}
+                InputProps={{
+                  startAdornment: (
+                    <TwitterIcon
+                      className="sensei-details-twitter"
+                      position="start"
+                    />
+                  ),
+                  endAdornment: myPage === true && <Button>Save</Button>,
+                  disableUnderline: true,
+                  sx: { mr: "5px" },
+                }}
+              />
+              <TextField
+                className="sensei-details-input"
+                disabled={!myPage}
+                sx={{
+                  backgroundColor: "white",
+                  borderRadius: "10px",
+                  padding: "10px",
+                  mb: "10px",
+                }}
+                variant="standard"
+                size="small"
+                type="text"
+                value={telegram}
+                placeholder="Telegram"
+                onChange={(event) => setTelegram(event.target.value)}
+                InputProps={{
+                  startAdornment: (
+                    <TelegramIcon sx={{ color: "black" }} position="start" />
+                  ),
+                  endAdornment: myPage === true && <Button>Save</Button>,
+                  disableUnderline: true,
+                  sx: { mr: "5px" },
+                }}
+              />
+            </Box>
+
+            <Box>
               <FeedCards data={userFeed} />
-            </Grid>
-          </Grid>
+            </Box>
+          </Box>
         </>
       )}
     </Container>
