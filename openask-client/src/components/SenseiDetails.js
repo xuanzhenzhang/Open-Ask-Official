@@ -4,36 +4,36 @@ import {
   Avatar,
   Box,
   Typography,
-  Grid,
   Card,
-  CardHeader,
-  CardActions,
   Link,
-  CardContent,
-  Paper,
   Button,
-  TextField,
-  InputAdornment,
+  Tabs,
+  Tab,
 } from "@mui/material";
-import { useParams, useLocation, useNavigate } from "react-router-dom";
+import QuestionBody from "./subcomponents/QuestionBody.js";
+import QuestionHeader from "./subcomponents/QuestionHeader.js";
+import QuestionFooter from "./subcomponents/QuestionFooter.js";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import axios, * as others from "axios";
 import Loader from "./Loader.js";
-import TwitterIcon from "@mui/icons-material/Twitter";
-import TelegramIcon from "@mui/icons-material/Telegram";
-import LanguageIcon from "@mui/icons-material/Language";
 
-import FeedCards from "./FeedCards.js";
+import AskSenseiButton from "./subcomponents/AskSenseiButton.js";
+import { calendarSVG, linkSVG, backSvg } from "./subcomponents/VectorSVGs.js";
 
 const SenseiDetails = ({ accessToken, setAccessError, userInfo }) => {
   const [loading, setLoading] = useState(false);
   const [profile, setProfile] = useState([]);
-  const [userFeed, setUserFeed] = useState();
+  const [allUsers, setAllUsers] = useState();
   const [profit, setProfit] = useState(100.0);
+
+  const [allQuestions, setAllQuestions] = useState();
+  const [allAnswers, setAllAnswers] = useState();
 
   const [myPage, setMyPage] = useState(false);
 
   const [tokenAmount, setTokenAmount] = useState("");
-  const [telegram, setTelegram] = useState("");
+
+  const [value, setValue] = useState(0);
 
   const sensei = useParams();
   const { twitter } = sensei;
@@ -42,8 +42,10 @@ const SenseiDetails = ({ accessToken, setAccessError, userInfo }) => {
   useEffect(() => {
     if (userInfo.twitterHandle === twitter) {
       setMyPage(true);
+    } else {
+      setMyPage(false)
     }
-  }, []);
+  }, [twitter]);
 
   // Get Sensei
   useEffect(() => {
@@ -56,6 +58,7 @@ const SenseiDetails = ({ accessToken, setAccessError, userInfo }) => {
         let userProfile = data.filter((user) => {
           return user.twitterHandle === twitter;
         });
+        setAllUsers(data);
         setProfile(userProfile);
       } catch (error) {
         console.error(error);
@@ -63,7 +66,7 @@ const SenseiDetails = ({ accessToken, setAccessError, userInfo }) => {
     };
 
     getUsers();
-  }, []);
+  }, [twitter]);
 
   // Get all questions by User
   useEffect(() => {
@@ -76,73 +79,15 @@ const SenseiDetails = ({ accessToken, setAccessError, userInfo }) => {
           `https://us-central1-fir-quickask.cloudfunctions.net/api/questions-for/${profile[0]?.userId}`
         );
 
-        // Combine questions asked and questions answered
-        const allActivity = [...questionsBy, ...questionsFor];
-
-        // Remove duplicates
-        const uniqueActivity = [
-          ...new Set(allActivity.map((activity) => activity.questionId)),
-        ].map((questionId) =>
-          allActivity.find((activity) => activity.questionId === questionId)
-        );
-
-        // Sort by recent activity
-        uniqueActivity.sort(
-          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-        );
-
-        // Find only questions that have been answered
-        let questionsWithAnswers = uniqueActivity.filter(function (question) {
+        const questions = questionsBy.filter((question) => {
+          return question.answerId !== null;
+        });
+        const answers = questionsFor.filter((question) => {
           return question.answerId !== null;
         });
 
-        // Find answer for each question(if applicable)
-        const answers = questionsWithAnswers.map((object) => {
-          return axios
-            .get(
-              `https://us-central1-fir-quickask.cloudfunctions.net/api/answer/${object.answerId}`,
-              {
-                headers: {
-                  Authorization: `Bearer ${accessToken}`,
-                },
-              }
-            )
-            .catch((error) => {
-              if (error.response.status === 403) {
-                setAccessError(true);
-              }
-              console.log(error);
-              return { data: "" };
-            });
-        });
-
-        const response = await Promise.all(answers);
-
-        // Destructure answer array
-        const answerArray = response.map((data) => {
-          return {
-            answer: data?.data?.body,
-            questionId: data?.data?.questionId,
-            answerCreatedAt: data?.data?.createdAt,
-          };
-        });
-
-        // Match questionId from question with answer. Add answer if applicable
-        answerArray.forEach((item) => {
-          if (item.questionId) {
-            const index = questionsWithAnswers.findIndex(
-              (item2) => item2.questionId === item.questionId
-            );
-            if (index !== -1) {
-              questionsWithAnswers[index].answer = item.answer;
-              questionsWithAnswers[index].answerCreatedAt =
-                item.answerCreatedAt;
-            }
-          }
-        });
-
-        // Set feed data
-        setUserFeed(questionsWithAnswers);
+        setAllQuestions(questions);
+        setAllAnswers(answers);
         setLoading(false);
       } catch (error) {
         setLoading(false);
@@ -155,13 +100,30 @@ const SenseiDetails = ({ accessToken, setAccessError, userInfo }) => {
 
   const navigate = useNavigate();
 
+  // Navigate to question landing page
+  const handleCardClick = (id) => {
+    navigate(`/id/${id}`);
+  };
+
   const onBtnClick = () => {
     navigate("/sensei/ask");
   };
 
-  const handleTokenAmountChange = (e) => {
-    e.preventDefault();
-    setTokenAmount(e.target.value);
+  // Go Back Function
+  function handleGoBack() {
+    navigate(-1);
+  }
+
+  // Format Date
+  function formatDate(dateString) {
+    const date = new Date(dateString);
+    const options = { month: "long", day: "numeric", year: "numeric" };
+    return date.toLocaleDateString("en-US", options);
+  }
+
+  // Change Tab
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
   };
 
   return (
@@ -177,68 +139,201 @@ const SenseiDetails = ({ accessToken, setAccessError, userInfo }) => {
         <Loader />
       ) : (
         <>
-        {/* Header */}
+          {/* Header */}
           <Box className="sensei-details-header">
-            {userInfo.twitterDisplayName}
+            <Box className="sensei-details-header-box" onClick={handleGoBack}>
+              {backSvg}
+            </Box>
+            <Box className="sensei-details-header-box">
+              {profile[0]?.twitterDisplayName}
+            </Box>
           </Box>
-        {/* Content */}
+          {/* Content */}
           <Box
             className="content-container"
             sx={{ height: "calc(100vh - 104.5px)" }}
           >
-            <Box className="sensei-details-body">
-              <Avatar
-                alt={profile && profile[0]?.twitterDisplayName}
-                src={profile && profile[0]?.twitterPFPUrl}
-                sx={{ width: 150, height: 150, mb: "10px" }}
-              />
-              {!myPage && (
-                <Button
-                  sx={{ height: "100%" }}
-                  variant="contained"
-                  size="large"
-                  onClick={onBtnClick}
-                >
-                  Ask
-                </Button>
-              )}
+            <Box className="sensei-details-body" sx={{ pt: "24px" }}>
+              <Box className="sensei-details-body-header">
+                <Avatar
+                  className="sensei-details-avatar"
+                  alt={profile && profile[0]?.twitterDisplayName}
+                  src={profile && profile[0]?.twitterPFPUrl}
+                />
+                {!myPage && <AskSenseiButton />}
+              </Box>
             </Box>
-            <Typography variant="h5">
-              {profile && profile[0]?.twitterDisplayName}
-            </Typography>
-            <Link
-              href={`https://twitter.com/${twitter}`}
-              target="_blank"
-              rel="noreferrer"
-              variant="body2"
-              underline="none"
-              sx={{
-                width: "100%",
-                display: "block",
-              }}
+            <Box className="sensei-details-body" sx={{ pt: "12px" }}>
+              <Typography variant="h5">
+                {profile && profile[0]?.twitterDisplayName}
+              </Typography>
+              <Link
+                className="link"
+                href={`https://twitter.com/${twitter}`}
+                target="_blank"
+                rel="noreferrer"
+                underline="none"
+                sx={{
+                  width: "100%",
+                  display: "block",
+                }}
+              >
+                @{twitter}
+              </Link>
+            </Box>
+            <Box className="sensei-details-body" sx={{ pt: "20px" }}>
+              <Typography>
+                {profile && profile[0]?.twitterDescription}
+              </Typography>
+            </Box>
+            {/* Text Stats */}
+            <Box className="sensei-details-body" sx={{ pt: "24px" }}>
+              <Box className="sensei-details-body-stats">
+                <Typography className="sensei-details-stats">
+                  {profile && (
+                    <span>
+                      {profile[0]?.publicMetrics?.followers_count?.toLocaleString()}
+                    </span>
+                  )}{" "}
+                  Followers
+                </Typography>
+                <Typography className="sensei-details-stats">
+                  {profile && (
+                    <span>
+                      {profile[0]?.questionsFor.length.toLocaleString()}
+                    </span>
+                  )}{" "}
+                  Answers
+                </Typography>
+              </Box>
+            </Box>
+            {/* Box Stats */}
+            <Box
+              className="sensei-details-body"
+              sx={{ pt: "20px", pb: "24px" }}
             >
-              @{twitter}
-            </Link>
-            <Typography variant="caption" color="text.secondary">
-              {profile &&
-                profile[0]?.publicMetrics?.followers_count?.toLocaleString()}{" "}
-              Followers
-            </Typography>
-            <br />
-            <Typography>About Me:</Typography>
-            <Typography>{profile && profile[0]?.twitterDescription}</Typography>
+              <Box className="sensei-details-fields">
+                <Box className="sensei-details-field">{calendarSVG} Joined</Box>
+                <Box className="sensei-details-field">{linkSVG} Website</Box>
+              </Box>
+              <Box className="sensei-details-fields">
+                <Box className="sensei-details-field2">
+                  {formatDate(profile[0]?.createdAt)}
+                </Box>
+                <Box className="sensei-details-field2">
+                  <Link
+                    className="link"
+                    href={`https://twitter.com/${twitter}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    underline="none"
+                  >
+                    ricefarmer.io
+                  </Link>
+                </Box>
+              </Box>
+            </Box>
+            {/* Tabs */}
+            <Box className="sensei-details-filter">
+              <Tabs
+                value={value}
+                onChange={handleChange}
+                centered
+                variant="fullWidth"
+              >
+                <Tab
+                  className="sensei-details-label"
+                  label="Answers"
+                  {...a11yProps(0)}
+                />
+                <Tab
+                  className="sensei-details-label"
+                  label="Questions"
+                  {...a11yProps(1)}
+                />
+              </Tabs>
+            </Box>
+            {/* Answers */}
+            <TabPanel value={value} index={0}>
+              {allAnswers?.map((content) => {
+                const questioner = allUsers?.filter((id) => {
+                  return id.userId === content.questionerUid;
+                });
 
-            <Box sx={{ mt: "12px", mb: "12px", padding: "5px" }}>
+                return (
+                  <Card
+                    className="feed-card"
+                    key={content.questionId}
+                    onClick={() => handleCardClick(content.questionId)}
+                  >
+                    <QuestionHeader
+                      twitterPfp={questioner[0]?.twitterPFPUrl}
+                      twitterHandle={questioner[0]?.twitterHandle}
+                      twitterDisplayName={questioner[0]?.twitterDisplayName}
+                      price
+                      tokenAmount={content.rewardTokenAmount}
+                      tokenType={content.rewardTokenType}
+                    />
+
+                    <QuestionBody
+                      body={content.body}
+                      createdAt={content.createdAt}
+                    />
+
+                    <QuestionFooter
+                      answeredBy={content.answerId !== null}
+                      twitterHandle={profile[0]?.twitterHandle}
+                    />
+                  </Card>
+                );
+              })}
+            </TabPanel>
+            {/* Questions */}
+            <TabPanel value={value} index={1}>
+              {allQuestions?.map((content) => {
+                const answerer = allUsers?.filter((id) => {
+                  return id.userId === content.questioneeUid;
+                });
+
+                return (
+                  <Card
+                    className="feed-card"
+                    key={content.questionId}
+                    onClick={() => handleCardClick(content.questionId)}
+                  >
+                    <QuestionHeader
+                      twitterPfp={profile[0]?.twitterPFPUrl}
+                      twitterHandle={profile[0]?.twitterHandle}
+                      twitterDisplayName={profile[0]?.twitterDisplayName}
+                      price
+                      tokenAmount={content.rewardTokenAmount}
+                      tokenType={content.rewardTokenType}
+                    />
+
+                    <QuestionBody
+                      body={content.body}
+                      createdAt={content.createdAt}
+                    />
+
+                    <QuestionFooter
+                      answeredBy={content.answerId !== null}
+                      twitterHandle={answerer[0]?.twitterHandle}
+                    />
+                  </Card>
+                );
+              })}
+            </TabPanel>
+            {/* <Box sx={{ mt: "12px", mb: "12px", padding: "5px" }}>
               <Typography variant="h6">
                 Total Profit: ${profit.toFixed(2)}
               </Typography>
-            </Box>
+            </Box> */}
 
-            <Box
+            {/* <Box
             // sx={{ mt: "12px" }}
             >
               <Box sx={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                {/* <Typography variant="body">Minimum Ask Price:</Typography> */}
+                <Typography variant="body">Minimum Ask Price:</Typography>
                 <TextField
                   disabled={!myPage}
                   sx={{ flexGrow: "1" }}
@@ -259,9 +354,9 @@ const SenseiDetails = ({ accessToken, setAccessError, userInfo }) => {
                 />
                 {myPage === true && <Button>Save</Button>}
               </Box>
-            </Box>
+            </Box> */}
 
-            <Box sx={{ mt: "12px", display: "flex", flexDirection: "column" }}>
+            {/* <Box sx={{ mt: "12px", display: "flex", flexDirection: "column" }}>
               <TextField
                 className="sensei-details-input"
                 disabled={!myPage}
@@ -313,11 +408,11 @@ const SenseiDetails = ({ accessToken, setAccessError, userInfo }) => {
                   sx: { mr: "5px" },
                 }}
               />
-            </Box>
+            </Box> */}
 
-            <Box>
+            {/* <Box>
               <FeedCards data={userFeed} />
-            </Box>
+            </Box> */}
           </Box>
         </>
       )}
@@ -326,3 +421,32 @@ const SenseiDetails = ({ accessToken, setAccessError, userInfo }) => {
 };
 
 export default SenseiDetails;
+
+function TabPanel(props) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <Box
+      className="content-container"
+      sx={{ height: "calc(100vh - 96px)" }}
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box>
+          <Box>{children}</Box>
+        </Box>
+      )}
+    </Box>
+  );
+}
+
+function a11yProps(index) {
+  return {
+    id: `simple-tab-${index}`,
+    "aria-controls": `simple-tabpanel-${index}`,
+  };
+}
