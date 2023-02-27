@@ -9,7 +9,7 @@ app.use(cors());
 const {
   getAllQuestions,
   getAllQuestionsByDescPrice,
-  postOneQuestion,
+  // postOneQuestion,
   postUnactivatedQuestion,
   updateActivateQuestion,
   getQuestion,
@@ -19,7 +19,7 @@ const {
 } = require("./handlers/questions");
 
 const {
-  createUserIfNotExist,
+  // createUserIfNotExist,
   getUser,
   getAllUsers,
   getAllUsersByFollowers,
@@ -37,28 +37,28 @@ const {
 } = require("./handlers/answers");
 
 app.get("/questions", getAllQuestions);
-// app.get("/questions-purchased", FBAuth, getAllQuestionPurhcasedByUser);
-// app.get("/questions-by-price", getAllQuestionsByDescPrice);
-// app.get("/questions-for/:uid", getAllQuestionsForUser);
-// app.get("/questions-by/:uid", getAllQuestionsByUser);
+app.get("/questions-purchased", FBAuth, getAllQuestionPurhcasedByUser);
+app.get("/questions-by-price", getAllQuestionsByDescPrice);
+app.get("/questions-for/:uid", getAllQuestionsForUser);
+app.get("/questions-by/:uid", getAllQuestionsByUser);
 // app.post("/question", FBAuth, postOneQuestion);
-// app.get("/question/:questionId", getQuestion);
-// app.post("/question", FBAuth, postUnactivatedQuestion);
-// app.put("/question/:contractAddress", FBAuth, updateActivateQuestion);
+app.get("/question/:questionId", getQuestion);
+app.post("/question", FBAuth, postUnactivatedQuestion);
+app.put("/question/:contractAddress", FBAuth, updateActivateQuestion);
 
-// app.get("/user/:uid", getUser);
+app.get("/user/:uid", getUser);
 // app.post("/login", FBAuth, createUserIfNotExist);
-// app.get("/users", getAllUsers);
-// app.get("/users-by-followers", getAllUsersByFollowers);
-// app.get("/user-wallet/:userId", getUserWallet);
-// app.post("/user-wallet", FBAuth, setCurrentUserWallet);
-// app.get("/user-wallet", FBAuth, getCurrentUserWallet);
+app.get("/users", getAllUsers);
+app.get("/users-by-followers", getAllUsersByFollowers);
+app.get("/user-wallet/:userId", getUserWallet);
+app.post("/user-wallet", FBAuth, setCurrentUserWallet);
+app.get("/user-wallet", FBAuth, getCurrentUserWallet);
 
-// app.get("/answer/:answerId", FBAuth, getAnswer);
-// app.get("/answer-to-question/:questionId", FBAuth, getAnswerToQuestion);
-// app.get("/answers-by-user/:userId", FBAuth, getAllAnswersByUser);
-// app.post("/answer/:questionId", FBAuth, postAnswerToQuestion);
-// app.put("/answer/payment/:answerId", FBAuth, purchaseAnswer);
+app.get("/answer/:answerId", FBAuth, getAnswer);
+app.get("/answer-to-question/:questionId", FBAuth, getAnswerToQuestion);
+app.get("/answers-by-user/:userId", FBAuth, getAllAnswersByUser);
+app.post("/answer/:questionId", FBAuth, postAnswerToQuestion);
+app.put("/answer/payment/:answerId", FBAuth, purchaseAnswer);
 
 // app.post("/signup", (req, res) => {
 //   const newUser = {
@@ -118,4 +118,13 @@ app.get("/questions", getAllQuestions);
 //   )
 //   .then((res) => console.log(res));
 
-exports.api = functions.https.onRequest(app);
+exports.api = functions
+  .runWith({
+    secrets: [
+      "TWITTER_APP_KEY",
+      "TWITTER_APP_SECRET",
+      "TWITTER_ACCESS_TOKEN",
+      "TWITTER_ACCESS_SECRET",
+    ],
+  })
+  .https.onRequest(app);

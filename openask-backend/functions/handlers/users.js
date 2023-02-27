@@ -1,5 +1,6 @@
 const { db } = require("../util/admin");
-const { twClient } = require("../util/client");
+// const { twClient } = require("../util/client");
+const { TwitterApi } = require("twitter-api-v2");
 
 exports.createUserIfNotExist = (req, res) => {
   let updatedUser;
@@ -11,6 +12,12 @@ exports.createUserIfNotExist = (req, res) => {
       if (doc.exists) {
         userAlreadyExists = true;
       }
+      const twClient = new TwitterApi({
+        appKey: process.env.TWITTER_APP_KEY,
+        appSecret: process.env.TWITTER_APP_SECRET,
+        accessToken: process.env.TWITTER_ACCESS_TOKEN,
+        accessSecret: process.env.TWITTER_ACCESS_SECRET,
+      });
       // Update twitter info when user logs in.
       twClient
         .get(
