@@ -28,6 +28,7 @@ exports.postAnswerToQuestion = (req, res) => {
         questioneeUid: question.data().questioneeUid,
         createdAt: new Date().toISOString(),
         secretToken: question.data().secretToken,
+        txHash: null,
       };
       return db.collection("answers").add(answer);
     })
@@ -40,6 +41,56 @@ exports.postAnswerToQuestion = (req, res) => {
     })
     .then(() => {
       return res.status(200).json(resAnswer);
+    })
+    .catch((err) => {
+      res.status(500).json({ error: "something went wrong" });
+      console.error(err);
+    });
+};
+
+exports.updateAnswerTxHash = (req, res) => {
+  let updatedAnswerWithTxHash;
+
+  db.doc(`/answer/${answerId}`)
+    .get()
+    .then((doc) => {
+      if (!doc.exists) {
+        return res.status(404).json({ error: "Answer not found." });
+      }
+      updatedAnswerWithTxHash = doc;
+      updatedAnswerWithTxHash.txHash = req.params.txHash;
+      return doc.ref.update({ txHash: req.params.txHash });
+    })
+    .then(() => {
+      return res.status(200).json({ updatedAnswerWithTxHash });
+    })
+    .catch((err) => {
+      res.status(500).json({ error: "something went wrong" });
+      console.error(err);
+    });
+};
+
+/**
+ * For transactions page
+ * Note that we DO NOT return the content of answer
+ */
+exports.getAllAnswersByDescTimestamp = (req, res) => {
+  db.collection("answers")
+    .orderBy("createdAt", "desc")
+    .get()
+    .then((docList) => {
+      let answers = [];
+      docList.forEach((doc) => {
+        answers.push({
+          answerId: doc.id,
+          questionId: doc.data().questionId,
+          questionerUid: doc.data().questionerUid,
+          questioneeUid: doc.data().questioneeUid,
+          createdAt: doc.data().createdAt,
+          txHash: doc.data().txHash,
+        });
+      });
+      return res.status(200).json(questions);
     })
     .catch((err) => {
       res.status(500).json({ error: "something went wrong" });
