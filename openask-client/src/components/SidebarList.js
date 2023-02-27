@@ -45,7 +45,7 @@ const SidebarList = ({
       setSelectedIndex(2);
     } else if (location.pathname === "/transaction_history") {
       setSelectedIndex(3);
-    } else if (location.pathname === `/sensei/${userInfo?.uid}`) {
+    } else if (location.pathname === `/sensei/${userInfo?.twitterHandle}`) {
       setSelectedIndex(4);
     }
   }, [location]);
@@ -293,7 +293,7 @@ const SidebarList = ({
   // Navigate to page and highlight current page
   const onItemClick = (link, index) => {
     navigate(link);
-    // setSelectedIndex(index);
+    setSelectedIndex(index);
     if (mobileOpen) {
       setMobileOpen(false);
     }
