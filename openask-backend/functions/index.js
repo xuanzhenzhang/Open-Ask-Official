@@ -19,7 +19,7 @@ const {
 } = require("./handlers/questions");
 
 const {
-  // createUserIfNotExist,
+  createUserIfNotExist,
   getUser,
   getAllUsers,
   getAllUsersByFollowers,
@@ -47,7 +47,7 @@ app.post("/question", FBAuth, postUnactivatedQuestion);
 app.put("/question/:contractAddress", FBAuth, updateActivateQuestion);
 
 app.get("/user/:uid", getUser);
-// app.post("/login", FBAuth, createUserIfNotExist);
+app.post("/login", FBAuth, createUserIfNotExist);
 app.get("/users", getAllUsers);
 app.get("/users-by-followers", getAllUsersByFollowers);
 app.get("/user-wallet/:userId", getUserWallet);
