@@ -19,7 +19,7 @@ const {
 } = require("./handlers/questions");
 
 const {
-  // createUserIfNotExist,
+  createUserIfNotExist,
   getUser,
   getAllUsers,
   getAllUsersByFollowers,
@@ -34,6 +34,7 @@ const {
   getAnswer,
   getAnswerToQuestion,
   getAllAnswersByUser,
+  updateAnswerTxHash,
 } = require("./handlers/answers");
 
 app.get("/questions", getAllQuestions);
@@ -47,7 +48,7 @@ app.post("/question", FBAuth, postUnactivatedQuestion);
 app.put("/question/:contractAddress", FBAuth, updateActivateQuestion);
 
 app.get("/user/:uid", getUser);
-// app.post("/login", FBAuth, createUserIfNotExist);
+app.post("/login", FBAuth, createUserIfNotExist);
 app.get("/users", getAllUsers);
 app.get("/users-by-followers", getAllUsersByFollowers);
 app.get("/user-wallet/:userId", getUserWallet);
@@ -59,6 +60,7 @@ app.get("/answer-to-question/:questionId", FBAuth, getAnswerToQuestion);
 app.get("/answers-by-user/:userId", FBAuth, getAllAnswersByUser);
 app.post("/answer/:questionId", FBAuth, postAnswerToQuestion);
 app.put("/answer/payment/:answerId", FBAuth, purchaseAnswer);
+app.put("/answer/tx/:answerId", FBAuth, updateAnswerTxHash);
 
 // app.post("/signup", (req, res) => {
 //   const newUser = {
