@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import Button from "@mui/material/Button";
 import axios from "axios";
+import { Box, Typography } from "@mui/material";
 
 const WalletCard = ({ accessToken, setAccessError }) => {
   const [userBalance, setUserBalance] = useState(null);
@@ -11,7 +12,8 @@ const WalletCard = ({ accessToken, setAccessError }) => {
   const [provider, setProvider] = useState();
   const [signer, setSigner] = useState();
 
-  const currentAccountString = "..." + currentAccount?.slice(-4);
+  const currentAccountString =
+    currentAccount?.slice(0, 4) + "..." + currentAccount?.slice(-4);
 
   // Connect wallet method
   const connectWallet = async () => {
@@ -157,19 +159,12 @@ const WalletCard = ({ accessToken, setAccessError }) => {
 
   return (
     <>
-      <div className="walletCard">
-        <Button
-          variant="contained"
-          size="small"
-          color={currentAccount ? "success" : "primary"}
-          onClick={connectWallet}
-          // disabled={connected}
-        >
+      <Box onClick={connectWallet} className="wallet-btn">
+        <Typography sx={{ display: "flex", justifyContent: "center" }}>
+          {" "}
           {currentAccount ? currentAccountString : "Connect Wallet"}
-        </Button>
-        {/* {errorMessage} */}
-        {/* <Button onClick={() => console.log("Click")}>D</Button> */}
-      </div>
+        </Typography>
+      </Box>
     </>
   );
 };
