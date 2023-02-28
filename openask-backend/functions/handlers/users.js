@@ -1,6 +1,10 @@
 const { db } = require("../util/admin");
 // const { twClient } = require("../util/client");
 const { TwitterApi } = require("twitter-api-v2");
+const PROFILE = {
+  TWITTER: "twitter",
+  LENS: "lens",
+};
 
 exports.createUserIfNotExist = (req, res) => {
   let updatedUser;
@@ -25,11 +29,17 @@ exports.createUserIfNotExist = (req, res) => {
         )
         .then((user) => {
           updatedUser = {
-            twitterHandle: user.data.username,
-            twitterDisplayName: user.data.name,
-            twitterPFPUrl: user.data.profile_image_url,
-            twitterDescription: user.data.description,
-            publicMetrics: user.data.public_metrics,
+            profile: {
+              type: PROFILE.TWITTER,
+              id: twitterId,
+              handle: user.data.username,
+              displayName: user.data.name,
+              imageUrl: user.data.profile_image_url,
+              bio: user.data.description,
+              followers_count: user.data.public_metrics.followers_count,
+              following_count: user.data.public_metrics.following_count,
+              posts_count: user.data.public_metrics.tweet_count,
+            },
             questionsAsked: userAlreadyExists ? doc.data().questionsAsked : [],
             questionsFor: userAlreadyExists ? doc.data().questionsFor : [],
             questionsPurchased: userAlreadyExists
@@ -55,6 +65,74 @@ exports.createUserIfNotExist = (req, res) => {
         .catch((err) => {
           res.status(500).json({ error: err.code });
         });
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).json({ error: err.code });
+    });
+};
+
+/**
+ * Switch profile to lens
+ * connect wallet ? set wallet address
+ * query wallet address on backend to update
+ */
+
+exports.updateUserProfile = (req, res) => {
+  let updatedUser;
+  // Can add facebook login later, we don't need gmail.
+  const twitterId = req.user.firebase.identities["twitter.com"][0];
+  const newProfileType = req.profile;
+  db.doc(`/users/${req.user.uid}`)
+    .get()
+    .then((doc) => {
+      const crProfileType = doc.data().profile.type;
+      if (newProfileType == crProfileType) {
+        return res.status(200).json(doc.data());
+      }
+      if (newProfileType.toLowercase() == PROFILE.TWITTER) {
+        const twClient = new TwitterApi({
+          appKey: process.env.TWITTER_APP_KEY,
+          appSecret: process.env.TWITTER_APP_SECRET,
+          accessToken: process.env.TWITTER_ACCESS_TOKEN,
+          accessSecret: process.env.TWITTER_ACCESS_SECRET,
+        });
+        twClient
+          .get(
+            `https://api.twitter.com/2/users/${twitterId}?user.fields=description,profile_image_url,public_metrics`
+          )
+          .then((user) => {
+            updatedUser = {
+              profile: {
+                type: PROFILE.TWITTER,
+                id: twitterId,
+                handle: user.data.username,
+                displayName: user.data.name,
+                imageUrl: user.data.profile_image_url,
+                bio: user.data.description,
+                followers_count: user.data.public_metrics.followers_count,
+                following_count: user.data.public_metrics.following_count,
+                posts_count: user.data.public_metrics.tweet_count,
+              },
+              questionsAsked: doc.data().questionsAsked,
+              questionsFor: doc.data().questionsFor,
+              questionsPurchased: doc.data().questionsPurchased,
+              walletAddress: doc.data().walletAddress,
+              createdAt: doc.data().createdAt,
+            };
+            return db.doc(`/users/${req.user.uid}`).set(updatedUser);
+          })
+          .then(() => {
+            return res.status(201).json(updatedUser);
+          })
+          .catch((err) => {
+            res.status(500).json({ error: err.code });
+          });
+      } else if (newProfileType.toLowercase() == PROFILE.LENS) {
+        /**
+         * LENS integration
+         */
+      }
     })
     .catch((err) => {
       console.error(err);
@@ -144,14 +222,10 @@ exports.getAllUsers = (req, res) => {
       docList.forEach((doc) => {
         users.push({
           userId: doc.id,
+          profile: doc.data().profile,
           questionsAsked: doc.data().questionsAsked,
           questionsFor: doc.data().questionsFor,
           questionsPurchased: doc.data().questionsPurchased,
-          twitterDisplayName: doc.data().twitterDisplayName,
-          twitterDescription: doc.data().twitterDescription,
-          twitterHandle: doc.data().twitterHandle,
-          twitterPFPUrl: doc.data().twitterPFPUrl,
-          publicMetrics: doc.data().publicMetrics,
           createdAt: doc.data().createdAt,
           walletAddress: doc.data().walletAddress,
         });
@@ -173,14 +247,10 @@ exports.getAllUsersByFollowers = (req, res) => {
       docList.forEach((doc) => {
         users.push({
           userId: doc.id,
+          profile: doc.data().profile,
           questionsAsked: doc.data().questionsAsked,
           questionsFor: doc.data().questionsFor,
           questionsPurchased: doc.data().questionsPurchased,
-          twitterDisplayName: doc.data().twitterDisplayName,
-          twitterDescription: doc.data().twitterDescription,
-          twitterHandle: doc.data().twitterHandle,
-          twitterPFPUrl: doc.data().twitterPFPUrl,
-          publicMetrics: doc.data().publicMetrics,
           createdAt: doc.data().createdAt,
           walletAddress: doc.data().walletAddress,
         });
