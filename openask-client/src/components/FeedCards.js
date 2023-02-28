@@ -4,7 +4,6 @@ import Card from "@mui/material/Card";
 
 import { getUsers } from "./functions/getUsers";
 
-
 import QuestionHeader from "./subcomponents/QuestionHeader";
 import QuestionBody from "./subcomponents/QuestionBody";
 import QuestionFooter from "./subcomponents/QuestionFooter";
@@ -50,9 +49,9 @@ const FeedCards = ({ data, price }) => {
         return (
           <Card className="feed-card" key={content.questionId}>
             <QuestionHeader
-              twitterPfp={user[0]?.twitterPFPUrl}
-              twitterHandle={user[0]?.twitterHandle}
-              twitterDisplayName={user[0]?.twitterDisplayName}
+              twitterPfp={user[0]?.profile.imageUrl}
+              twitterHandle={user[0]?.profile.handle}
+              twitterDisplayName={user[0]?.profile.displayName}
               price
               tokenAmount={content.rewardTokenAmount}
               tokenType={content.rewardTokenType}
@@ -62,9 +61,8 @@ const FeedCards = ({ data, price }) => {
 
             <QuestionFooter
               answeredBy
-              twitterHandle={answerer[0]?.twitterHandle}
+              twitterHandle={answerer[0]?.profile.handle}
             />
-
           </Card>
         );
       })}

@@ -2,9 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import Container from "@mui/material/Container";
 import { Box } from "@mui/system";
-import Congratulations from "./Congratulations.js";
-import confetti from "canvas-confetti";
-import AppContext from "./context/AppContext";
+
 
 import FeedCards from "./FeedCards.js";
 import Loader from "./Loader.js";
@@ -74,9 +72,9 @@ const Feed = ({ accessToken, setAccessError }) => {
           </>
         )}
       </Container>
-      {congrats && (
+      {/* {congrats && (
         <Congratulations handleCloseCongrats={handleCloseCongrats} purchase />
-      )}
+      )} */}
     </>
   );
 };
