@@ -5,7 +5,6 @@ Here are the workflows for using StandardBounties with OpenAsk:
 - [Create a bounty](#create-a-question)
 - [Fulfill a bounty](#fulfill-a-bounty)
 - [Accept a fulfillment](#accept-a-fulfillment)
-- [Kill a bounty](#kill-a-bounty)
 - [Change bounty data](#change-bounty-data)
 - [Change fulfillment data](#change-fulfillment-data)
 - [Increase bounty payout](#increase-bounty-payout)
@@ -50,3 +49,32 @@ function issueAndContribute(
 - `_depositAmount` is the amount of tokens that the questioner is paying for the question. If the questioner is paying in ETH, then this should be set to the amount of ETH that they are paying (measured in wei).
 - `returns(uint)` is the id of the question (bounty in the smart contract) that was created.
 - payable -> submit ETH as part of the transaction if intending to fund the question in ETH. Otherwise, leave the amount as 0.
+
+### Answer a question and withdraw amount
+To answer a question, a Sensei will need to sign a transaction with the following parameters:
+```solidity
+function fulfillAndAccept(
+    address _sender,
+    uint _bountyId,
+    address payable[] memory _fulfillers,
+    string memory _data,
+    uint _approverId,
+    uint[] memory _tokenAmounts)
+    public
+    senderIsValid(_sender)
+```
+
+- `_sender` is the address of the Sensei who is answering the question
+- `_bountyId` is the id of the question (from the smart contract) that the Sensei is answering
+- `_fulfillers` is the list of addresses who should receive the payment. This should be set to the Sensei's address. In the future, you can do things like have joint answers, and pay out the reward to multiple addresses, or take a fee by having the Sensei's address as one of the fulfillers.
+- `_data` is the link to the answer/submission. It is intended to be an ipfs hash that follows the json schema [here](https://github.com/Bounties-Network/StandardBounties/blob/master/docs/standardSchemas.md). This can be done in the future.
+- `_approverId` is the index of the approver in the list of approvers that is approving the submission. This should be set to 0 since there is only one approver.
+- `_tokenAmounts` is the list of amounts of tokens that should be paid out, corresponding with the same indices as the fulfillers array. If the approver is paying in ETH, then this should be set to the amount of ETH that they are paying (measured in wei).
+
+### Withdraw funds if the question is not answered and the deadline has passed
+
+### Eavesdrop
+
+### [Optional] Change question data
+
+### [Optional] Contribute to reward pool
