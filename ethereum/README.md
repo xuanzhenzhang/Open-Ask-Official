@@ -72,6 +72,23 @@ function fulfillAndAccept(
 - `_tokenAmounts` is the list of amounts of tokens that should be paid out, corresponding with the same indices as the fulfillers array. If the approver is paying in ETH, then this should be set to the amount of ETH that they are paying (measured in wei).
 
 ### Withdraw funds if the question is not answered and the deadline has passed
+When a user's question has not been answered within the deadline, they can withdraw their deposit. If they don't withdraw their deposit, then the questioner will lose their deposit. To withdraw the deposit, a user will need to sign a transaction with the following parameters:
+```solidity
+function refundContributions(
+    address _sender,
+    uint _bountyId,
+    uint _issuerId,
+    uint[] memory _contributionIds)
+    public
+    senderIsValid(_sender)
+    validateBountyArrayIndex(_bountyId)
+    onlyIssuer(_sender, _bountyId, _issuerId)
+    callNotStarted
+```
+
+- `_sender` is the address of the user who is withdrawing their deposit
+- `_bountyId` is the id of the question (from the smart contract) that the user is withdrawing their deposit from.
+- `_contributionIds` is the list of indices of contributions a user has made to a question. This should just be the index 0 when there is only one contribution, which is the case at the start, and for most of the time.
 
 ### Eavesdrop
 
