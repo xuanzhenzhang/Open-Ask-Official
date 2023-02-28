@@ -44,6 +44,7 @@ const QuestionId = ({ accessToken, setAccessError }) => {
         const { data } = await axios.get(
           `https://us-central1-open-ask-dbbe2.cloudfunctions.net/api.net/api/question/${id}`
         );
+        console.log(data);
         setQuestion(data);
       } catch (error) {
         console.error(error);
@@ -138,10 +139,11 @@ const QuestionId = ({ accessToken, setAccessError }) => {
 
   return (
     <Container
+      className="main-container"
       sx={{
         width: { md: `calc(100% - 300px)` },
-        ml: { md: `300px` },
-        mt: "84px",
+        mr: { md: `276px` },
+        mt: "24px",
       }}
     >
       {loading ? (

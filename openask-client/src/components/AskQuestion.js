@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { Box, Card, CardContent, Avatar, Typography } from "@material-ui/core";
 import { Autocomplete, TextField, Chip, CircularProgress } from "@mui/material";
 import { getUsers } from "./functions/getUsers";
@@ -13,10 +14,12 @@ import axios from "axios";
 const AskQuestion = (props) => {
   const { userInfo, accessToken, setAccessError } = props;
   const { handleCloseBackdrop } = props;
+  const { askedSensei } = props;
 
   const [allSenseis, setAllSenseis] = useState([]);
 
   const [askLoader, setAskLoader] = useState(false);
+  const [askLoaderText, setAskLoaderText] = useState("Continue on Metamask");
 
   const [question, setQuestion] = useState("");
   const [sensei, setSensei] = useState();
@@ -26,6 +29,14 @@ const AskQuestion = (props) => {
   const [senseiName, setSenseiName] = useState("");
 
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Set Sensei Name if Available
+  useEffect(() => {
+    if (askedSensei) {
+      setSenseiName(askedSensei);
+    }
+  }, [askedSensei]);
 
   // Get all users
   useEffect(() => {
@@ -40,16 +51,16 @@ const AskQuestion = (props) => {
   // Set sensei ID #
   useEffect(() => {
     const questionee = allSenseis?.find((user) => {
-      return user.twitterDisplayName === sensei;
+      return user.profile.displayName === sensei;
     });
     setSenseiId(questionee?.userId);
   }, [sensei]);
 
-  // Set token type
-  const handleTokenTypeChange = (e) => {
-    e.preventDefault();
-    setTokenType(e.target.value);
-  };
+  // // Set token type
+  // const handleTokenTypeChange = (e) => {
+  //   e.preventDefault();
+  //   setTokenType(e.target.value);
+  // };
 
   // Set token amount
   const handleTokenAmountChange = (e) => {
@@ -57,13 +68,18 @@ const AskQuestion = (props) => {
     setTokenAmount(e.target.value);
   };
 
-  // Set Sensei Name from Sensei page
+  // Refresh Page
+  function refreshPage() {
+    setTimeout(() => {
+      window.location.reload();
+    }, 3000);
+  }
 
   // ETH Contract
   const handleDeployEthContract = async () => {
     // Check sensei wallet address
     const paymentSensei = allSenseis.find((data) => {
-      return data.twitterDisplayName === sensei;
+      return data.profile.displayName === sensei;
     });
 
     if (paymentSensei.walletAddress) {
@@ -75,22 +91,22 @@ const AskQuestion = (props) => {
           18
         );
 
-        // // Find Sensei Wallet Address
-        // const paymentSensei = allSenseis.find((data) => {
-        //   return data.twitterDisplayName === sensei;
-        // });
+        // Add Contract to Backend
+        const data = await askQuestion();
 
+        // Deploy Contract
         const deployedAddress = await deployEthContract(
           paymentSensei.walletAddress, // Sensei Address
           tokenAmountUpdated, // Token Amount
-          172800 //48 Hours
+          172800, //48 Hours
+          data.data.questionId, //questionId
+          data.data.secretToken, // secret
+          setAskLoaderText
         );
         console.log(`Contract Deployed: ${deployedAddress}`);
 
-        // // POST maturity date to backend
-        // const maturityDate = await ethMatureTime(deployedAddress);
-
-        await askQuestion(deployedAddress);
+        // Update Question with Contract Address
+        await updateQuestion(deployedAddress);
         setAskLoader(false);
 
         confetti({
@@ -105,10 +121,14 @@ const AskQuestion = (props) => {
         // Clear Form
         setQuestion("");
         setSensei("");
-        setTokenAmount();
+        setTokenAmount("");
         // Close Backdrop
         await handleCloseBackdrop();
-        navigate("/questions");
+        if (location.pathname === "/questions") {
+          refreshPage();
+        } else {
+          navigate("/questions");
+        }
       } catch (error) {
         setAskLoader(false);
         console.log(error);
@@ -121,16 +141,15 @@ const AskQuestion = (props) => {
   };
 
   // POST question to sensei
-  const askQuestion = async (ethContractAddress) => {
+  const askQuestion = async () => {
     try {
-      await axios.post(
+      const data = await axios.post(
         `https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/question`,
         {
           body: question,
           questioneeUid: senseiId,
           rewardTokenType: tokenType,
           rewardTokenAmount: tokenAmount,
-          contractAddress: ethContractAddress,
         },
         {
           headers: {
@@ -138,8 +157,32 @@ const AskQuestion = (props) => {
           },
         }
       );
-      console.log("Question Added to Backend");
+      console.log("Question Sent to Backend. Retrieve Question ID and Secret");
+      return data;
     } catch (error) {
+      console.log(error);
+      if (error.response.status === 403) {
+        setAccessError(true);
+      }
+      throw new Error(error);
+    }
+  };
+  // PUT question to sensei
+  const updateQuestion = async (contractAddress) => {
+    try {
+      const data = await axios.put(
+        `https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/question/${contractAddress}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      console.log("Contract Address added to Backend.");
+      return data;
+    } catch (error) {
+      console.log(error);
       if (error.response.status === 403) {
         setAccessError(true);
       }
@@ -153,7 +196,9 @@ const AskQuestion = (props) => {
         {askLoader && (
           <Box className="ask-question-loader">
             <CircularProgress />
-            <Typography>Continue on Metamask</Typography>
+            <Box className="ask-question-loader-text">
+              <Typography>{askLoaderText}</Typography>
+            </Box>
           </Box>
         )}
         {!askLoader && (
@@ -198,10 +243,10 @@ const AskQuestion = (props) => {
               <Typography className="ask-question-text">from: </Typography>
               <Avatar
                 className="ask-question-avatar"
-                alt={userInfo.twitterHandle}
-                src={userInfo.twitterPFPUrl}
+                alt={userInfo?.profile?.handle}
+                src={userInfo?.profile?.imageUrl}
               />
-              <Typography> {userInfo.twitterDisplayName}</Typography>
+              <Typography> {userInfo?.profile?.displayName}</Typography>
             </CardContent>
 
             {/* To */}
@@ -211,29 +256,29 @@ const AskQuestion = (props) => {
                 className="ask-question-autocomplete"
                 options={allSenseis}
                 getOptionLabel={(option) => {
-                  return option.twitterDisplayName;
+                  return option.profile.displayName;
                 }}
                 renderOption={(props, option) => (
                   <Box component="li" {...props}>
                     <Avatar
                       className="ask-question-avatar"
-                      alt={option.twitterHandle}
-                      src={option.twitterPFPUrl}
+                      alt={option.profile.displayName}
+                      src={option.profile.imageUrl}
                     />
-                    {option.twitterDisplayName}
+                    {option.profile.displayName}
                   </Box>
                 )}
                 inputValue={senseiName}
                 onInputChange={(event, newInputValue) => {
-                  //   if (location?.state?.displayName) {
-                  //     return newInputValue === senseiName;
-                  //   }
+                  if (askedSensei) {
+                    return newInputValue === askedSensei;
+                  }
                   setSenseiName(newInputValue);
                 }}
                 renderInput={(params) => {
                   const displayName = params?.inputProps?.value;
                   const sensei = allSenseis?.find(
-                    (profile) => profile?.twitterDisplayName === displayName
+                    (sensei) => sensei?.profile.displayName === displayName
                   );
 
                   return (
@@ -250,8 +295,8 @@ const AskQuestion = (props) => {
                         startAdornment: sensei && (
                           <Avatar
                             className="ask-question-avatar"
-                            alt={sensei?.twitterHandle}
-                            src={sensei?.twitterPFPUrl}
+                            alt={sensei?.profile.handle}
+                            src={sensei?.profile.imageUrl}
                           />
                         ),
                       }}
