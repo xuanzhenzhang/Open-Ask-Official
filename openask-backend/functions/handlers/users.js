@@ -82,7 +82,8 @@ exports.updateUserProfile = (req, res) => {
   let updatedUser;
   // Can add facebook login later, we don't need gmail.
   const twitterId = req.user.firebase.identities["twitter.com"][0];
-  const newProfileType = req.profile;
+  // new profile type use query params
+  const newProfileType = req.params.profile;
   db.doc(`/users/${req.user.uid}`)
     .get()
     .then((doc) => {
@@ -132,6 +133,8 @@ exports.updateUserProfile = (req, res) => {
         /**
          * LENS integration
          */
+      } else {
+        return res.status(400).json({ error: "No profile type exists" });
       }
     })
     .catch((err) => {
