@@ -4,7 +4,7 @@ import TwitterIcon from "@mui/icons-material/Twitter";
 
 const TwitterButton = ({ signInTwitter }) => {
   return (
-    <Box className="twitter-btn" onClick={() => signInTwitter("reload")}>
+    <Box className="twitter-btn" onClick={() => signInTwitter(true)}>
       <TwitterIcon fontSize="large" />
       <Typography>Sign In</Typography>
     </Box>

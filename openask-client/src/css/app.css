@@ -339,6 +339,9 @@ body {
   color: var(--gray-2);
   border-radius: 16px;
 }
+.ask-sensei:hover {
+  background: var(--gray-6);
+}
 .sensei-subtext span {
   color: var(--brand-black);
   font-weight: 600;
@@ -624,6 +627,16 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 371px;
+}
+.ask-question-loader-text{
+  padding: 24px;
+  width: 400px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.ask-question-backdrop {
+  z-index: 2000;
 }
 /* Sensei Details */
 .sensei-details-header {
