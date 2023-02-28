@@ -41,8 +41,11 @@ const Questions = ({ userInfo, accessToken, setAccessError }) => {
           const response = await axios.get(
             `https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/questions-by/${userInfo.userUid}`
           );
+          const filteredQuestions = response.data.filter(
+            (data) => data.contractAddress
+          );
           // Set all questions
-          setAllQuestionsAsked(response.data);
+          setAllQuestionsAsked(filteredQuestions);
           setLoading(false);
         } catch (error) {
           console.error(error);
@@ -64,9 +67,11 @@ const Questions = ({ userInfo, accessToken, setAccessError }) => {
           const { data } = await axios.get(
             `https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/questions-for/${userInfo.userUid}`
           );
+          const filteredQuestions = data.filter(
+            (response) => response.contractAddress
+          );
           // Set all questions for
-          setAllQuestionsFor(data);
-       
+          setAllQuestionsFor(filteredQuestions);
         } catch (error) {
           console.error(error);
         }
@@ -182,7 +187,9 @@ const Questions = ({ userInfo, accessToken, setAccessError }) => {
                 const diffInMs = now - specificDate;
                 const diffInHours = Math.floor(diffInMs / (1000 * 60 * 60));
                 const diffInMinutes = Math.floor((diffInMs / (1000 * 60)) % 60);
-                const waitingTime = `${47 - diffInHours} hours and ${60 - diffInMinutes} minutes`;
+                const waitingTime = `${47 - diffInHours} hours and ${
+                  60 - diffInMinutes
+                } minutes`;
 
                 return (
                   <Card
@@ -191,9 +198,9 @@ const Questions = ({ userInfo, accessToken, setAccessError }) => {
                     onClick={() => handleCardClick(content.questionId)}
                   >
                     <QuestionHeader
-                      twitterPfp={userInfo?.twitterPFPUrl}
-                      twitterHandle={userInfo?.twitterHandle}
-                      twitterDisplayName={userInfo?.twitterDisplayName}
+                      twitterPfp={userInfo?.profile?.imageUrl}
+                      twitterHandle={userInfo?.profile?.handle}
+                      twitterDisplayName={userInfo?.profile?.displayName}
                       price
                       tokenAmount={content.rewardTokenAmount}
                       tokenType={content.rewardTokenType}
@@ -208,7 +215,7 @@ const Questions = ({ userInfo, accessToken, setAccessError }) => {
                       answeredBy={content.answerId !== null}
                       waiting={content.answerId === null && diffInHours < 48}
                       expired={content.answerId === null && diffInHours >= 48}
-                      twitterHandle={answerer && answerer[0]?.twitterHandle}
+                      twitterHandle={answerer && answerer[0]?.profile.handle}
                       waitingTime={waitingTime}
                     />
                   </Card>
@@ -232,7 +239,9 @@ const Questions = ({ userInfo, accessToken, setAccessError }) => {
                 const diffInMs = now - specificDate;
                 const diffInHours = Math.floor(diffInMs / (1000 * 60 * 60));
                 const diffInMinutes = Math.floor((diffInMs / (1000 * 60)) % 60);
-                const waitingTime = `${diffInHours} hours and ${diffInMinutes} minutes`;
+                const waitingTime = `${47 - diffInHours} hours and ${
+                  60 - diffInMinutes
+                } minutes`;
 
                 return (
                   <Card
@@ -241,9 +250,9 @@ const Questions = ({ userInfo, accessToken, setAccessError }) => {
                     onClick={() => handleCardClick(content.questionId)}
                   >
                     <QuestionHeader
-                      twitterPfp={user && user[0]?.twitterPFPUrl}
-                      twitterHandle={user && user[0]?.twitterHandle}
-                      twitterDisplayName={user && user[0]?.twitterDisplayName}
+                      twitterPfp={user && user[0]?.profile.imageUrl}
+                      twitterHandle={user && user[0]?.profile.handle}
+                      twitterDisplayName={user && user[0]?.profile.displayName}
                       price
                       tokenAmount={content.rewardTokenAmount}
                       tokenType={content.rewardTokenType}
@@ -260,7 +269,7 @@ const Questions = ({ userInfo, accessToken, setAccessError }) => {
                       userExpired={
                         content.answerId === null && diffInHours >= 48
                       }
-                      twitterHandle={answerer && answerer[0]?.twitterHandle}
+                      twitterHandle={answerer && answerer[0]?.profile.handle}
                       waitingTime={waitingTime}
                     />
                   </Card>
@@ -286,9 +295,9 @@ const Questions = ({ userInfo, accessToken, setAccessError }) => {
                     onClick={() => handleCardClick(content.questionId)}
                   >
                     <QuestionHeader
-                      twitterPfp={user && user[0]?.twitterPFPUrl}
-                      twitterHandle={user && user[0]?.twitterHandle}
-                      twitterDisplayName={user && user[0]?.twitterDisplayName}
+                      twitterPfp={user && user[0]?.profile.imageUrl}
+                      twitterHandle={user && user[0]?.profile.handle}
+                      twitterDisplayName={user && user[0]?.profile.displayName}
                       price
                       tokenAmount={content.rewardTokenAmount}
                       tokenType={content.rewardTokenType}
@@ -301,7 +310,7 @@ const Questions = ({ userInfo, accessToken, setAccessError }) => {
 
                     <QuestionFooter
                       purchased
-                      twitterHandle={answerer && answerer[0]?.twitterHandle}
+                      twitterHandle={answerer && answerer[0]?.profile.handle}
                     />
                   </Card>
                 );
