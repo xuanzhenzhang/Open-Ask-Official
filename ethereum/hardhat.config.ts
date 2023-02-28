@@ -3,14 +3,28 @@ import "@nomicfoundation/hardhat-toolbox";
 require('dotenv').config();
 
 const config: HardhatUserConfig = {
-    solidity: "0.5.12",
+    solidity: {
+        compilers: [
+          {
+            version: "0.5.12"
+          },
+          {
+            version: "0.8.19"
+          }
+        ]
+    },
     networks: {
       development: {
               url: "http://127.0.0.1:8545/",
     //            logLevel: "debug",
       },
-      scrollTestnet: {
+      scroll_alpha: {
         url: process.env.SCROLL_TESTNET_URL || "",
+        accounts:
+        process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+      },
+      scroll_prealpha: {
+        url: process.env.SCROLL_PREALPHA_TESTNET_URL || "",
         accounts:
         process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
       },
