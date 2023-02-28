@@ -20,7 +20,7 @@ const FeedFilters = ({ questions, setQuestions }) => {
       try {
         const { data } = await axios
           .get(
-            "https://us-central1-fir-quickask.cloudfunctions.net/api/questions-by-price"
+            "https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/questions-by-price"
           )
           .catch((error) => {
             console.log(error);

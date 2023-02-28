@@ -279,7 +279,7 @@ const AskPage = ({ userInfo, accessToken, setAccessError }) => {
   const askQuestion = async (ethContractAddress) => {
     try {
       await axios.post(
-        `https://us-central1-fir-quickask.cloudfunctions.net/api/question`,
+        `https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/question`,
         {
           body: question,
           questioneeUid: senseiId,

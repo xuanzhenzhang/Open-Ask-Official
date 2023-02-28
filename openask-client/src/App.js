@@ -103,7 +103,7 @@ function App() {
   const addUser = async (accessToken) => {
     try {
       const user = await axios.post(
-        `https://us-central1-fir-quickask.cloudfunctions.net/api/login`,
+        `https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/login`,
         {},
         {
           headers: {

@@ -263,7 +263,7 @@ const SidebarList = ({
       if (userInfo) {
         try {
           const { data } = await axios.get(
-            `https://us-central1-fir-quickask.cloudfunctions.net/api/questions-for/${userInfo.userUid}`
+            `https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/questions-for/${userInfo.userUid}`
           );
           const waiting = data.filter((question) => {
             return !question.answerId;

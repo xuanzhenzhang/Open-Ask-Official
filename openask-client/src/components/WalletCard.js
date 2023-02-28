@@ -123,7 +123,7 @@ const WalletCard = ({ accessToken, setAccessError }) => {
   const setUserWallet = async (userWallet) => {
     try {
       await axios.post(
-        `https://us-central1-fir-quickask.cloudfunctions.net/api/user-wallet`,
+        `https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/user-wallet`,
         {
           body: userWallet,
         },

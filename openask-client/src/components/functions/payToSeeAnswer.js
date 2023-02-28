@@ -4,7 +4,7 @@ import reloadPage from "./reloadPage";
 export const payToSeeAnswer = async (answerId, accessToken) => {
   try {
     await axios.put(
-      `https://us-central1-fir-quickask.cloudfunctions.net/api/answer/payment/${answerId}`,
+      `https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/answer/payment/${answerId}`,
       {},
       {
         headers: {

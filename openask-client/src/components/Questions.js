@@ -39,7 +39,7 @@ const Questions = ({ userInfo, accessToken, setAccessError }) => {
       if (userInfo?.userUid) {
         try {
           const response = await axios.get(
-            `https://us-central1-fir-quickask.cloudfunctions.net/api/questions-by/${userInfo.userUid}`
+            `https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/questions-by/${userInfo.userUid}`
           );
           // Set all questions
           setAllQuestionsAsked(response.data);
@@ -62,7 +62,7 @@ const Questions = ({ userInfo, accessToken, setAccessError }) => {
       if (userInfo) {
         try {
           const { data } = await axios.get(
-            `https://us-central1-fir-quickask.cloudfunctions.net/api/questions-for/${userInfo.userUid}`
+            `https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/questions-for/${userInfo.userUid}`
           );
           // Set all questions for
           setAllQuestionsFor(data);
@@ -86,7 +86,7 @@ const Questions = ({ userInfo, accessToken, setAccessError }) => {
       const getPurchasedQuestions = async () => {
         try {
           const { data } = await axios.get(
-            "https://us-central1-fir-quickask.cloudfunctions.net/api/questions-purchased",
+            "https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/questions-purchased",
             {
               headers: {
                 Authorization: `Bearer ${accessToken}`,

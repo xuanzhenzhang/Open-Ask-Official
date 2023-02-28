@@ -23,7 +23,7 @@ const QuestionsPurchased = ({ accessToken, userInfo, setAccessError }) => {
       const getPurchasedQuestions = async () => {
         try {
           const { data: questionsPurchased } = await axios.get(
-            "https://us-central1-fir-quickask.cloudfunctions.net/api/questions-purchased",
+            "https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/questions-purchased",
             {
               headers: {
                 Authorization: `Bearer ${accessToken}`,
@@ -35,7 +35,7 @@ const QuestionsPurchased = ({ accessToken, userInfo, setAccessError }) => {
           const answers = questionsPurchased.map((object) => {
             return axios
               .get(
-                `https://us-central1-fir-quickask.cloudfunctions.net/api/answer/${object.answerId}`,
+                `https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/answer/${object.answerId}`,
                 {
                   headers: {
                     Authorization: `Bearer ${accessToken}`,

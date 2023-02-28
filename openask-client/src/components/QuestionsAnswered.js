@@ -33,7 +33,7 @@ const QuestionsAnswered = ({ userInfo, accessToken, setAccessError }) => {
       if (userInfo) {
         try {
           const { data } = await axios.get(
-            `https://us-central1-fir-quickask.cloudfunctions.net/api/questions-for/${userInfo.userUid}`
+            `https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/questions-for/${userInfo.userUid}`
           );
           // Sort questions by waiting and completed
           const waiting = data.filter((question) => {
@@ -77,7 +77,7 @@ const QuestionsAnswered = ({ userInfo, accessToken, setAccessError }) => {
       completedQuestions?.map(async (question) => {
         try {
           const { data } = await axios.get(
-            `https://us-central1-fir-quickask.cloudfunctions.net/api/answer/${question.answerId}`,
+            `https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/answer/${question.answerId}`,
             {
               headers: {
                 Authorization: `Bearer ${accessToken}`,

@@ -25,7 +25,7 @@ const Feed = ({ accessToken, setAccessError }) => {
       try {
         const { data } = await axios
           .get(
-            "https://us-central1-fir-quickask.cloudfunctions.net/api/questions"
+            "https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/questions"
           )
           .catch((error) => {
             console.log(error);

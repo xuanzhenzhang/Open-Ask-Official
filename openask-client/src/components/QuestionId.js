@@ -42,7 +42,7 @@ const QuestionId = ({ accessToken, setAccessError }) => {
     const getQuestion = async () => {
       try {
         const { data } = await axios.get(
-          `https://us-central1-fir-quickask.cloudfunctions.net/api/question/${id}`
+          `https://us-central1-open-ask-dbbe2.cloudfunctions.net/api.net/api/question/${id}`
         );
         setQuestion(data);
       } catch (error) {
@@ -59,7 +59,7 @@ const QuestionId = ({ accessToken, setAccessError }) => {
       try {
         if (question) {
           const { data } = await axios.get(
-            `https://us-central1-fir-quickask.cloudfunctions.net/api/user/${question?.questionerUid}`
+            `https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/user/${question?.questionerUid}`
           );
           setUser(data);
         }
@@ -77,7 +77,7 @@ const QuestionId = ({ accessToken, setAccessError }) => {
       try {
         if (question) {
           const { data } = await axios.get(
-            `https://us-central1-fir-quickask.cloudfunctions.net/api/user/${question?.questioneeUid}`
+            `https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/user/${question?.questioneeUid}`
           );
           setAnswerer(data);
         }
@@ -95,7 +95,7 @@ const QuestionId = ({ accessToken, setAccessError }) => {
       try {
         if (question) {
           const { data } = await axios.get(
-            `https://us-central1-fir-quickask.cloudfunctions.net/api/answer-to-question/${id}`,
+            `https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/answer-to-question/${id}`,
             {
               headers: {
                 Authorization: `Bearer ${accessToken}`,

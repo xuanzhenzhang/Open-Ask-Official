@@ -98,7 +98,7 @@ const AnswerQuestion = ({ accessToken, setAccessError }) => {
   const answerQuestion = async () => {
     try {
       await axios.post(
-        `https://us-central1-fir-quickask.cloudfunctions.net/api/answer/${questionId}`,
+        `https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/answer/${questionId}`,
         {
           body: answer,
         },

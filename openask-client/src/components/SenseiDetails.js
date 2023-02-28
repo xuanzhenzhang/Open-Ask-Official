@@ -53,7 +53,7 @@ const SenseiDetails = ({ accessToken, setAccessError, userInfo }) => {
     const getUsers = async () => {
       try {
         const { data } = await axios.get(
-          `https://us-central1-fir-quickask.cloudfunctions.net/api/users`
+          `https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/users`
         );
         let userProfile = data.filter((user) => {
           return user.twitterHandle === twitter;
@@ -73,10 +73,10 @@ const SenseiDetails = ({ accessToken, setAccessError, userInfo }) => {
     const getUserQuestions = async () => {
       try {
         const { data: questionsBy } = await axios.get(
-          `https://us-central1-fir-quickask.cloudfunctions.net/api/questions-by/${profile[0]?.userId}`
+          `https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/questions-by/${profile[0]?.userId}`
         );
         const { data: questionsFor } = await axios.get(
-          `https://us-central1-fir-quickask.cloudfunctions.net/api/questions-for/${profile[0]?.userId}`
+          `https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/questions-for/${profile[0]?.userId}`
         );
 
         const questions = questionsBy.filter((question) => {
