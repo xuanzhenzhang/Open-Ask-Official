@@ -40,10 +40,10 @@ const SenseiDetails = ({ accessToken, setAccessError, userInfo }) => {
 
   // Set My Page
   useEffect(() => {
-    if (userInfo.twitterHandle === twitter) {
+    if (userInfo.profile.handle === twitter) {
       setMyPage(true);
     } else {
-      setMyPage(false)
+      setMyPage(false);
     }
   }, [twitter]);
 
@@ -56,7 +56,7 @@ const SenseiDetails = ({ accessToken, setAccessError, userInfo }) => {
           `https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/users`
         );
         let userProfile = data.filter((user) => {
-          return user.twitterHandle === twitter;
+          return user.profile.handle === twitter;
         });
         setAllUsers(data);
         setProfile(userProfile);
@@ -145,27 +145,27 @@ const SenseiDetails = ({ accessToken, setAccessError, userInfo }) => {
               {backSvg}
             </Box>
             <Box className="sensei-details-header-box">
-              {profile[0]?.twitterDisplayName}
+              {profile[0]?.profile.displayName}
             </Box>
           </Box>
           {/* Content */}
           <Box
             className="content-container"
-            sx={{ height: "calc(100vh - 104.5px)" }}
+            sx={{ height: "calc(100vh - 98px)" }}
           >
             <Box className="sensei-details-body" sx={{ pt: "24px" }}>
               <Box className="sensei-details-body-header">
                 <Avatar
                   className="sensei-details-avatar"
-                  alt={profile && profile[0]?.twitterDisplayName}
-                  src={profile && profile[0]?.twitterPFPUrl}
+                  alt={profile && profile[0]?.profile.displayName}
+                  src={profile && profile[0]?.profile.imageUrl}
                 />
                 {!myPage && <AskSenseiButton />}
               </Box>
             </Box>
             <Box className="sensei-details-body" sx={{ pt: "12px" }}>
               <Typography variant="h5">
-                {profile && profile[0]?.twitterDisplayName}
+                {profile && profile[0]?.profile.displayName}
               </Typography>
               <Link
                 className="link"
@@ -182,9 +182,7 @@ const SenseiDetails = ({ accessToken, setAccessError, userInfo }) => {
               </Link>
             </Box>
             <Box className="sensei-details-body" sx={{ pt: "20px" }}>
-              <Typography>
-                {profile && profile[0]?.twitterDescription}
-              </Typography>
+              <Typography>{profile && profile[0]?.profile.bio}</Typography>
             </Box>
             {/* Text Stats */}
             <Box className="sensei-details-body" sx={{ pt: "24px" }}>
@@ -192,7 +190,7 @@ const SenseiDetails = ({ accessToken, setAccessError, userInfo }) => {
                 <Typography className="sensei-details-stats">
                   {profile && (
                     <span>
-                      {profile[0]?.publicMetrics?.followers_count?.toLocaleString()}
+                      {profile[0]?.profile.followers_count?.toLocaleString()}
                     </span>
                   )}{" "}
                   Followers
@@ -223,7 +221,7 @@ const SenseiDetails = ({ accessToken, setAccessError, userInfo }) => {
                 <Box className="sensei-details-field2">
                   <Link
                     className="link"
-                    href={`https://twitter.com/${twitter}`}
+                    href={`https://ricefarmer.io`}
                     target="_blank"
                     rel="noreferrer"
                     underline="none"
@@ -267,9 +265,9 @@ const SenseiDetails = ({ accessToken, setAccessError, userInfo }) => {
                     onClick={() => handleCardClick(content.questionId)}
                   >
                     <QuestionHeader
-                      twitterPfp={questioner[0]?.twitterPFPUrl}
-                      twitterHandle={questioner[0]?.twitterHandle}
-                      twitterDisplayName={questioner[0]?.twitterDisplayName}
+                      twitterPfp={questioner[0]?.profile.imageUrl}
+                      twitterHandle={questioner[0]?.profile.handle}
+                      twitterDisplayName={questioner[0]?.profile.displayName}
                       price
                       tokenAmount={content.rewardTokenAmount}
                       tokenType={content.rewardTokenType}
@@ -282,7 +280,7 @@ const SenseiDetails = ({ accessToken, setAccessError, userInfo }) => {
 
                     <QuestionFooter
                       answeredBy={content.answerId !== null}
-                      twitterHandle={profile[0]?.twitterHandle}
+                      twitterHandle={profile[0]?.profile.handle}
                     />
                   </Card>
                 );
@@ -302,9 +300,9 @@ const SenseiDetails = ({ accessToken, setAccessError, userInfo }) => {
                     onClick={() => handleCardClick(content.questionId)}
                   >
                     <QuestionHeader
-                      twitterPfp={profile[0]?.twitterPFPUrl}
-                      twitterHandle={profile[0]?.twitterHandle}
-                      twitterDisplayName={profile[0]?.twitterDisplayName}
+                      twitterPfp={profile[0]?.profile.imageUrl}
+                      twitterHandle={profile[0]?.profile.handle}
+                      twitterDisplayName={profile[0]?.profile.displayName}
                       price
                       tokenAmount={content.rewardTokenAmount}
                       tokenType={content.rewardTokenType}
@@ -317,102 +315,12 @@ const SenseiDetails = ({ accessToken, setAccessError, userInfo }) => {
 
                     <QuestionFooter
                       answeredBy={content.answerId !== null}
-                      twitterHandle={answerer[0]?.twitterHandle}
+                      twitterHandle={answerer[0]?.profile.handle}
                     />
                   </Card>
                 );
               })}
             </TabPanel>
-            {/* <Box sx={{ mt: "12px", mb: "12px", padding: "5px" }}>
-              <Typography variant="h6">
-                Total Profit: ${profit.toFixed(2)}
-              </Typography>
-            </Box> */}
-
-            {/* <Box
-            // sx={{ mt: "12px" }}
-            >
-              <Box sx={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                <Typography variant="body">Minimum Ask Price:</Typography>
-                <TextField
-                  disabled={!myPage}
-                  sx={{ flexGrow: "1" }}
-                  variant="outlined"
-                  label="Minimum Ask Price"
-                  size="small"
-                  type="number"
-                  value={tokenAmount}
-                  onChange={handleTokenAmountChange}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">ETH</InputAdornment>
-                    ),
-                    inputProps: {
-                      step: 0.01,
-                    },
-                  }}
-                />
-                {myPage === true && <Button>Save</Button>}
-              </Box>
-            </Box> */}
-
-            {/* <Box sx={{ mt: "12px", display: "flex", flexDirection: "column" }}>
-              <TextField
-                className="sensei-details-input"
-                disabled={!myPage}
-                sx={{
-                  backgroundColor: "white",
-                  borderRadius: "10px",
-                  padding: "10px",
-                  mb: "10px",
-                }}
-                variant="standard"
-                size="small"
-                type="text"
-                value={twitter}
-                placeholder="Twitter"
-                // onChange={handleTokenAmountChange}
-                InputProps={{
-                  startAdornment: (
-                    <TwitterIcon
-                      className="sensei-details-twitter"
-                      position="start"
-                    />
-                  ),
-                  endAdornment: myPage === true && <Button>Save</Button>,
-                  disableUnderline: true,
-                  sx: { mr: "5px" },
-                }}
-              />
-              <TextField
-                className="sensei-details-input"
-                disabled={!myPage}
-                sx={{
-                  backgroundColor: "white",
-                  borderRadius: "10px",
-                  padding: "10px",
-                  mb: "10px",
-                }}
-                variant="standard"
-                size="small"
-                type="text"
-                value={telegram}
-                placeholder="Telegram"
-                onChange={(event) => setTelegram(event.target.value)}
-                InputProps={{
-                  startAdornment: (
-                    <TelegramIcon sx={{ color: "black" }} position="start" />
-                  ),
-                  endAdornment: myPage === true && <Button>Save</Button>,
-                  disableUnderline: true,
-                  sx: { mr: "5px" },
-                }}
-              />
-            </Box> */}
-
-            {/* <Box>
-              <FeedCards data={userFeed} />
-            </Box> */}
           </Box>
         </>
       )}
@@ -427,8 +335,8 @@ function TabPanel(props) {
 
   return (
     <Box
-      className="content-container"
-      sx={{ height: "calc(100vh - 96px)" }}
+      // className="content-container"
+      // sx={{ height: "calc(100vh - 96px)" }}
       role="tabpanel"
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}

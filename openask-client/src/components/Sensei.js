@@ -6,32 +6,26 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
-import CardContent from "@mui/material/CardContent";
 import Grid from "@mui/material/Grid";
 import Link from "@mui/material/Link";
-import {
-  CardHeader,
-  Autocomplete,
-  TextField,
-  Menu,
-  MenuItem,
-  Avatar,
-} from "@mui/material";
+import { Autocomplete, TextField, Menu, MenuItem, Avatar, Backdrop } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { getUsers } from "./functions/getUsers";
 import Loader from "./Loader";
-import { display } from "@mui/system";
 import QuestionHeader from "./subcomponents/QuestionHeader";
 import SenseiBody from "./subcomponents/SenseiBody";
+import AskQuestion from "./AskQuestion";
 
-const Sensei = ({ userInfo }) => {
+const Sensei = ({ userInfo, accessToken, setAccessError }) => {
   const [loading, setLoading] = useState(false);
   const [filteredSensei, setFilteredSensei] = useState();
   const [autocompleteSensei, setAutocompleteSensei] = useState([]);
 
   const [lastClicked, setLastClicked] = useState("Latest");
   const [searchTerm, setSearchterm] = useState();
+
+  const [openBackdrop, setOpenBackdrop] = useState(false);
+  const [askedSensei, setAskedSensei] = useState();
 
   const [sortAlphabetical, setSortAlphabetical] = useState(1);
   const [sortFollowers, setSortFollowers] = useState(-1);
@@ -50,18 +44,20 @@ const Sensei = ({ userInfo }) => {
     });
   }, []);
 
-  // Navigate to question ask page
-  const onAskQuestion = (displayName) => {
-    navigate("/sensei/ask", {
-      state: {
-        displayName: displayName,
-      },
-    });
+   // Click ask question
+   const onAskQuestion = (senseiDisplayName) => {
+    setAskedSensei(senseiDisplayName);
+    setOpenBackdrop(!open);
   };
 
   // Navigate to sensei details page
   const onSenseiClick = (twitter) => {
     navigate(`/sensei/${twitter}`);
+  };
+
+  // Close backdrop
+  const handleCloseBackdrop = () => {
+    setOpenBackdrop(false);
   };
 
   // Sorting Features
@@ -88,9 +84,9 @@ const Sensei = ({ userInfo }) => {
   const sortByAlphabeticalAZ = () => {
     setFilteredSensei(
       [...filteredSensei].sort((a, b) => {
-        return a.twitterDisplayName
+        return a.profile.displayName
           .toLowerCase()
-          .localeCompare(b.twitterDisplayName.toLowerCase());
+          .localeCompare(b.profile.displayName.toLowerCase());
       })
     );
     setLastClicked("Alphabetical (A-Z)");
@@ -99,9 +95,9 @@ const Sensei = ({ userInfo }) => {
   const sortByAlphabeticalZA = () => {
     setFilteredSensei(
       [...filteredSensei].sort((a, b) => {
-        return b.twitterDisplayName
+        return b.profile.displayName
           .toLowerCase()
-          .localeCompare(a.twitterDisplayName.toLowerCase());
+          .localeCompare(a.profile.displayName.toLowerCase());
       })
     );
     setLastClicked("Alphabetical (Z-A)");
@@ -111,9 +107,7 @@ const Sensei = ({ userInfo }) => {
   const sortByFollowersHigh = () => {
     setFilteredSensei(
       [...filteredSensei].sort((a, b) => {
-        return (
-          b.publicMetrics.followers_count - a.publicMetrics.followers_count
-        );
+        return b.profile.followers_count - a.profile.followers_count;
       })
     );
     setLastClicked("Followers (High)");
@@ -123,9 +117,7 @@ const Sensei = ({ userInfo }) => {
   const sortByFollowersLow = () => {
     setFilteredSensei(
       [...filteredSensei].sort((a, b) => {
-        return (
-          a.publicMetrics.followers_count - b.publicMetrics.followers_count
-        );
+        return a.profile.followers_count - b.profile.followers_count;
       })
     );
     setLastClicked("Followers (Low)");
@@ -154,7 +146,7 @@ const Sensei = ({ userInfo }) => {
     if (searchTerm !== undefined || "") {
       setFilteredSensei(
         autocompleteSensei?.filter((profile) =>
-          profile?.twitterDisplayName
+          profile?.profile.displayName
             ?.toLowerCase()
             .includes(searchTerm?.toLowerCase())
         )
@@ -171,6 +163,7 @@ const Sensei = ({ userInfo }) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
 
   return (
     <>
@@ -191,15 +184,15 @@ const Sensei = ({ userInfo }) => {
                 className="sensei-autocomplete"
                 disablePortal
                 options={autocompleteSensei}
-                getOptionLabel={(option) => option.twitterDisplayName}
+                getOptionLabel={(option) => option.profile.displayName}
                 renderOption={(props, option) => (
                   <Box component="li" {...props}>
                     <Avatar
                       sx={{ mr: "8px" }}
-                      alt={option.twitterHandle}
-                      src={option.twitterPFPUrl}
+                      alt={option.profile.handle}
+                      src={option.profile.imageUrl}
                     />
-                    {option.twitterDisplayName}
+                    {option.profile.displayName}
                   </Box>
                 )}
                 onInputChange={(event, input) => {
@@ -209,7 +202,7 @@ const Sensei = ({ userInfo }) => {
                 renderInput={(params) => {
                   const displayName = params?.inputProps?.value;
                   const sensei = filteredSensei?.find(
-                    (profile) => profile?.twitterDisplayName === displayName
+                    (sensei) => sensei?.profile.displayName === displayName
                   );
                   return (
                     <TextField
@@ -242,8 +235,8 @@ const Sensei = ({ userInfo }) => {
                           <Avatar
                             className="autocomplete-avatar"
                             sx={{ mr: "5px" }}
-                            alt={sensei?.twitterHandle}
-                            src={sensei?.twitterPFPUrl}
+                            alt={sensei?.profile.handle}
+                            src={sensei?.profile.imageUrl}
                           />
                         ),
                       }}
@@ -365,37 +358,49 @@ const Sensei = ({ userInfo }) => {
             >
               <Grid>
                 {filteredSensei?.map((profile, index) => (
-                    <Card
-                      onClick={() => onSenseiClick(profile.twitterHandle)}
-                      className="sensei-card"
-                      sx={{
-                        height: "100%",
-                        display: "flex",
-                        flexDirection: "column",
-                        borderRadius: "0px",
-                        backgroundColor: "#FDFDFD",
-                        cursor: "pointer",
-                        hover: { backgroundColor: "#f2f2f2" },
-                      }}
-                      key={index}
-                    >
-                      <QuestionHeader
-                        twitterPfp={profile.twitterPFPUrl}
-                        twitterHandle={profile.twitterHandle}
-                        twitterDisplayName={profile.twitterDisplayName}
-                        askSensei
-                      />
-                      <SenseiBody
-                        followers={profile.publicMetrics.followers_count.toLocaleString()}
-                        questionsAsked={profile?.questionsFor?.length}
-                        twitterDescription={profile.twitterDescription}
-                      />
-                    </Card>
+                  <Card
+                    onClick={() => onSenseiClick(profile.profile.handle)}
+                    className="sensei-card"
+                    sx={{
+                      height: "100%",
+                      display: "flex",
+                      flexDirection: "column",
+                      borderRadius: "0px",
+                      backgroundColor: "#FDFDFD",
+                      cursor: "pointer",
+                      hover: { backgroundColor: "#f2f2f2" },
+                    }}
+                    key={index}
+                  >
+                    <QuestionHeader
+                      twitterPfp={profile.profile.imageUrl}
+                      twitterHandle={profile.profile.handle}
+                      twitterDisplayName={profile.profile.displayName}
+                      onAskQuestion={onAskQuestion}
+                      senseiDisplayName={profile.profile.displayName}
+                      askSensei
+                    />
+                    <SenseiBody
+                      followers={profile.profile.followers_count.toLocaleString()}
+                      questionsAsked={profile?.questionsFor?.length}
+                      twitterDescription={profile.profile.bio}
+                    />
+                  </Card>
                 ))}
               </Grid>
             </Box>
           </>
         )}
+
+        <Backdrop className="ask-question-backdrop" open={openBackdrop}>
+          <AskQuestion
+            userInfo={userInfo}
+            accessToken={accessToken}
+            setAccessError={setAccessError}
+            handleCloseBackdrop={handleCloseBackdrop}
+            askedSensei={askedSensei}
+          />
+        </Backdrop>
       </Container>
     </>
   );
