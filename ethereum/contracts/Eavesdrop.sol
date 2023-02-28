@@ -1,7 +1,7 @@
-
-contract Eavesdrop {
-
-    function eavesdrop() public payable {
-
-    }
-}
+//
+//contract Eavesdrop {
+//
+//    function eavesdrop(uint256 questionId, address[] payees) public payable {
+//
+//    }
+//}
