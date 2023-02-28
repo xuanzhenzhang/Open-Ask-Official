@@ -10,9 +10,7 @@ import Sensei from "./components/Sensei";
 import Feed from "./components/Feed";
 import Sidebar from "./components/Sidebar";
 import Questions from "./components/Questions";
-import QuestionsAnswered from "./components/QuestionsAnswered";
 import SenseiDetails from "./components/SenseiDetails";
-import QuestionsPurchased from "./components/QuestionsPurchased";
 import TransactionHistory from "./components/TransactionHistory";
 import QuestionId from "./components/QuestionId";
 import { useNavigate } from "react-router-dom";
@@ -64,7 +62,6 @@ function App() {
         return addUser(bearer);
       })
       .then((response) => {
-        console.log("response:");
         console.log(response.data);
         setUserInfo((prevState) => ({
           ...prevState,
@@ -174,7 +171,13 @@ function App() {
           <Route
             exact
             path="/sensei"
-            element={<Sensei userInfo={userInfo} />}
+            element={
+              <Sensei
+                userInfo={userInfo}
+                accessToken={accessToken}
+                setAccessError={setAccessError}
+              />
+            }
           />
           <Route
             path="/questions"
