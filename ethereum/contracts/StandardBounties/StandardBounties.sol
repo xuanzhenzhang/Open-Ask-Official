@@ -8,6 +8,12 @@ import "./inherited/ERC721Basic.sol";
 /// @title StandardBounties
 /// @dev A contract for issuing bounties on Ethereum paying in ETH, ERC20, or ERC721 tokens
 /// @author Mark Beylin <mark.beylin@consensys.net>, Gonçalo Sá <goncalo.sa@consensys.net>, Kevin Owocki <kevin.owocki@consensys.net>, Ricardo Guilherme Schmidt (@3esmit), Matt Garnett <matt.garnett@consensys.net>, Craig Williams <craig.williams@consensys.net>
+
+/// Adopted by the OpenAsk team to be deployed on L2s where the contract isn't already deployed
+/// The contract remains unmodified besides some comments
+/// Comments modified by Ray Zhu <rayzhu.eth>
+/// https://openask.me/
+
 contract StandardBounties {
 
   using SafeMath for uint256;
@@ -436,7 +442,7 @@ contract StandardBounties {
   }
 
   /// @dev fulfillBounty(): Allows users to fulfill the bounty to get paid out
-  /// @param _sender the sender of the transaction issuing the bounty (should be the same as msg.sender unless the txn is called by the meta tx relayer)
+  /// @param _sender the sender of the transaction fulfilling the bounty (should be the same as msg.sender unless the txn is called by the meta tx relayer)
   /// @param _bountyId the index of the bounty
   /// @param _fulfillers the array of addresses which will receive payouts for the submission
   /// @param _data the IPFS hash corresponding to a JSON object which contains the details of the submission (see docs for schema details)
@@ -462,7 +468,7 @@ contract StandardBounties {
   }
 
   /// @dev updateFulfillment(): Allows the submitter of a fulfillment to update their submission
-  /// @param _sender the sender of the transaction issuing the bounty (should be the same as msg.sender unless the txn is called by the meta tx relayer)
+  /// @param _sender the sender of the transaction fulfilling the bounty (should be the same as msg.sender unless the txn is called by the meta tx relayer)
   /// @param _bountyId the index of the bounty
   /// @param _fulfillmentId the index of the fulfillment
   /// @param _fulfillers the new array of addresses which will receive payouts for the submission
@@ -487,7 +493,7 @@ contract StandardBounties {
   }
 
   /// @dev acceptFulfillment(): Allows any of the approvers to accept a given submission
-  /// @param _sender the sender of the transaction issuing the bounty (should be the same as msg.sender unless the txn is called by the meta tx relayer)
+  /// @param _sender the sender of the transaction fulfilling the bounty (should be the same as msg.sender unless the txn is called by the meta tx relayer)
   /// @param _bountyId the index of the bounty
   /// @param _fulfillmentId the index of the fulfillment to be accepted
   /// @param _approverId the index of the approver which is making the call
@@ -529,7 +535,7 @@ contract StandardBounties {
   }
 
   /// @dev fulfillAndAccept(): Allows any of the approvers to fulfill and accept a submission simultaneously
-  /// @param _sender the sender of the transaction issuing the bounty (should be the same as msg.sender unless the txn is called by the meta tx relayer)
+  /// @param _sender the sender of the transaction fulfilling the bounty (should be the same as msg.sender unless the txn is called by the meta tx relayer)
   /// @param _bountyId the index of the bounty
   /// @param _fulfillers the array of addresses which will receive payouts for the submission
   /// @param _data the IPFS hash corresponding to a JSON object which contains the details of the submission (see docs for schema details)
