@@ -14,6 +14,7 @@ import { Box } from "@mui/material";
 import PsychologyAltIcon from "@mui/icons-material/PsychologyAlt";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import AskQuestion from "./AskQuestion";
+import { WalletCard } from "./WalletCard";
 
 import { useNavigate, useParams } from "react-router-dom";
 import axios, * as others from "axios";
@@ -45,7 +46,7 @@ const SidebarList = ({
       setSelectedIndex(2);
     } else if (location.pathname === "/transaction_history") {
       setSelectedIndex(3);
-    } else if (location.pathname === `/sensei/${userInfo?.twitterHandle}`) {
+    } else if (location.pathname === `/sensei/${userInfo.profile.handle}`) {
       setSelectedIndex(4);
     }
   }, [location]);
@@ -310,7 +311,7 @@ const SidebarList = ({
   };
 
   const onProfileClick = () => {
-    navigate(`/sensei/${userInfo.twitterHandle}`);
+    navigate(`/sensei/${userInfo.profile.handle}`);
   };
 
   const onAvatarLogin = () => {
@@ -430,6 +431,10 @@ const SidebarList = ({
               Ask Question
             </button>
           )}
+          <WalletCard
+            accessToken={accessToken}
+            setAccessError={setAccessError}
+          />
         </Box>
         <Divider variant="middle" />
         <Box className="sidebar-footer">
@@ -443,7 +448,6 @@ const SidebarList = ({
       <Backdrop
         className="ask-question-backdrop"
         open={open}
-        // onClick={handleCloseBackdrop}
       >
         <AskQuestion
           userInfo={userInfo}
