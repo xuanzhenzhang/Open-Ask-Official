@@ -8,8 +8,14 @@ import Typography from "@mui/material/Typography";
 import Card from "@mui/material/Card";
 import Grid from "@mui/material/Grid";
 import Link from "@mui/material/Link";
-import { Autocomplete, TextField, Menu, MenuItem, Avatar, Backdrop } from "@mui/material";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import {
+  Autocomplete,
+  TextField,
+  Menu,
+  MenuItem,
+  Avatar,
+  Backdrop,
+} from "@mui/material";
 import { getUsers } from "./functions/getUsers";
 import Loader from "./Loader";
 import QuestionHeader from "./subcomponents/QuestionHeader";
@@ -22,6 +28,7 @@ const Sensei = ({ userInfo, accessToken, setAccessError }) => {
   const [autocompleteSensei, setAutocompleteSensei] = useState([]);
 
   const [lastClicked, setLastClicked] = useState("Latest");
+  const [filterName, setFilterName] = useState("Latest");
   const [searchTerm, setSearchterm] = useState();
 
   const [openBackdrop, setOpenBackdrop] = useState(false);
@@ -44,8 +51,8 @@ const Sensei = ({ userInfo, accessToken, setAccessError }) => {
     });
   }, []);
 
-   // Click ask question
-   const onAskQuestion = (senseiDisplayName) => {
+  // Click ask question
+  const onAskQuestion = (senseiDisplayName) => {
     setAskedSensei(senseiDisplayName);
     setOpenBackdrop(!open);
   };
@@ -61,84 +68,94 @@ const Sensei = ({ userInfo, accessToken, setAccessError }) => {
   };
 
   // Sorting Features
-  // Sort sensei latest
-  const sortByLatest = () => {
+  // Sort senseis by date joined Open Ask
+  const sortByJoined = () => {
+    const newSortJoined = sortJoined === 1 ? -1 : 1;
+    setSortJoined(newSortJoined);
+
     setFilteredSensei(
       [...filteredSensei].sort((a, b) => {
-        return new Date(b.createdAt) - new Date(a.createdAt);
+        if (sortJoined === 1) {
+          setFilterName("Earliest")
+          return new Date(a.createdAt) - new Date(b.createdAt);
+        }
+        if (sortJoined === -1) {
+          setFilterName("Latest")
+          return new Date(b.createdAt) - new Date(a.createdAt);
+        }
+        return 0;
       })
     );
-    setLastClicked("Latest");
+    setLastClicked("joined");
   };
 
-  // Sort sensei earliest
-  const sortByEarliest = () => {
+  // Sort senseis alphabetically
+  const sortByAlphabetical = () => {
+    const newSortAlphabetical = sortAlphabetical === 1 ? -1 : 1;
+    setSortAlphabetical(newSortAlphabetical);
+
     setFilteredSensei(
       [...filteredSensei].sort((a, b) => {
-        return new Date(a.createdAt) - new Date(b.createdAt);
+        if (
+          a.profile.displayName.toLowerCase() >
+          b.profile.displayName.toLowerCase()
+        ) {
+          setFilterName("Alphabetical (Z-A)")
+          return sortAlphabetical;
+        }
+        if (
+          a.profile.displayName.toLowerCase() <
+          b.profile.displayName.toLowerCase()
+        ) {
+          setFilterName("Alphabetical (A-Z)")
+          return -sortAlphabetical;
+        }
+        return 0;
       })
     );
-    setLastClicked("Earliest");
-  };
-  // Sort senseis alphabetically a-z
-  const sortByAlphabeticalAZ = () => {
-    setFilteredSensei(
-      [...filteredSensei].sort((a, b) => {
-        return a.profile.displayName
-          .toLowerCase()
-          .localeCompare(b.profile.displayName.toLowerCase());
-      })
-    );
-    setLastClicked("Alphabetical (A-Z)");
-  };
-  // Sort senseis alphabetically z-a
-  const sortByAlphabeticalZA = () => {
-    setFilteredSensei(
-      [...filteredSensei].sort((a, b) => {
-        return b.profile.displayName
-          .toLowerCase()
-          .localeCompare(a.profile.displayName.toLowerCase());
-      })
-    );
-    setLastClicked("Alphabetical (Z-A)");
+    setLastClicked("alphabetical");
   };
 
-  // Sort senseis by twitter followers high
-  const sortByFollowersHigh = () => {
+  // Sort senseis by twitter followers
+  const sortByFollowers = () => {
+    const newSortFollowers = sortFollowers === 1 ? -1 : 1;
+    setSortFollowers(newSortFollowers);
+
     setFilteredSensei(
       [...filteredSensei].sort((a, b) => {
-        return b.profile.followers_count - a.profile.followers_count;
+        if (a.profile.followers_count > b.profile.followers_count) {
+          setFilterName("Followers (High)")
+          return sortFollowers;
+        }
+        if (a.profile.followers_count < b.profile.followers_count) {
+          setFilterName("Followers (Low)")
+          return -sortFollowers;
+        }
+        return 0;
       })
     );
-    setLastClicked("Followers (High)");
+    setLastClicked("followers");
   };
 
-  // Sort senseis by twitter followers low
-  const sortByFollowersLow = () => {
+  // Sort senseis by questions answered
+  const sortByAnswered = () => {
+    const newSortAnswered = sortAnswered === 1 ? -1 : 1;
+    setSortAnswered(newSortAnswered);
+
     setFilteredSensei(
       [...filteredSensei].sort((a, b) => {
-        return a.profile.followers_count - b.profile.followers_count;
+        if (a.questionsFor.length > b.questionsFor.length) {
+          setFilterName("Answered (High)")
+          return sortAnswered;
+        }
+        if (a.questionsFor.length < b.questionsFor.length) {
+          setFilterName("Answered (Low)")
+          return -sortAnswered;
+        }
+        return 0;
       })
     );
-    setLastClicked("Followers (Low)");
-  };
-  // Sort senseis by questions answered high
-  const sortByAnsweredHigh = () => {
-    setFilteredSensei(
-      [...filteredSensei].sort((a, b) => {
-        return b.questionsFor.length - a.questionsFor.length;
-      })
-    );
-    setLastClicked("Answered (High)");
-  };
-  // Sort senseis by questions answered low
-  const sortByAnsweredLow = () => {
-    setFilteredSensei(
-      [...filteredSensei].sort((a, b) => {
-        return a.questionsFor.length - b.questionsFor.length;
-      })
-    );
-    setLastClicked("Answered (Low)");
+    setLastClicked("answered");
   };
 
   // Search Term Input
@@ -163,7 +180,6 @@ const Sensei = ({ userInfo, accessToken, setAccessError }) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
 
   return (
     <>
@@ -260,7 +276,7 @@ const Sensei = ({ userInfo, accessToken, setAccessError }) => {
                 //   minWidth: "190px",
                 // }}
               >
-                {lastClicked}
+                {filterName}
               </button>
               <Menu
                 anchorEl={anchorEl}
@@ -271,84 +287,47 @@ const Sensei = ({ userInfo, accessToken, setAccessError }) => {
                 }}
               >
                 <MenuItem
-                  selected={lastClicked === "Latest" ? true : false}
-                  onClick={sortByLatest}
+                  selected={lastClicked === "joined" ? true : false}
+                  onClick={sortByJoined}
                   sx={{
                     background: "#FDFDFD",
                     borderBottom: "1px solid #e8e8e8",
                   }}
                 >
-                  Latest
+                  {sortJoined === -1 ? "Earliest" : "Latest"}
                 </MenuItem>
+
                 <MenuItem
-                  selected={lastClicked === "Earliest" ? true : false}
-                  onClick={sortByEarliest}
+                  selected={lastClicked === "alphabetical" ? true : false}
+                  onClick={sortByAlphabetical}
                   sx={{
                     background: "#FDFDFD",
                     borderBottom: "1px solid #e8e8e8",
                   }}
                 >
-                  Earliest
+                  Alphabetical ({sortAlphabetical === -1 ? "A-Z" : "Z-A"})
                 </MenuItem>
+
                 <MenuItem
-                  selected={lastClicked === "Alphabetical (A-Z)" ? true : false}
-                  onClick={sortByAlphabeticalAZ}
+                  selected={lastClicked === "followers" ? true : false}
+                  onClick={sortByFollowers}
                   sx={{
                     background: "#FDFDFD",
                     borderBottom: "1px solid #e8e8e8",
                   }}
                 >
-                  Alphabetical (A-Z)
+                  Followers ({sortFollowers === -1 ? "Low" : "High"})
                 </MenuItem>
+
                 <MenuItem
-                  selected={lastClicked === "Alphabetical (Z-A)" ? true : false}
-                  onClick={sortByAlphabeticalZA}
+                  selected={lastClicked === "answered" ? true : false}
+                  onClick={sortByAnswered}
                   sx={{
                     background: "#FDFDFD",
                     borderBottom: "1px solid #e8e8e8",
                   }}
                 >
-                  Alphabetical (Z-A)
-                </MenuItem>
-                <MenuItem
-                  selected={lastClicked === "Followers (High)" ? true : false}
-                  onClick={sortByFollowersHigh}
-                  sx={{
-                    background: "#FDFDFD",
-                    borderBottom: "1px solid #e8e8e8",
-                  }}
-                >
-                  Followers (High)
-                </MenuItem>
-                <MenuItem
-                  selected={lastClicked === "Followers (Low)" ? true : false}
-                  onClick={sortByFollowersLow}
-                  sx={{
-                    background: "#FDFDFD",
-                    borderBottom: "1px solid #e8e8e8",
-                  }}
-                >
-                  Followers (Low)
-                </MenuItem>
-                <MenuItem
-                  selected={lastClicked === "Answered (High)" ? true : false}
-                  onClick={sortByAnsweredHigh}
-                  sx={{
-                    background: "#FDFDFD",
-                    borderBottom: "1px solid #e8e8e8",
-                  }}
-                >
-                  Answered (High)
-                </MenuItem>
-                <MenuItem
-                  selected={lastClicked === "Answered (Low)" ? true : false}
-                  onClick={sortByAnsweredLow}
-                  sx={{
-                    background: "#FDFDFD",
-                    borderBottom: "1px solid #e8e8e8",
-                  }}
-                >
-                  Answered (Low)
+                  Answered ({sortAnswered === -1 ? "Low" : "High"})
                 </MenuItem>
               </Menu>
             </Box>
