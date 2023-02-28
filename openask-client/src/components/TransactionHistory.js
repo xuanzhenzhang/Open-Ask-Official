@@ -27,10 +27,11 @@ const TransactionHistory = () => {
   };
   return (
     <Container
+      className="main-container"
       sx={{
         width: { md: `calc(100% - 300px)` },
-        ml: { md: `300px` },
-        mt: "84px",
+        mr: { md: `276px` },
+        mt: "24px",
       }}
     >
       <TableContainer sx={{ maxWidth: "100%" }} component={Paper}>
@@ -38,8 +39,8 @@ const TransactionHistory = () => {
           <TableHead>
             <TableRow>
               <TableCell align="left">Question</TableCell>
-              <TableCell align="left">Question Sensei</TableCell>
-              <TableCell align="left">Answer Sensei</TableCell>
+              <TableCell align="left">Asked</TableCell>
+              <TableCell align="left">Answered</TableCell>
               <TableCell align="left">Price</TableCell>
               <TableCell align="left">TX Hash</TableCell>
             </TableRow>
@@ -62,10 +63,9 @@ const TransactionHistory = () => {
                 >
                   <Box className="tx-sensei">
                     <Avatar
-                      sx={{ width: "20px", height: "20px" }}
                       src={row.userAvatar}
                     ></Avatar>
-                    <Typography variant="body2">{row.displayName}</Typography>
+                    {/* <Typography variant="body2">{row.displayName}</Typography> */}
                   </Box>
                 </TableCell>
                 <TableCell
@@ -75,12 +75,11 @@ const TransactionHistory = () => {
                 >
                   <Box className="tx-sensei">
                     <Avatar
-                      sx={{ width: "20px", height: "20px" }}
                       src={row.answerAvatar}
                     ></Avatar>
-                    <Typography variant="body2">
+                    {/* <Typography variant="body2">
                       {row.answerDisplayName}
-                    </Typography>
+                    </Typography> */}
                   </Box>
                 </TableCell>
                 <TableCell align="left">

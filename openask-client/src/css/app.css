@@ -502,6 +502,10 @@ body {
   display: flex !important;
   gap: 3px;
 }
+.tx-sensei img {
+  width: 24px;
+  height: 24px;
+}
 
 /* Access Error */
 .access-error-container {

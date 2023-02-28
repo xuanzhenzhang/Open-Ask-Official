@@ -15,6 +15,7 @@ import PsychologyAltIcon from "@mui/icons-material/PsychologyAlt";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import AskQuestion from "./AskQuestion";
 import { WalletCard } from "./WalletCard";
+import LensCard from "./LensCard";
 
 import { useNavigate, useParams } from "react-router-dom";
 import axios, * as others from "axios";
@@ -419,6 +420,10 @@ const SidebarList = ({
             </button>
           )}
           <WalletCard
+            accessToken={accessToken}
+            setAccessError={setAccessError}
+          />
+          <LensCard
             accessToken={accessToken}
             setAccessError={setAccessError}
           />
