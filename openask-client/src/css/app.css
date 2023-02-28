@@ -46,6 +46,10 @@ body {
   width: 0;
   height: 0;
 }
+.link {
+  font-family: Roboto;
+  color: var(--brand-vibrant) !important;
+}
 /* Header */
 .header {
   justify-content: space-between;
@@ -522,6 +526,8 @@ body {
 .twitter-btn p {
   font-size: 20px !important;
 }
+
+
 /* Ask Question */
 .ask-question-container {
   background-color: var(--white) !important;
@@ -607,15 +613,83 @@ body {
 }
 /* Sensei Details */
 .sensei-details-header {
-  padding: 12px 12px 12px 12px;
+  padding: 16px 24px;
+  font-size: 24px;
+  font-family: "Roboto Flex";
+  font-weight: 600;
   border-radius: 12px 12px 0px 0px;
   background-color: var(--white);
   display: flex;
   justify-content: flex-start;
+  align-items: center;
   gap: 10px;
+  border: 1px solid var(--gray-3);
+}
+.sensei-details-header-box {
+  display: flex;
+  align-items: center;
+}
+.sensei-details-header-box svg {
+  cursor: pointer;
 }
 .sensei-details-body {
-  padding: 24px;
+  padding: 0px 24px 0px 24px;
   display: flex;
   flex-direction: column;
+}
+.sensei-details-avatar {
+  width: 96px !important;
+  height: 96px !important;
+}
+.sensei-details-body-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.sensei-details-body-stats {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+}
+.sensei-details-stats span {
+  color: var(--brand-black);
+  font-weight: 600;
+}
+.sensei-details-stats {
+  color: var(--gray-6);
+}
+.sensei-details-fields {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+.sensei-details-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 50%;
+  font-family: "Roboto Flex";
+  font-size: 16px;
+  padding: 8px 12px;
+  background: var(--gray-1);
+  border-bottom: 1px solid var(--gray-3);
+}
+.sensei-details-field2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 50%;
+  font-family: "Roboto Flex";
+  font-size: 16px;
+  padding: 8px 12px;
+  background: var(--gray-1);
+}
+.sensei-details-filter {
+  padding: 0px 12px 0px 12px;
+}
+.sensei-details-label {
+  font-size: 20px !important;
+  font-family: "Roboto" !important;
+  /* color: var(--brand-black) !important; */
 }
