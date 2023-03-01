@@ -359,7 +359,10 @@ const Sensei = ({ userInfo, accessToken, setAccessError }) => {
                         twitterDisplayName={profile.profile.displayName}
                         onAskQuestion={onAskQuestion}
                         senseiDisplayName={profile.profile.displayName}
-                        askSensei={profile.profile.handle}
+                        askSensei={
+                          profile.profile.displayName !==
+                          userInfo.profile.displayName
+                        }
                       />
                       <SenseiBody
                         followers={profile.profile.followers_count.toLocaleString()}
