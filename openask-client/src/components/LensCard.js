@@ -4,6 +4,106 @@ import Button from "@mui/material/Button";
 import axios from "axios";
 import { Box, Typography } from "@mui/material";
 
+const { ApolloClient, InMemoryCache, gql } = require("@apollo/client");
+
+const APIURL = "https://api-mumbai.lens.dev/";
+
+const apolloClient = new ApolloClient({
+  uri: APIURL,
+  cache: new InMemoryCache(),
+});
+
+// user can fake their wallet address, but does them no good.
+
+const profileQuery = `
+query DefaultProfile {
+    defaultProfile(request: { ethereumAddress: "0x3A5bd1E37b099aE3386D13947b6a90d97675e5e3"}) {
+      id
+      name
+      bio
+      handle
+      picture {
+        ... on NftImage {
+          contractAddress
+          tokenId
+          uri
+          chainId
+          verified
+        }
+        ... on MediaSet {
+          original {
+            url
+            mimeType
+          }
+        }
+      }
+      stats {
+        totalFollowers
+        totalFollowing
+        totalPosts
+      }
+    }
+  }
+`;
+
+const PROFILE = {
+  TWITTER: "twitter",
+  LENS: "lens",
+};
+
+const profileQueryExample = async () => {
+  const response = await apolloClient.query({
+    query: gql(profileQuery),
+  });
+  const defaultProfile = response.data.defaultProfile;
+  console.log(defaultProfile);
+  const profile = {
+    type: PROFILE.LENS,
+    id: defaultProfile.id,
+    handle: defaultProfile.handle,
+    displayName: defaultProfile.name,
+    imageUrl: defaultProfile.picture.original.url,
+    bio: defaultProfile.bio,
+    followers_count: defaultProfile.stats.totalFollowers,
+    following_count: defaultProfile.stats.totalFollowing,
+    posts_count: defaultProfile.stats.totalPosts,
+  };
+  return profile;
+};
+
+const loginQueryExample = async (address) => {
+  const loginQuery = `query Challenge {
+  challenge(request: { address: "${address}" }) {
+    text
+  }
+}`;
+  const response = await apolloClient.query({
+    query: gql(loginQuery),
+  });
+  return response;
+};
+
+// const login = async () => {
+//   const response = await apolloClient.query({
+//     query: gql(profileQuery),
+//   });
+//   const defaultProfile = response.data.defaultProfile;
+//   console.log(defaultProfile);
+//   const profile = {
+//     type: PROFILE.LENS,
+//     id: defaultProfile.id,
+//     handle: defaultProfile.handle,
+//     displayName: defaultProfile.name,
+//     imageUrl: defaultProfile.picture.original.url,
+//     bio: defaultProfile.bio,
+//     followers_count: defaultProfile.stats.totalFollowers,
+//     following_count: defaultProfile.stats.totalFollowing,
+//     posts_count: defaultProfile.stats.totalPosts,
+//   };
+
+//   return profile;
+// };
+
 const LensCard = ({ accessToken, setAccessError }) => {
   const [currentAccount, setCurrentAccount] = useState();
   const [provider, setProvider] = useState();
@@ -107,15 +207,37 @@ const LensCard = ({ accessToken, setAccessError }) => {
   //   Lens Function
   const connectLens = async () => {
     const account = await connectWallet();
-    console.log(account);
+    // const profile = await profileQueryExample();
+    const loginInfo = await loginQueryExample(account);
+    const challenge = loginInfo.data.challenge;
+    console.log("loginInfo", loginInfo.data.challenge);
+    const signer = provider.getSigner();
+    const signature = await signer.signMessage(challenge.text);
+    console.log("message: ", signature);
+    const authenticateQuery = `mutation Authenticate {
+      authenticate(request: {
+        address: "${account}",
+        signature: "${signature}"
+      }) {
+        accessToken
+        refreshToken
+      }
+    }`;
+    const authenticateResponse = await apolloClient.mutate({
+      mutation: gql(authenticateQuery),
+    });
+    console.log(
+      "authenticateResponse: ",
+      authenticateResponse.data?.accessToken
+    );
   };
 
   return (
     <>
-      <Box onClick={connectLens} className="wallet-btn">
+      <Box onClick={connectLens} className='wallet-btn'>
         <Typography sx={{ display: "flex", justifyContent: "center" }}>
           {" "}
-          {currentAccount ? "Connected" : "Connect Wallet"}
+          {currentAccount ? "Connected" : "Login With Lens"}
         </Typography>
       </Box>
     </>
