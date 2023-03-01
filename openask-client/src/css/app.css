@@ -213,6 +213,7 @@ body {
   gap: 10px;
 }
 .feed-card {
+  cursor: pointer;
   background: var(--white);
   border-bottom: 1px solid var(--gray-3);
   box-shadow: none !important;
@@ -438,6 +439,9 @@ body {
   border-radius: 16px;
   margin-left: 8px;
 }
+.eavesdrop-btn:hover {
+  background: var(--gray-6);
+}
 .sensei-details-input input {
   margin-left: 5px;
   padding: 0;
@@ -498,6 +502,15 @@ body {
 }
 
 /* Transaction History */
+.table-container {
+  border-radius: 12px 12px 0px 0px !important;
+}
+.css-1dm4zx6-MuiTableCell-root {
+  padding: 8px !important;
+}
+.css-1ex1afd-MuiTableCell-root {
+  padding: 8px !important;
+}
 .tx-sensei {
   display: flex !important;
   gap: 3px;
@@ -505,8 +518,22 @@ body {
 .tx-sensei img {
   width: 24px;
   height: 24px;
+  border-radius: 50%;
+  cursor: pointer;
 }
-
+.tx-link {
+  color: var(--brand-vibrant) !important;
+  text-decoration: underline !important;
+}
+.tx-link:hover {
+  opacity: .8;
+}
+.tx-price {
+  overflow: visible;
+}
+.tx-price p {
+  font-size: 14px;
+}
 /* Access Error */
 .access-error-container {
   display: flex;
@@ -723,4 +750,11 @@ body {
   font-size: 20px !important;
   font-family: "Roboto" !important;
   /* color: var(--brand-black) !important; */
+}
+/* Question Landing Page */
+.question-landing-card {
+  cursor: default;
+  background: var(--white);
+  border-bottom: 1px solid var(--gray-3);
+  box-shadow: none !important;
 }

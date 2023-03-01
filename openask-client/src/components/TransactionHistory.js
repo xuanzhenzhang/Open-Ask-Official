@@ -15,6 +15,7 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import questions from "./data/questionsData";
+import PriceButton from "./subcomponents/PriceButton";
 
 const TransactionHistory = () => {
   const navigate = useNavigate();
@@ -34,8 +35,8 @@ const TransactionHistory = () => {
         mt: "24px",
       }}
     >
-      <TableContainer sx={{ maxWidth: "100%" }} component={Paper}>
-        <Table>
+      <TableContainer sx={{ maxWidth: "100%" }} component={Paper} className="table-container">
+        <Table stickyHeader>
           <TableHead>
             <TableRow>
               <TableCell align="left">Question</TableCell>
@@ -56,37 +57,32 @@ const TransactionHistory = () => {
                 >
                   {row.question}
                 </TableCell>
-                <TableCell
-                  sx={{ cursor: "pointer" }}
-                  align="left"
-                  onClick={() => handleSenseiClick(row.questionUser)}
-                >
+                <TableCell align="left">
                   <Box className="tx-sensei">
                     <Avatar
                       src={row.userAvatar}
+                      onClick={() => handleSenseiClick(row.questionUser)}
                     ></Avatar>
-                    {/* <Typography variant="body2">{row.displayName}</Typography> */}
                   </Box>
                 </TableCell>
-                <TableCell
-                  sx={{ cursor: "pointer" }}
-                  align="left"
-                  onClick={() => handleSenseiClick(row.answerUser)}
-                >
+                <TableCell align="left">
                   <Box className="tx-sensei">
                     <Avatar
                       src={row.answerAvatar}
+                      onClick={() => handleSenseiClick(row.answerUser)}
                     ></Avatar>
-                    {/* <Typography variant="body2">
-                      {row.answerDisplayName}
-                    </Typography> */}
                   </Box>
                 </TableCell>
                 <TableCell align="left">
-                  {row.price} {row.paymentType}
+                  <PriceButton
+                    tokenAmount={row.price}
+                    tokenType={row.paymentType}
+                    txPrice
+                  />
                 </TableCell>
                 <TableCell align="left">
                   <Link
+                    className="tx-link"
                     underline="none"
                     href={`https://etherscan.io/tx/${row.txHash}`}
                     target="_blank"

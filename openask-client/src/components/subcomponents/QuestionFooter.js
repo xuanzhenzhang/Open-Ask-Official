@@ -3,9 +3,10 @@ import { CardActions, Typography, Link } from "@mui/material";
 import WithdrawButton from "./WithdrawButton";
 import AnswerButton from "./AnswerButton";
 import PurchasedButton from "./PurchasedButton";
+import EavesdropButton from "./EavesdropButton";
 
 const QuestionFooter = (props) => {
-  const { answeredBy, waiting, expired } = props;
+  const { answeredBy, waiting, expired, eavesdrop, notAnswered } = props;
   const { answered, toAnswer, userExpired } = props;
   const { purchased } = props;
   const { waitingTime } = props;
@@ -17,7 +18,7 @@ const QuestionFooter = (props) => {
       {answeredBy && (
         <CardActions
           className="feed-see-answer"
-          sx={{ cursor: "pointer", pb: "16px" }}
+          sx={{ pb: "16px" }}
         >
           <Typography className="feed-purchase">Answered by</Typography>
           <Typography className="feed-purchase-link">
@@ -33,13 +34,14 @@ const QuestionFooter = (props) => {
               @{twitterHandle}
             </Link>
           </Typography>
+          {notAnswered && <EavesdropButton />}
         </CardActions>
       )}
 
       {waiting && (
         <CardActions
           className="feed-see-answer"
-          sx={{ cursor: "pointer", pb: "16px" }}
+          sx={{ pb: "16px" }}
         >
           <Typography className="feed-purchase">To be answered by</Typography>
           <Typography className="feed-purchase-link">
@@ -62,7 +64,7 @@ const QuestionFooter = (props) => {
       {expired && (
         <CardActions
           className="feed-see-answer"
-          sx={{ cursor: "pointer", pb: "16px" }}
+          sx={{ pb: "16px" }}
         >
           <Typography className="feed-purchase">To</Typography>
           <Typography className="feed-purchase-link">
@@ -87,7 +89,7 @@ const QuestionFooter = (props) => {
       {answered && (
         <CardActions
           className="feed-see-answer"
-          sx={{ cursor: "pointer", pb: "16px" }}
+          sx={{ pb: "16px" }}
         >
           <Typography className="feed-complete">Complete</Typography>
         </CardActions>
@@ -95,7 +97,7 @@ const QuestionFooter = (props) => {
       {toAnswer && (
         <CardActions
           className="feed-see-answer"
-          sx={{ cursor: "pointer", pb: "16px" }}
+          sx={{ pb: "16px" }}
         >
           <Typography className="feed-time-left">{waitingTime}</Typography>
           <AnswerButton />
@@ -104,17 +106,17 @@ const QuestionFooter = (props) => {
       {userExpired && (
         <CardActions
           className="feed-see-answer"
-          sx={{ cursor: "pointer", pb: "16px" }}
+          sx={{ pb: "16px" }}
         >
           <Typography className="feed-expired">Expired</Typography>
         </CardActions>
       )}
 
-    {/* Purchased */}
-    {purchased && (
+      {/* Purchased */}
+      {purchased && (
         <CardActions
           className="feed-see-answer"
-          sx={{ cursor: "pointer", pb: "16px" }}
+          sx={{ pb: "16px" }}
         >
           <Typography className="feed-purchase">Answered by</Typography>
           <Typography className="feed-purchase-link">
@@ -131,6 +133,17 @@ const QuestionFooter = (props) => {
             </Link>
           </Typography>
           {/* <PurchasedButton /> */}
+        </CardActions>
+      )}
+
+      {/* Eavesdrop */}
+      {eavesdrop && (
+        <CardActions
+          className="feed-see-answer"
+          sx={{ pb: "16px" }}
+        >
+          <Typography>Eavesdropped by () users</Typography>
+          {/* <EavesdropButton /> */}
         </CardActions>
       )}
     </>

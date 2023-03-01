@@ -23,7 +23,6 @@ const LensCard = ({ accessToken, setAccessError }) => {
       const accounts = await ethereum.request({
         method: "eth_requestAccounts",
       });
-      console.log("Connected", accounts[0]);
 
       setCurrentAccount(accounts[0]);
       setupEventListener();
@@ -42,7 +41,6 @@ const LensCard = ({ accessToken, setAccessError }) => {
       console.log("Please install metamask!");
       return;
     } else {
-      console.log("We have the ethereum object", ethereum);
       console.log(
         await ethereum.request({
           method: "eth_accounts",
@@ -56,7 +54,6 @@ const LensCard = ({ accessToken, setAccessError }) => {
     // Use first account if multiple authorized accounts
     if (accounts.length !== 0) {
       const account = accounts[0];
-      console.log("Found an authorized account:", account);
       setCurrentAccount(account);
       setupEventListener();
       await setUserWallet(account);
@@ -77,8 +74,6 @@ const LensCard = ({ accessToken, setAccessError }) => {
         const provider = new ethers.providers.Web3Provider(ethereum);
         const signer = provider.getSigner();
         setProvider(provider);
-
-        console.log("Successfully setup event listener.");
       } else {
         console.log("Ethereum object doesn't exist");
       }
@@ -101,7 +96,6 @@ const LensCard = ({ accessToken, setAccessError }) => {
           },
         }
       );
-      console.log(`Wallet Address Set: ${userWallet}`);
     } catch (error) {
       if (error.response.status === 403) {
         setAccessError(true);
