@@ -1,3 +1,4 @@
+//SPDX-License-Identifier: MIT
 pragma solidity 0.5.12;
 pragma experimental ABIEncoderV2;
 
@@ -8,6 +9,12 @@ import "./inherited/ERC721Basic.sol";
 /// @title StandardBounties
 /// @dev A contract for issuing bounties on Ethereum paying in ETH, ERC20, or ERC721 tokens
 /// @author Mark Beylin <mark.beylin@consensys.net>, Gonçalo Sá <goncalo.sa@consensys.net>, Kevin Owocki <kevin.owocki@consensys.net>, Ricardo Guilherme Schmidt (@3esmit), Matt Garnett <matt.garnett@consensys.net>, Craig Williams <craig.williams@consensys.net>
+
+/// Adopted by the OpenAsk team to be deployed on L2s where the contract isn't already deployed
+/// The contract remains unmodified besides some comments
+/// Comments modified by Ray Zhu <rayzhu.eth>
+/// https://openask.me/
+
 contract StandardBounties {
 
   using SafeMath for uint256;
@@ -183,7 +190,7 @@ contract StandardBounties {
   }
 
   /// @dev issueBounty(): creates a new bounty
-  /// @param _sender the sender of the transaction issuing the bounty (should be the same as msg.sender unless the txn is called by the meta tx relayer)
+  /// @param _sender the sender of the transaction (should be the same as msg.sender unless the txn is called by the meta tx relayer)
   /// @param _issuers the array of addresses who will be the issuers of the bounty
   /// @param _approvers the array of addresses who will be the approvers of the bounty
   /// @param _data the IPFS hash representing the JSON object storing the details of the bounty (see docs for schema details)
@@ -262,7 +269,7 @@ contract StandardBounties {
   ///                    has elapsed, and the bounty has not yet paid out any funds.
   ///                    All funds deposited in a bounty are at the mercy of a
   ///                    bounty's issuers and approvers, so please be careful!
-  /// @param _sender the sender of the transaction issuing the bounty (should be the same as msg.sender unless the txn is called by the meta tx relayer)
+  /// @param _sender the sender of the transaction (should be the same as msg.sender unless the txn is called by the meta tx relayer)
   /// @param _bountyId the index of the bounty
   /// @param _amount the amount of tokens being contributed
   function contribute(
@@ -314,7 +321,7 @@ contract StandardBounties {
   /// @dev refundContribution(): Allows users to refund the contributions they've
   ///                            made to a particular bounty, but only if the bounty
   ///                            has not yet paid out, and the deadline has elapsed.
-  /// @param _sender the sender of the transaction issuing the bounty (should be the same as msg.sender unless the txn is called by the meta tx relayer)
+  /// @param _sender the sender of the transaction (should be the same as msg.sender unless the txn is called by the meta tx relayer)
   /// @param _bountyId the index of the bounty
   /// @param _contributionId the index of the contribution being refunded
   function refundContribution(
@@ -342,7 +349,7 @@ contract StandardBounties {
   }
 
   /// @dev refundMyContributions(): Allows users to refund their contributions in bulk
-  /// @param _sender the sender of the transaction issuing the bounty (should be the same as msg.sender unless the txn is called by the meta tx relayer)
+  /// @param _sender the sender of the transaction (should be the same as msg.sender unless the txn is called by the meta tx relayer)
   /// @param _bountyId the index of the bounty
   /// @param _contributionIds the array of indexes of the contributions being refunded
   function refundMyContributions(
@@ -358,7 +365,7 @@ contract StandardBounties {
   }
 
   /// @dev refundContributions(): Allows users to refund their contributions in bulk
-  /// @param _sender the sender of the transaction issuing the bounty (should be the same as msg.sender unless the txn is called by the meta tx relayer)
+  /// @param _sender the sender of the transaction (should be the same as msg.sender unless the txn is called by the meta tx relayer)
   /// @param _bountyId the index of the bounty
   /// @param _issuerId the index of the issuer who is making the call
   /// @param _contributionIds the array of indexes of the contributions being refunded
@@ -390,7 +397,7 @@ contract StandardBounties {
 
   /// @dev drainBounty(): Allows an issuer to drain the funds from the bounty
   /// @notice when using this function, if an issuer doesn't drain the entire balance, some users may be able to refund their contributions, while others may not (which is unfair to them). Please use it wisely, only when necessary
-  /// @param _sender the sender of the transaction issuing the bounty (should be the same as msg.sender unless the txn is called by the meta tx relayer)
+  /// @param _sender the sender of the transaction (should be the same as msg.sender unless the txn is called by the meta tx relayer)
   /// @param _bountyId the index of the bounty
   /// @param _issuerId the index of the issuer who is making the call
   /// @param _amounts an array of amounts of tokens to be sent. The length of the array should be 1 if the bounty is in ETH or ERC20 tokens. If it's an ERC721 bounty, the array should be the list of tokenIDs.
@@ -421,7 +428,7 @@ contract StandardBounties {
 
   /// @dev performAction(): Allows users to perform any generalized action
   ///                       associated with a particular bounty, such as applying for it
-  /// @param _sender the sender of the transaction issuing the bounty (should be the same as msg.sender unless the txn is called by the meta tx relayer)
+  /// @param _sender the sender of the transaction (should be the same as msg.sender unless the txn is called by the meta tx relayer)
   /// @param _bountyId the index of the bounty
   /// @param _data the IPFS hash corresponding to a JSON object which contains the details of the action being performed (see docs for schema details)
   function performAction(
@@ -436,7 +443,7 @@ contract StandardBounties {
   }
 
   /// @dev fulfillBounty(): Allows users to fulfill the bounty to get paid out
-  /// @param _sender the sender of the transaction issuing the bounty (should be the same as msg.sender unless the txn is called by the meta tx relayer)
+  /// @param _sender the sender of the transaction (should be the same as msg.sender unless the txn is called by the meta tx relayer)
   /// @param _bountyId the index of the bounty
   /// @param _fulfillers the array of addresses which will receive payouts for the submission
   /// @param _data the IPFS hash corresponding to a JSON object which contains the details of the submission (see docs for schema details)
@@ -462,7 +469,7 @@ contract StandardBounties {
   }
 
   /// @dev updateFulfillment(): Allows the submitter of a fulfillment to update their submission
-  /// @param _sender the sender of the transaction issuing the bounty (should be the same as msg.sender unless the txn is called by the meta tx relayer)
+  /// @param _sender the sender of the transaction (should be the same as msg.sender unless the txn is called by the meta tx relayer)
   /// @param _bountyId the index of the bounty
   /// @param _fulfillmentId the index of the fulfillment
   /// @param _fulfillers the new array of addresses which will receive payouts for the submission
@@ -487,7 +494,7 @@ contract StandardBounties {
   }
 
   /// @dev acceptFulfillment(): Allows any of the approvers to accept a given submission
-  /// @param _sender the sender of the transaction issuing the bounty (should be the same as msg.sender unless the txn is called by the meta tx relayer)
+  /// @param _sender the sender of the transaction (should be the same as msg.sender unless the txn is called by the meta tx relayer)
   /// @param _bountyId the index of the bounty
   /// @param _fulfillmentId the index of the fulfillment to be accepted
   /// @param _approverId the index of the approver which is making the call
@@ -529,7 +536,7 @@ contract StandardBounties {
   }
 
   /// @dev fulfillAndAccept(): Allows any of the approvers to fulfill and accept a submission simultaneously
-  /// @param _sender the sender of the transaction issuing the bounty (should be the same as msg.sender unless the txn is called by the meta tx relayer)
+  /// @param _sender the sender of the transaction (should be the same as msg.sender unless the txn is called by the meta tx relayer)
   /// @param _bountyId the index of the bounty
   /// @param _fulfillers the array of addresses which will receive payouts for the submission
   /// @param _data the IPFS hash corresponding to a JSON object which contains the details of the submission (see docs for schema details)
@@ -563,7 +570,7 @@ contract StandardBounties {
 
 
   /// @dev changeBounty(): Allows any of the issuers to change the bounty
-  /// @param _sender the sender of the transaction issuing the bounty (should be the same as msg.sender unless the txn is called by the meta tx relayer)
+  /// @param _sender the sender of the transaction (should be the same as msg.sender unless the txn is called by the meta tx relayer)
   /// @param _bountyId the index of the bounty
   /// @param _issuerId the index of the issuer who is calling the function
   /// @param _issuers the new array of addresses who will be the issuers of the bounty
@@ -599,7 +606,7 @@ contract StandardBounties {
   }
 
   /// @dev changeIssuer(): Allows any of the issuers to change a particular issuer of the bounty
-  /// @param _sender the sender of the transaction issuing the bounty (should be the same as msg.sender unless the txn is called by the meta tx relayer)
+  /// @param _sender the sender of the transaction (should be the same as msg.sender unless the txn is called by the meta tx relayer)
   /// @param _bountyId the index of the bounty
   /// @param _issuerId the index of the issuer who is calling the function
   /// @param _issuerIdToChange the index of the issuer who is being changed
@@ -624,7 +631,7 @@ contract StandardBounties {
   }
 
   /// @dev changeApprover(): Allows any of the issuers to change a particular approver of the bounty
-  /// @param _sender the sender of the transaction issuing the bounty (should be the same as msg.sender unless the txn is called by the meta tx relayer)
+  /// @param _sender the sender of the transaction (should be the same as msg.sender unless the txn is called by the meta tx relayer)
   /// @param _bountyId the index of the bounty
   /// @param _issuerId the index of the issuer who is calling the function
   /// @param _approverId the index of the approver who is being changed
@@ -647,7 +654,7 @@ contract StandardBounties {
   }
 
   /// @dev changeIssuerAndApprover(): Allows any of the issuers to change a particular approver of the bounty
-  /// @param _sender the sender of the transaction issuing the bounty (should be the same as msg.sender unless the txn is called by the meta tx relayer)
+  /// @param _sender the sender of the transaction (should be the same as msg.sender unless the txn is called by the meta tx relayer)
   /// @param _bountyId the index of the bounty
   /// @param _issuerId the index of the issuer who is calling the function
   /// @param _issuerIdToChange the index of the issuer who is being changed
@@ -676,7 +683,7 @@ contract StandardBounties {
   }
 
   /// @dev changeData(): Allows any of the issuers to change the data the bounty
-  /// @param _sender the sender of the transaction issuing the bounty (should be the same as msg.sender unless the txn is called by the meta tx relayer)
+  /// @param _sender the sender of the transaction (should be the same as msg.sender unless the txn is called by the meta tx relayer)
   /// @param _bountyId the index of the bounty
   /// @param _issuerId the index of the issuer who is calling the function
   /// @param _data the new IPFS hash representing the JSON object storing the details of the bounty (see docs for schema details)
@@ -695,7 +702,7 @@ contract StandardBounties {
   }
 
   /// @dev changeDeadline(): Allows any of the issuers to change the deadline the bounty
-  /// @param _sender the sender of the transaction issuing the bounty (should be the same as msg.sender unless the txn is called by the meta tx relayer)
+  /// @param _sender the sender of the transaction (should be the same as msg.sender unless the txn is called by the meta tx relayer)
   /// @param _bountyId the index of the bounty
   /// @param _issuerId the index of the issuer who is calling the function
   /// @param _deadline the new timestamp which will become the deadline of the bounty
@@ -716,7 +723,7 @@ contract StandardBounties {
   }
 
   /// @dev addIssuers(): Allows any of the issuers to add more issuers to the bounty
-  /// @param _sender the sender of the transaction issuing the bounty (should be the same as msg.sender unless the txn is called by the meta tx relayer)
+  /// @param _sender the sender of the transaction (should be the same as msg.sender unless the txn is called by the meta tx relayer)
   /// @param _bountyId the index of the bounty
   /// @param _issuerId the index of the issuer who is calling the function
   /// @param _issuers the array of addresses to add to the list of valid issuers
@@ -739,7 +746,7 @@ contract StandardBounties {
   }
 
   /// @dev addApprovers(): Allows any of the issuers to add more approvers to the bounty
-  /// @param _sender the sender of the transaction issuing the bounty (should be the same as msg.sender unless the txn is called by the meta tx relayer)
+  /// @param _sender the sender of the transaction (should be the same as msg.sender unless the txn is called by the meta tx relayer)
   /// @param _bountyId the index of the bounty
   /// @param _issuerId the index of the issuer who is calling the function
   /// @param _approvers the array of addresses to add to the list of valid approvers
