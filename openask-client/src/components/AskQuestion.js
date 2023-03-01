@@ -6,6 +6,7 @@ import { getUsers } from "./functions/getUsers";
 import { useNavigate } from "react-router-dom";
 import { deployEthContract } from "./functions/ethContract";
 import { ethMatureTime } from "./functions/ethMatureTime";
+import { ethBountyContract } from "./functions/ethBountyContract";
 import AskButton from "./subcomponents/AskButton";
 import { ethers } from "ethers";
 import confetti from "canvas-confetti";
@@ -103,10 +104,77 @@ const AskQuestion = (props) => {
           data.data.secretToken, // secret
           setAskLoaderText
         );
-        console.log(`Contract Deployed: ${deployedAddress}`);
+        console.log(`Contract Deployed: ${deployedAddress.toString()}`);
 
         // Update Question with Contract Address
         await updateQuestion(deployedAddress);
+        setAskLoader(false);
+
+        confetti({
+          zIndex: "3002",
+          particleCount: 300,
+          spread: 150,
+          shapes: ["circle", "square"],
+          origin: {
+            y: 0.65,
+          },
+        });
+        // Clear Form
+        setQuestion("");
+        setSensei("");
+        setTokenAmount("");
+        // Close Backdrop
+        await handleCloseBackdrop();
+        if (location.pathname === "/questions") {
+          refreshPage();
+        } else {
+          navigate("/questions");
+        }
+      } catch (error) {
+        setAskLoader(false);
+        console.log(error);
+      }
+    } else {
+      alert(
+        "This Sensei does not have a wallet address. Please select another Sensei."
+      );
+    }
+  };
+
+  // NEW ETH Contract
+  const handleEthBountyContract = async () => {
+    // Check sensei wallet address
+    const paymentSensei = allSenseis.find((data) => {
+      return data.profile.displayName === sensei;
+    });
+
+    if (tokenAmount) {
+      try {
+        setAskLoader(true);
+        const tokenAmountString = tokenAmount.toString();
+        const tokenAmountUpdated = ethers.utils.parseUnits(
+          tokenAmountString,
+          18
+        );
+
+        // Add Contract to Backend
+        const data = await askQuestion();
+
+        // Add Bounty
+        const bountyId = await ethBountyContract(
+          ["0xc8fb0913a8e36487710f838a08d4e66367d07924"], // paymentSensei.walletAddress, // Sensei Address
+          172800, //48 Hours
+          tokenAmountUpdated, // Token Amount
+          // data.data.questionId, //questionId
+          // data.data.secretToken, // secret
+          setAskLoaderText
+        );
+
+        console.log(`Bounty ID: ${bountyId}`);
+
+        // Update Question with Contract Address
+        await updateQuestion(bountyId);
+
         setAskLoader(false);
 
         confetti({
@@ -345,7 +413,7 @@ const AskQuestion = (props) => {
               />
               <AskButton
                 disabled={tokenAmount > 0 && sensei && question ? true : false}
-                handleDeployEthContract={handleDeployEthContract}
+                handleDeployEthContract={handleEthBountyContract}
               />
             </CardContent>
           </>
