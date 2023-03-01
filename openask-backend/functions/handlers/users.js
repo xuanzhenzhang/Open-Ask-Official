@@ -175,7 +175,7 @@ exports.getAllUsers = (req, res) => {
 
 exports.getAllUsersByFollowers = (req, res) => {
   db.collection("users")
-    .orderBy("publicMetrics.followers_count", "desc")
+    .orderBy("profile.followers_count", "desc")
     .get()
     .then((docList) => {
       let users = [];
@@ -248,10 +248,14 @@ const updateUserProfileHelper = async (req, res, newProfileType) => {
         /**
          * LENS integration
          */
-        const addr = "0x3A5bd1E37b099aE3386D13947b6a90d97675e5e3";
+        if (doc.data().walletAddress == "") {
+          return res
+            .status(400)
+            .json({ error: "No wallet exists for this user" });
+        }
         const profileQuery = `
                   query DefaultProfile {
-                      defaultProfile(request: { ethereumAddress: "${addr}"}) {
+                      defaultProfile(request: { ethereumAddress: "0x3A5bd1E37b099aE3386D13947b6a90d97675e5e3"}) {
                         id
                         name
                         bio
@@ -285,6 +289,12 @@ const updateUserProfileHelper = async (req, res, newProfileType) => {
           })
           .then((response) => {
             const defaultProfile = response.data.defaultProfile;
+            if (defaultProfile == null) {
+              console.log("defaultProfile is null");
+              return res
+                .status(400)
+                .json({ error: "No lens profile exists for this user" });
+            }
             const profile = {
               type: PROFILE.LENS,
               id: defaultProfile.id,
