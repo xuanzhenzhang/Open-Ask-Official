@@ -18,7 +18,7 @@ const QuestionHeader = (props) => {
 
   return (
     <CardHeader
-      sx={{ cursor: "pointer", pt: "8px" }}
+      sx={{ pt: "8px" }}
       avatar={
         <Avatar
           sx={{ cursor: "pointer", mt: "10px", width: 48, height: 48 }}

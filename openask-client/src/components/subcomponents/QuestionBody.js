@@ -5,7 +5,7 @@ const QuestionBody = (props) => {
   const { body, createdAt } = props;
   return (
     <>
-      <CardContent sx={{ cursor: "pointer", pl: "72px !important", pt: "0px !important" }}>
+      <CardContent sx={{ pl: "72px !important", pt: "0px !important" }}>
         <Typography>{body}</Typography>
       </CardContent>
       <CardContent className="feed-timestamp">

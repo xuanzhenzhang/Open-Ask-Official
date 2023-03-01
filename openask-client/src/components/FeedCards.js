@@ -47,7 +47,11 @@ const FeedCards = ({ data, price }) => {
         });
 
         return (
-          <Card className="feed-card" key={content.questionId}>
+          <Card
+            className="feed-card"
+            key={content.questionId}
+            onClick={() => handleCardClick(content.questionId)}
+          >
             <QuestionHeader
               twitterPfp={user[0]?.profile.imageUrl}
               twitterHandle={user[0]?.profile.handle}

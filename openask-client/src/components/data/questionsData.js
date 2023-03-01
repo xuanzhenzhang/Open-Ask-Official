@@ -2,27 +2,29 @@ const questions = [
   {
     id: 1,
     displayName: "Rice Farmer",
-    questionUser: "@RiceFarmerNFT",
+    questionUser: "RiceFarmerNFT",
     question:
       "What is the fundamental difference between a centralized and a decentralized cryptocurrency?",
     answerDisplayName: "Camol",
-    answerUser: "@camolNFT",
+    answerUser: "camolNFT",
     answer:
       "A centralized cryptocurrency is controlled by a central authority, while a decentralized cryptocurrency operates on a peer-to-peer network with no central authority.",
     access: true,
     timeStamp: "Jun 09 2022 15:28:14",
     userAvatar:
-      "https://i.seadn.io/gae/Y_PyXWY2759-KtqFQWe6ZO_AKAo8jKs0XKF95-mDS19RjysJeYP1NszXE3UI3K-3cqXERh1SgSsWpCLxg4a5AJf6ZmWtQmRHywrCwg?auto=format&w=1000",
+      "https://pbs.twimg.com/profile_images/1628230637676027904/sHg_f30e_normal.png",
+    answerAvatar:
+      "https://pbs.twimg.com/profile_images/1628230637676027904/sHg_f30e_normal.png",
 
-    answerAvatar: "C",
     price: 0.02,
     paymentType: "ETH",
-    txHash: "0xb656bc4aa3080f313f12336d6124997ea971a7b01b34d46ce01e6f4412449252",
+    txHash:
+      "0xb656bc4aa3080f313f12336d6124997ea971a7b01b34d46ce01e6f4412449252",
   },
   {
     id: 2,
     displayName: "6529",
-    questionUser: "@punk6529",
+    questionUser: "punk6529",
     question: "What are the benefits of using cryptocurrency?",
     answerDisplayName: "Kevin Rose",
     answerUser: "@kevinrose",
@@ -30,11 +32,14 @@ const questions = [
       "Some benefits of using cryptocurrency include increased security and privacy, faster and cheaper transactions, and the ability to bypass traditional financial systems.",
     access: false,
     timeStamp: "Jun 09 2022 15:28:14",
-    userAvatar: "6",
-    answerAvatar: "K",
+    answerAvatar:
+      "https://pbs.twimg.com/profile_images/1628230637676027904/sHg_f30e_normal.png",
+    userAvatar:
+      "https://pbs.twimg.com/profile_images/1628230637676027904/sHg_f30e_normal.png",
     price: 10.02,
     paymentType: "DOGE",
-    txHash: "0xb656bc4aa3080f313f12336d6124997ea971a7b01b34d46ce01e6f4412449252",
+    txHash:
+      "0xb656bc4aa3080f313f12336d6124997ea971a7b01b34d46ce01e6f4412449252",
   },
   {
     id: 3,
@@ -51,7 +56,12 @@ const questions = [
     answerAvatar: "J",
     price: 10.02,
     paymentType: "USDT",
-    txHash: "0xb656bc4aa3080f313f12336d6124997ea971a7b01b34d46ce01e6f4412449252",
+    txHash:
+      "0xb656bc4aa3080f313f12336d6124997ea971a7b01b34d46ce01e6f4412449252",
+    answerAvatar:
+      "https://pbs.twimg.com/profile_images/1628230637676027904/sHg_f30e_normal.png",
+    userAvatar:
+      "https://pbs.twimg.com/profile_images/1628230637676027904/sHg_f30e_normal.png",
   },
   {
     id: 4,
@@ -64,11 +74,15 @@ const questions = [
       "The impact of cryptocurrency on the economy is a topic of ongoing debate, but some potential effects include increased competition for traditional financial institutions and potential changes to monetary policy.",
     access: false,
     timeStamp: "Jun 09 2022 15:28:14",
-    userAvatar: "G",
-    answerAvatar: "Z",
+
     price: 0.03,
     paymentType: "ETH",
-    txHash: "0xb656bc4aa3080f313f12336d6124997ea971a7b01b34d46ce01e6f4412449252",
+    txHash:
+      "0xb656bc4aa3080f313f12336d6124997ea971a7b01b34d46ce01e6f4412449252",
+    answerAvatar:
+      "https://pbs.twimg.com/profile_images/1628230637676027904/sHg_f30e_normal.png",
+    userAvatar:
+      "https://pbs.twimg.com/profile_images/1628230637676027904/sHg_f30e_normal.png",
   },
   {
     id: 5,
@@ -81,11 +95,14 @@ const questions = [
       "A public blockchain is a decentralized network that is open to anyone and allows anyone to participate in the network and validate transactions. A private blockchain is a permissioned network where only a select group of participants are allowed to validate transactions and access the network.",
     access: false,
     timeStamp: "Jun 09 2022 15:28:14",
-    userAvatar: "Z",
-    answerAvatar: "V",
+    answerAvatar:
+      "https://pbs.twimg.com/profile_images/1628230637676027904/sHg_f30e_normal.png",
+    userAvatar:
+      "https://pbs.twimg.com/profile_images/1628230637676027904/sHg_f30e_normal.png",
     price: 8.5,
     paymentType: "USDT",
-    txHash: "0xb656bc4aa3080f313f12336d6124997ea971a7b01b34d46ce01e6f4412449252",
+    txHash:
+      "0xb656bc4aa3080f313f12336d6124997ea971a7b01b34d46ce01e6f4412449252",
   },
 ];
 
