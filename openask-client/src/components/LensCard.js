@@ -13,11 +13,10 @@ const apolloClient = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-// user can fake their wallet address, but does them no good.
-
-const profileQuery = `
-query DefaultProfile {
-    defaultProfile(request: { ethereumAddress: "0x3A5bd1E37b099aE3386D13947b6a90d97675e5e3"}) {
+const profileQuery = async (address) => {
+  const profileQueryGraphql = `
+  query DefaultProfile {
+    defaultProfile(request: { ethereumAddress: "${address}"}) {
       id
       name
       bio
@@ -44,43 +43,39 @@ query DefaultProfile {
       }
     }
   }
-`;
-
-const PROFILE = {
-  TWITTER: "twitter",
-  LENS: "lens",
-};
-
-const profileQueryExample = async () => {
+      `;
   const response = await apolloClient.query({
-    query: gql(profileQuery),
+    query: gql(profileQueryGraphql),
   });
-  const defaultProfile = response.data.defaultProfile;
-  console.log(defaultProfile);
-  const profile = {
-    type: PROFILE.LENS,
-    id: defaultProfile.id,
-    handle: defaultProfile.handle,
-    displayName: defaultProfile.name,
-    imageUrl: defaultProfile.picture.original.url,
-    bio: defaultProfile.bio,
-    followers_count: defaultProfile.stats.totalFollowers,
-    following_count: defaultProfile.stats.totalFollowing,
-    posts_count: defaultProfile.stats.totalPosts,
-  };
-  return profile;
+  return response.data;
 };
 
-const loginQueryExample = async (address) => {
-  const loginQuery = `query Challenge {
+const loginQuery = async (address) => {
+  const loginQueryGraphql = `query Challenge {
   challenge(request: { address: "${address}" }) {
     text
   }
 }`;
   const response = await apolloClient.query({
-    query: gql(loginQuery),
+    query: gql(loginQueryGraphql),
   });
-  return response;
+  return response.data;
+};
+
+const authenticateMutation = async (address, signature) => {
+  const authenticateQueryGraphql = `mutation Authenticate {
+    authenticate(request: {
+      address: "${address}",
+      signature: "${signature}"
+    }) {
+      accessToken
+      refreshToken
+    }
+  }`;
+  const response = await apolloClient.mutate({
+    mutation: gql(authenticateQueryGraphql),
+  });
+  return response.data;
 };
 
 // const login = async () => {
@@ -108,6 +103,9 @@ const LensCard = ({ accessToken, setAccessError }) => {
   const [currentAccount, setCurrentAccount] = useState();
   const [provider, setProvider] = useState();
   const [signer, setSigner] = useState();
+  const [lensAccessToken, setLensAccessToken] = useState();
+  const [profile, setProfile] = useState({});
+  const [lensPrompt, setLensPrompt] = useState("Lens Login");
 
   // Connect wallet method
   const connectWallet = async () => {
@@ -165,6 +163,14 @@ const LensCard = ({ accessToken, setAccessError }) => {
     checkIfWalletIsConnected();
   }, []);
 
+  useEffect(() => {
+    if (lensAccessToken) {
+      setLensPrompt("Use Lens Profile");
+    } else {
+      setLensPrompt("Lens Login");
+    }
+  }, [lensAccessToken]);
+
   // Set Event
   const setupEventListener = async () => {
     try {
@@ -173,6 +179,7 @@ const LensCard = ({ accessToken, setAccessError }) => {
       if (ethereum) {
         const provider = new ethers.providers.Web3Provider(ethereum);
         const signer = provider.getSigner();
+        setSigner(signer);
         setProvider(provider);
       } else {
         console.log("Ethereum object doesn't exist");
@@ -208,38 +215,57 @@ const LensCard = ({ accessToken, setAccessError }) => {
   const connectLens = async () => {
     const account = await connectWallet();
     // const profile = await profileQueryExample();
-    const loginInfo = await loginQueryExample(account);
-    const challenge = loginInfo.data.challenge;
-    console.log("loginInfo", loginInfo.data.challenge);
-    const signer = provider.getSigner();
+    const loginInfo = await loginQuery(account);
+    const challenge = loginInfo.challenge;
     const signature = await signer.signMessage(challenge.text);
-    console.log("message: ", signature);
-    const authenticateQuery = `mutation Authenticate {
-      authenticate(request: {
-        address: "${account}",
-        signature: "${signature}"
-      }) {
-        accessToken
-        refreshToken
-      }
-    }`;
-    const authenticateResponse = await apolloClient.mutate({
-      mutation: gql(authenticateQuery),
-    });
-    console.log(
-      "authenticateResponse: ",
-      authenticateResponse.data?.accessToken
+    const authenticateResponse = await authenticateMutation(account, signature);
+
+    setLensAccessToken(authenticateResponse.authenticate.accessToken);
+    // console.log("account: ", account);
+  };
+
+  const useLensProfile = async () => {
+    const profileResponse = await profileQuery(
+      "0x3A5bd1E37b099aE3386D13947b6a90d97675e5e3"
     );
+    if (profileResponse.defaultProfile != null) {
+      setProfile(profileResponse.defaultProfile);
+    }
+    console.log("accesstoken: ", accessToken);
+
+    axios
+      .put(
+        // "https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/lens",
+        "http://localhost:5001/open-ask-dbbe2/us-central1/api/user/lens",
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res);
+      });
   };
 
   return (
     <>
-      <Box onClick={connectLens} className='wallet-btn'>
-        <Typography sx={{ display: "flex", justifyContent: "center" }}>
-          {" "}
-          {currentAccount ? "Connected" : "Login With Lens"}
-        </Typography>
-      </Box>
+      {lensAccessToken != null ? (
+        <Box onClick={useLensProfile} className='wallet-btn'>
+          <Typography sx={{ display: "flex", justifyContent: "center" }}>
+            {" "}
+            {profile.handle ? profile.handle : "Use Lens Profile"}
+          </Typography>
+        </Box>
+      ) : (
+        <Box onClick={connectLens} className='wallet-btn'>
+          <Typography sx={{ display: "flex", justifyContent: "center" }}>
+            {" "}
+            {lensAccessToken ? "Use Lens Profile" : "Lens Login"}
+          </Typography>
+        </Box>
+      )}
     </>
   );
 };
