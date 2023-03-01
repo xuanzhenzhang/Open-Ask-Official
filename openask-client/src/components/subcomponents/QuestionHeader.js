@@ -7,7 +7,7 @@ import AskSenseiButton from "./AskSenseiButton";
 const QuestionHeader = (props) => {
   const { twitterPfp, twitterHandle, twitterDisplayName } = props;
   const { tokenAmount, tokenType } = props;
-  const {onAskQuestion, senseiDisplayName} = props;
+  const { onAskQuestion, senseiDisplayName } = props;
   const { price, askSensei } = props;
 
   const navigate = useNavigate();
@@ -62,7 +62,12 @@ const QuestionHeader = (props) => {
             {price && (
               <PriceButton tokenAmount={tokenAmount} tokenType={tokenType} />
             )}
-            {askSensei && <AskSenseiButton onAskQuestion={onAskQuestion} senseiDisplayName={senseiDisplayName} />}
+            {askSensei === true && (
+              <AskSenseiButton
+                onAskQuestion={onAskQuestion}
+                senseiDisplayName={senseiDisplayName}
+              />
+            )}
           </div>
         </>
       }

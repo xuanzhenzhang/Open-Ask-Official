@@ -76,11 +76,11 @@ const Sensei = ({ userInfo, accessToken, setAccessError }) => {
     setFilteredSensei(
       [...filteredSensei].sort((a, b) => {
         if (sortJoined === 1) {
-          setFilterName("Earliest")
+          setFilterName("Earliest");
           return new Date(a.createdAt) - new Date(b.createdAt);
         }
         if (sortJoined === -1) {
-          setFilterName("Latest")
+          setFilterName("Latest");
           return new Date(b.createdAt) - new Date(a.createdAt);
         }
         return 0;
@@ -100,14 +100,14 @@ const Sensei = ({ userInfo, accessToken, setAccessError }) => {
           a.profile.displayName.toLowerCase() >
           b.profile.displayName.toLowerCase()
         ) {
-          setFilterName("Alphabetical (Z-A)")
+          setFilterName("Alphabetical (Z-A)");
           return sortAlphabetical;
         }
         if (
           a.profile.displayName.toLowerCase() <
           b.profile.displayName.toLowerCase()
         ) {
-          setFilterName("Alphabetical (A-Z)")
+          setFilterName("Alphabetical (A-Z)");
           return -sortAlphabetical;
         }
         return 0;
@@ -124,11 +124,11 @@ const Sensei = ({ userInfo, accessToken, setAccessError }) => {
     setFilteredSensei(
       [...filteredSensei].sort((a, b) => {
         if (a.profile.followers_count > b.profile.followers_count) {
-          setFilterName("Followers (High)")
+          setFilterName("Followers (High)");
           return sortFollowers;
         }
         if (a.profile.followers_count < b.profile.followers_count) {
-          setFilterName("Followers (Low)")
+          setFilterName("Followers (Low)");
           return -sortFollowers;
         }
         return 0;
@@ -145,11 +145,11 @@ const Sensei = ({ userInfo, accessToken, setAccessError }) => {
     setFilteredSensei(
       [...filteredSensei].sort((a, b) => {
         if (a.questionsFor.length > b.questionsFor.length) {
-          setFilterName("Answered (High)")
+          setFilterName("Answered (High)");
           return sortAnswered;
         }
         if (a.questionsFor.length < b.questionsFor.length) {
-          setFilterName("Answered (Low)")
+          setFilterName("Answered (Low)");
           return -sortAnswered;
         }
         return 0;
@@ -336,36 +336,39 @@ const Sensei = ({ userInfo, accessToken, setAccessError }) => {
               sx={{ height: "calc(100vh - 104.5px)" }}
             >
               <Grid>
-                {filteredSensei?.map((profile, index) => (
-                  <Card
-                    onClick={() => onSenseiClick(profile.profile.handle)}
-                    className="sensei-card"
-                    sx={{
-                      height: "100%",
-                      display: "flex",
-                      flexDirection: "column",
-                      borderRadius: "0px",
-                      backgroundColor: "#FDFDFD",
-                      cursor: "pointer",
-                      hover: { backgroundColor: "#f2f2f2" },
-                    }}
-                    key={index}
-                  >
-                    <QuestionHeader
-                      twitterPfp={profile.profile.imageUrl}
-                      twitterHandle={profile.profile.handle}
-                      twitterDisplayName={profile.profile.displayName}
-                      onAskQuestion={onAskQuestion}
-                      senseiDisplayName={profile.profile.displayName}
-                      askSensei
-                    />
-                    <SenseiBody
-                      followers={profile.profile.followers_count.toLocaleString()}
-                      questionsAsked={profile?.questionsFor?.length}
-                      twitterDescription={profile.profile.bio}
-                    />
-                  </Card>
-                ))}
+                {filteredSensei?.map((profile, index) => {
+                  const isSameUser = profile.userId === userInfo.userUid;
+                  return (
+                    <Card
+                      onClick={() => onSenseiClick(profile.profile.handle)}
+                      className="sensei-card"
+                      sx={{
+                        height: "100%",
+                        display: "flex",
+                        flexDirection: "column",
+                        borderRadius: "0px",
+                        backgroundColor: "#FDFDFD",
+                        cursor: "pointer",
+                        hover: { backgroundColor: "#f2f2f2" },
+                      }}
+                      key={index}
+                    >
+                      <QuestionHeader
+                        twitterPfp={profile.profile.imageUrl}
+                        twitterHandle={profile.profile.handle}
+                        twitterDisplayName={profile.profile.displayName}
+                        onAskQuestion={onAskQuestion}
+                        senseiDisplayName={profile.profile.displayName}
+                        askSensei={profile.profile.handle}
+                      />
+                      <SenseiBody
+                        followers={profile.profile.followers_count.toLocaleString()}
+                        questionsAsked={profile?.questionsFor?.length}
+                        twitterDescription={profile.profile.bio}
+                      />
+                    </Card>
+                  );
+                })}
               </Grid>
             </Box>
           </>
