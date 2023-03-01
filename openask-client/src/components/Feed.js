@@ -3,14 +3,13 @@ import { useNavigate } from "react-router-dom";
 import Container from "@mui/material/Container";
 import { Box } from "@mui/system";
 
-
 import FeedCards from "./FeedCards.js";
 import Loader from "./Loader.js";
 import axios, * as others from "axios";
 import FeedFilters from "./subcomponents/FeedFilters.js";
 
 const Feed = ({ accessToken, setAccessError }) => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [congrats, setCongrats] = useState();
   const [questions, setQuestions] = useState();
 
@@ -19,7 +18,6 @@ const Feed = ({ accessToken, setAccessError }) => {
   // Get Feed Questions and Answers
   useEffect(() => {
     const getQuestions = async () => {
-      setLoading(true);
       try {
         const { data } = await axios
           .get(
@@ -36,9 +34,9 @@ const Feed = ({ accessToken, setAccessError }) => {
 
         // Set feed data
         setQuestions(filteredData);
-        setLoading(false);
       } catch (error) {
         console.error(error);
+      } finally {
         setLoading(false);
       }
     };
@@ -66,7 +64,10 @@ const Feed = ({ accessToken, setAccessError }) => {
         ) : (
           <>
             <FeedFilters setQuestions={setQuestions} questions={questions} />
-            <Box className="content-container" sx={{height: "calc(100vh - 84.5px)"}}>
+            <Box
+              className="content-container"
+              sx={{ height: "calc(100vh - 84.5px)" }}
+            >
               <FeedCards data={questions} price />
             </Box>
           </>

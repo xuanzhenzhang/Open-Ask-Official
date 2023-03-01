@@ -526,7 +526,7 @@ body {
   text-decoration: underline !important;
 }
 .tx-link:hover {
-  opacity: .8;
+  opacity: 0.8;
 }
 .tx-price {
   overflow: visible;
@@ -574,7 +574,6 @@ body {
 .twitter-btn p {
   font-size: 20px !important;
 }
-
 
 /* Ask Question */
 .ask-question-container {
@@ -659,7 +658,7 @@ body {
   align-items: center;
   min-height: 371px;
 }
-.ask-question-loader-text{
+.ask-question-loader-text {
   padding: 24px;
   width: 400px;
   display: flex;
