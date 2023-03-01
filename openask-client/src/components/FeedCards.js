@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import Card from "@mui/material/Card";
 
@@ -14,21 +14,31 @@ const FeedCards = ({ data, price }) => {
 
   const navigate = useNavigate();
 
-  // Navigate to Sensei Detail page
-  const handleAvatarClick = (twitter) => {
-    navigate(`/sensei/${twitter}`);
-  };
-
+  const handleAvatarClick = useCallback(
+    (twitter) => {
+      navigate(`/sensei/${twitter}`);
+    },
+    [navigate]
+  );
   // Navigate to Question landing Page
-  const handleCardClick = (id) => {
-    navigate(`/id/${id}`);
-  };
+  const handleCardClick = useCallback(
+    (id) => {
+      navigate(`/id/${id}`);
+    },
+    [navigate]
+  );
 
   // Get all users
   useEffect(() => {
+    let isMounted = true;
     getUsers().then((response) => {
-      setUserInfo(response);
+      if (isMounted) {
+        setUserInfo(response);
+      }
     });
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   // Set imported data as question set
