@@ -223,7 +223,7 @@ const SidebarList = ({
     },
     {
       text: "Profile",
-      link: `/sensei/${userInfo.profile.handle}`,
+      link: `/sensei/${userInfo && userInfo?.profile?.handle}`,
       svg:
         selectedIndex === 4 ? (
           <svg
