@@ -16,7 +16,7 @@ const Sidebar = (props) => {
 
   return (
     <>
-      {/* <Drawer
+      <Drawer
         className="sidebar"
         variant="temporary"
         anchor="right"
@@ -32,8 +32,15 @@ const Sidebar = (props) => {
           },
         }}
       >
-        <SidebarList setMobileOpen={setMobileOpen} mobileOpen={mobileOpen} />
-      </Drawer> */}
+        <SidebarList
+          setMobileOpen={setMobileOpen}
+          mobileOpen={mobileOpen}
+          userInfo={userInfo}
+          signInTwitter={signInTwitter}
+          accessToken={accessToken}
+          setAccessError={setAccessError}
+        />
+      </Drawer>
 
       <Drawer
         className="sidebar"

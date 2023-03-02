@@ -1,6 +1,7 @@
 import { useEffect, useState, useContext } from "react";
 import AppContext from "./components/context/AppContext";
 import Container from "@mui/material/Container";
+import Box from "@mui/material/Box";
 
 import { Routes, Route } from "react-router-dom";
 import AskPage from "./components/AskPage";
@@ -28,6 +29,7 @@ import AnswerQuestion from "./components/AnswerQuestion";
 import AccessErrorLogin from "./components/AccessErrorLogin";
 
 import axios, * as others from "axios";
+import { Avatar } from "@mui/material";
 
 const provider = new TwitterAuthProvider();
 
@@ -85,7 +87,6 @@ function App() {
 
   // Open Sidebar
   const onAvatarClick = (e) => {
-    e.preventDefault();
     setMobileOpen(!mobileOpen);
   };
 
@@ -127,6 +128,20 @@ function App() {
             accessError={accessError}
           />
         )}
+        <Box
+          className="user-avatar-container"
+          sx={{ display: { xs: "flex", sm: "flex", md: "none" } }}
+        >
+          <Avatar
+            className="user-avatar"
+            sx={{ cursor: "pointer" }}
+            src={userInfo && userInfo?.profile?.imageUrl}
+            onClick={(event) => {
+              event.stopPropagation();
+              onAvatarClick();
+            }}
+          ></Avatar>
+        </Box>
         {window.location.pathname !== "/" && (
           <Sidebar
             userInfo={userInfo}

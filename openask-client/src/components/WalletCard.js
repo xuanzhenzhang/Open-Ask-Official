@@ -12,8 +12,8 @@ const WalletCard = ({ accessToken, setAccessError }) => {
   const [provider, setProvider] = useState();
   const [signer, setSigner] = useState();
 
-  const currentAccountString =
-    currentAccount?.slice(0, 4) + "..." + currentAccount?.slice(-4);
+  const currentAccountString = (account) =>
+    account?.slice(0, 4) + "..." + account?.slice(-4);
 
   // Connect wallet method
   const connectWallet = async () => {
@@ -33,7 +33,7 @@ const WalletCard = ({ accessToken, setAccessError }) => {
       });
       console.log("Connected", accounts[0]);
       checkNetwork();
-      setCurrentAccount(accounts[0]);
+      setCurrentAccount(currentAccountString(accounts[0]));
       setupEventListener();
       setUserWallet(accounts[0]);
     } catch (error) {
@@ -77,7 +77,7 @@ const WalletCard = ({ accessToken, setAccessError }) => {
     if (accounts.length !== 0) {
       const account = accounts[0];
       console.log("Found an authorized account:", account);
-      setCurrentAccount(account);
+      setCurrentAccount(currentAccountString(account));
       setupEventListener();
       setUserWallet(account);
     } else {
@@ -86,21 +86,18 @@ const WalletCard = ({ accessToken, setAccessError }) => {
   };
 
   // Disconnect Wallet
-  // const disconnectWallet = () => {
-  //   if (window.ethereum) {
-  //     window.ethereum.enable().then((accounts) => {
-  //       window.ethereum.send({ method: "wallet_disconnect", params: [] }, (err, result) => {
-  //         if (err) {
-  //           console.error(err);
-  //         } else {
-  //           console.log(result);
-  //         }
-  //       });
-  //     });
-  //   } else {
-  //     console.log("MetaMask not detected");
-  //   }
-  // };
+  const handleDisconnect = async () => {
+    const { ethereum } = window;
+
+    const accounts = await ethereum.request({ method: "eth_accounts" });
+
+    if (accounts.length === 0) {
+      console.log("Wallet Disconnected");
+      setCurrentAccount();
+    } else if (accounts.length > 0) {
+      setCurrentAccount(currentAccountString(accounts[0]));
+    }
+  };
 
   // Set Event
   const setupEventListener = async () => {
@@ -109,8 +106,10 @@ const WalletCard = ({ accessToken, setAccessError }) => {
 
       if (ethereum) {
         const provider = new ethers.providers.Web3Provider(ethereum);
-        const signer = provider.getSigner();
+        // const signer = provider.getSigner();
         setProvider(provider);
+
+        ethereum.on("accountsChanged", handleDisconnect);
 
         console.log("Successfully setup event listener.");
       } else {
@@ -162,7 +161,7 @@ const WalletCard = ({ accessToken, setAccessError }) => {
       <Box onClick={connectWallet} className="wallet-btn">
         <Typography sx={{ display: "flex", justifyContent: "center" }}>
           {" "}
-          {currentAccount ? currentAccountString : "Connect Wallet"}
+          {currentAccount ? currentAccount : "Connect Wallet"}
         </Typography>
       </Box>
     </>

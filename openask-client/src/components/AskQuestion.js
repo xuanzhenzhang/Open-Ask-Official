@@ -41,12 +41,18 @@ const AskQuestion = (props) => {
 
   // Get all users
   useEffect(() => {
+    let isMounted = true;
     getUsers().then((response) => {
       const filteredResponse = response.filter(
         (user) => user.userId !== userInfo?.userUid
       );
-      setAllSenseis(filteredResponse);
+      if (isMounted) {
+        setAllSenseis(filteredResponse);
+      }
     });
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   // Set sensei ID #

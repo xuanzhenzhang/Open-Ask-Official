@@ -50,6 +50,18 @@ body {
   font-family: Roboto;
   color: var(--brand-vibrant) !important;
 }
+.user-avatar-container {
+  display: block;
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 3;
+}
+.user-avatar img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+}
 /* Header */
 .header {
   justify-content: space-between;
@@ -526,7 +538,7 @@ body {
   text-decoration: underline !important;
 }
 .tx-link:hover {
-  opacity: .8;
+  opacity: 0.8;
 }
 .tx-price {
   overflow: visible;
@@ -575,13 +587,13 @@ body {
   font-size: 20px !important;
 }
 
-
 /* Ask Question */
 .ask-question-container {
   background-color: var(--white) !important;
   border-radius: 20px !important;
   width: 560px;
   min-height: 371px;
+  max-width: 90%;
 }
 .ask-question-header {
   display: flex;
@@ -659,7 +671,7 @@ body {
   align-items: center;
   min-height: 371px;
 }
-.ask-question-loader-text{
+.ask-question-loader-text {
   padding: 24px;
   width: 400px;
   display: flex;

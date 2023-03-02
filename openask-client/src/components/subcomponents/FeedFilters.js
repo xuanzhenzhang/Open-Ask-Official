@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Box, Button, Menu, MenuItem, Typography } from "@mui/material";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import axios from "axios";
 
 const FeedFilters = ({ questions, setQuestions }) => {
@@ -16,6 +15,7 @@ const FeedFilters = ({ questions, setQuestions }) => {
 
   //   Questions by Price
   useEffect(() => {
+    let isMounted = true;
     const questionByPrice = async () => {
       try {
         const { data } = await axios
@@ -35,13 +35,18 @@ const FeedFilters = ({ questions, setQuestions }) => {
           })
           .reverse();
 
-        setQuestionsByPriceHigh(priceHigh);
-        setQuestionsByPriceLow(priceLow);
+        if (isMounted) {
+          setQuestionsByPriceHigh(priceHigh);
+          setQuestionsByPriceLow(priceLow);
+        }
       } catch (error) {
         console.log(error);
       }
     };
     questionByPrice();
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   // Filter Menu

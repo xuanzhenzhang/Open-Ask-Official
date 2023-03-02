@@ -6,7 +6,7 @@ import {
   Typography,
   Card,
   Link,
-  Button,
+  Backdrop,
   Tabs,
   Tab,
 } from "@mui/material";
@@ -16,6 +16,7 @@ import QuestionFooter from "./subcomponents/QuestionFooter.js";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import axios, * as others from "axios";
 import Loader from "./Loader.js";
+import AskQuestion from "./AskQuestion.js";
 
 import AskSenseiButton from "./subcomponents/AskSenseiButton.js";
 import { calendarSVG, linkSVG, backSvg } from "./subcomponents/VectorSVGs.js";
@@ -24,6 +25,7 @@ const SenseiDetails = ({ accessToken, setAccessError, userInfo }) => {
   const [loading, setLoading] = useState(false);
   const [profile, setProfile] = useState([]);
   const [allUsers, setAllUsers] = useState();
+  const [openBackdrop, setOpenBackdrop] = useState(false);
   const [profit, setProfit] = useState(100.0);
 
   const [allQuestions, setAllQuestions] = useState();
@@ -46,6 +48,16 @@ const SenseiDetails = ({ accessToken, setAccessError, userInfo }) => {
       setMyPage(false);
     }
   }, [twitter]);
+
+  // Click ask question
+  const onAskQuestion = (senseiDisplayName) => {
+    setOpenBackdrop(true);
+  };
+
+  // Close backdrop
+  const handleCloseBackdrop = () => {
+    setOpenBackdrop(false);
+  };
 
   // Get Sensei
   useEffect(() => {
@@ -160,7 +172,12 @@ const SenseiDetails = ({ accessToken, setAccessError, userInfo }) => {
                   alt={profile && profile[0]?.profile.displayName}
                   src={profile && profile[0]?.profile.imageUrl}
                 />
-                {!myPage && <AskSenseiButton />}
+                {!myPage && (
+                  <AskSenseiButton
+                    onAskQuestion={onAskQuestion}
+                    senseiDisplayName={profile && profile[0]?.profile.displayName}
+                  />
+                )}
               </Box>
             </Box>
             <Box className="sensei-details-body" sx={{ pt: "12px" }}>
@@ -322,6 +339,16 @@ const SenseiDetails = ({ accessToken, setAccessError, userInfo }) => {
               })}
             </TabPanel>
           </Box>
+          {/* Backdrop */}
+          <Backdrop className="ask-question-backdrop" open={openBackdrop}>
+            <AskQuestion
+              userInfo={userInfo}
+              accessToken={accessToken}
+              setAccessError={setAccessError}
+              handleCloseBackdrop={handleCloseBackdrop}
+              askedSensei={profile && profile[0]?.profile.displayName}
+            />
+          </Backdrop>
         </>
       )}
     </Container>
