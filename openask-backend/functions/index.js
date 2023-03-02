@@ -55,7 +55,7 @@ app.get("/users-by-followers", getAllUsersByFollowers);
 app.get("/user-wallet/:userId", getUserWallet);
 app.post("/user-wallet", FBAuth, setCurrentUserWallet);
 app.get("/user-wallet", FBAuth, getCurrentUserWallet);
-app.put("/user/:profile", FBAuth, updateUserProfile);
+app.put("/user/:profileType", FBAuth, updateUserProfile);
 
 app.get("/answer/:answerId", FBAuth, getAnswer);
 app.get("/answer-to-question/:questionId", FBAuth, getAnswerToQuestion);

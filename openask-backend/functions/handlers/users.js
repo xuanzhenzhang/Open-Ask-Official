@@ -5,11 +5,15 @@ const PROFILE = {
   TWITTER: "twitter",
   LENS: "lens",
 };
-const { gql } = require("@apollo/client");
-const { apolloClient, urqlClient } = require("../util/lensClient");
+// const { gql } = require("@apollo/client");
+// const { apolloClient, urqlClient } = require("../util/lensClient");
 
-const updateUserProfileHelper = async (req, res, newProfileType, profile) => {
-  console.log("need to be here?");
+const updateUserProfileHelper = async (
+  req,
+  res,
+  newProfileType,
+  newProfile
+) => {
   let updatedUser;
   // Can add facebook login later, we don't need gmail.
   const twitterId = req.user.firebase.identities["twitter.com"][0];
@@ -17,6 +21,7 @@ const updateUserProfileHelper = async (req, res, newProfileType, profile) => {
     .get()
     .then((doc) => {
       // update user profile info even if twitter => twitter (i.e. followcount udpate)
+      // don't use input newProfile as we fetch new profile below
       if (newProfileType.toLowerCase() == PROFILE.TWITTER) {
         const twClient = new TwitterApi({
           appKey: process.env.TWITTER_APP_KEY,
@@ -117,7 +122,7 @@ const updateUserProfileHelper = async (req, res, newProfileType, profile) => {
         //   posts_count: defaultProfile.stats.totalPosts,
         // };
         updatedUser = {
-          profile,
+          profile: newProfile,
           questionsAsked: doc.data().questionsAsked,
           questionsFor: doc.data().questionsFor,
           questionsPurchased: doc.data().questionsPurchased,
@@ -211,8 +216,9 @@ exports.createUserIfNotExist = async (req, res) => {
 
 exports.updateUserProfile = async (req, res) => {
   // new profile type use query params
+  const profileType = req.params.profileType;
   const profile = req.body.profile;
-  return updateUserProfileHelper(req, res, PROFILE.LENS, profile);
+  return updateUserProfileHelper(req, res, profileType, profile);
 };
 
 exports.getUser = (req, res) => {
