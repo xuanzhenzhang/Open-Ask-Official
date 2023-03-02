@@ -50,6 +50,18 @@ body {
   font-family: Roboto;
   color: var(--brand-vibrant) !important;
 }
+.user-avatar-container {
+  display: block;
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 3;
+}
+.user-avatar img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+}
 /* Header */
 .header {
   justify-content: space-between;
@@ -581,6 +593,7 @@ body {
   border-radius: 20px !important;
   width: 560px;
   min-height: 371px;
+  max-width: 90%;
 }
 .ask-question-header {
   display: flex;
