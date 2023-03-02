@@ -2,26 +2,11 @@
 
 Here are the workflows for using StandardBounties with OpenAsk:
 
-- [Create a bounty](#create-a-question)
-- [Fulfill a bounty](#fulfill-a-bounty)
-- [Accept a fulfillment](#accept-a-fulfillment)
-- [Change bounty data](#change-bounty-data)
-- [Change fulfillment data](#change-fulfillment-data)
-- [Increase bounty payout](#increase-bounty-payout)
-- [Increase fulfillment payout](#increase-fulfillment-payout)
-- [Contribute to a bounty](#contribute-to-a-bounty)
-- [Refund a contribution](#refund-a-contribution)
-- [Refund a fulfillment](#refund-a-fulfillment)
-- [Refund a bounty](#refund-a-bounty)
-- [Activate a bounty](#activate-a-bounty)
-- [Deactivate a bounty](#deactivate-a-bounty)
-- [Transfer ownership of a bounty](#transfer-ownership-of-a-bounty)
-- [Transfer ownership of a fulfillment](#transfer-ownership-of-a-fulfillment)
-- [Change bounty fulfillment amount](#change-bounty-fulfillment-amount)
-- [Change bounty deadline](#change-bounty-deadline)
-- [Change bounty arbiter](#change-bounty-arbiter)
-- [Change bounty contributor](#change-bounty-contributor)
-- [Change bounty data](#change-bounty-data)
+- [Create a question](#create-a-question)
+- [Answer a question and withdraw amount](#answer-a-question-and-withdraw-amount)
+- [Withdraw funds if the question is not answered and the deadline has passed](#withdraw-funds-if-the-question-is-not-answered-and-the-deadline-has-passed)
+- [Eavesdrop](#eavesdrop)
+
 
 ### Create a question
 To create a question, a user will need to sign a transaction with the following parameters:
@@ -95,3 +80,11 @@ function refundContributions(
 ### [Optional] Change question data
 
 ### [Optional] Contribute to reward pool
+
+# Testing
+
+To run tests, run the command 
+```bash
+forge test -vv --fork-url https://cloudflare-eth.com/    
+```
+Other rpc urls are available. See https://ethereumnodes.com/ for the list.

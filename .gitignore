@@ -13,3 +13,5 @@ artifacts
 
 # Forge files
 forge-cache
+out
+test
