@@ -30,12 +30,14 @@ const {
 } = require("./handlers/users");
 
 const {
-  postAnswerToQuestion,
+  // postAnswerToQuestion,
   purchaseAnswer,
   getAnswer,
   getAnswerToQuestion,
   getAllAnswersByUser,
-  updateAnswerTxHash,
+  // updateAnswerTxHash,
+  postUnactivatedAnswerToQuestion,
+  updateActivateAnswer,
 } = require("./handlers/answers");
 
 app.get("/questions", getAllQuestions);
@@ -60,67 +62,11 @@ app.put("/user/:profileType", FBAuth, updateUserProfile);
 app.get("/answer/:answerId", FBAuth, getAnswer);
 app.get("/answer-to-question/:questionId", FBAuth, getAnswerToQuestion);
 app.get("/answers-by-user/:userId", FBAuth, getAllAnswersByUser);
-app.post("/answer/:questionId", FBAuth, postAnswerToQuestion);
+// app.post("/answer/:questionId", FBAuth, postAnswerToQuestion);
+app.post("/answer/:questionId", FBAuth, postUnactivatedAnswerToQuestion);
+app.put("answer/:answerId", FBAuth, updateActivateAnswer);
 app.put("/answer/payment/:answerId", FBAuth, purchaseAnswer);
-app.put("/answer/tx/:answerId", FBAuth, updateAnswerTxHash);
-
-// app.post("/signup", (req, res) => {
-//   const newUser = {
-//     twitterHandle: req.body.twitterHandle,
-//     twitterPFP: req.body.twitterPFP,
-//     twitterDisplayName: req.body.twitterDisplayName,
-//   };
-
-//   db.collection("users")
-//     .add(newUser)
-//     .then((doc) => {
-//       res.json({ message: `document ${doc.id} created successfully` });
-//     })
-//     .catch((err) => {
-//       res.status(500).json({ error: "something went wrong" });
-//     });
-// });
-
-// // Create and Deploy Your First Cloud Functions
-// // https://firebase.google.com/docs/functions/write-firebase-functions
-//
-// exports.helloWorld = functions.https.onRequest((request, response) => {
-//   functions.logger.info("Hello logs!", { structuredData: true });
-//   response.send("Hello world!");
-// });
-
-// app.get("/questions", (req, res) => {
-//   db.collection("questions")
-//     .get()
-//     .then((docList) => {
-//       let questions = [];
-//       docList.forEach((doc) => {
-//         questions.push(doc.data());
-//       });
-//       return res.json(questions);
-//     })
-//     .catch((err) => console.error(err));
-// });
-
-// exports.getQuestions = functions.https.onRequest((req, res) => {
-//   db.collection("questions")
-//     .get()
-//     .then((docList) => {
-//       let questions = [];
-//       docList.forEach((doc) => {
-//         questions.push(doc.data());
-//       });
-//       return res.json(questions);
-//     })
-//     .catch((err) => console.error(err));
-// });
-
-// const { twClient } = require("./util/client");
-// twClient
-//   .get(
-//     "https://api.twitter.com/2/users/1504363325886328835?user.fields=description,profile_image_url,public_metrics"
-//   )
-//   .then((res) => console.log(res));
+// app.put("/answer/tx/:answerId", FBAuth, updateAnswerTxHash);
 
 exports.api = functions
   .runWith({

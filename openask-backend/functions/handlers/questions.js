@@ -2,6 +2,11 @@
 const { db } = require("../util/admin");
 const { generateToken } = require("../util/token");
 const { getEscrowQuestionId } = require("../util/contracts");
+const {
+  getBountyIdAndQuestionIdFromBountyIssueAndContributeHash,
+  getTokenTypeAndDepositAmountFromIssueAndContributeHash,
+} = require("../util/hash");
+const { getTokenSymbol } = require("../util/erc20");
 
 exports.getAllQuestions = (req, res) => {
   db.collection("questions")
@@ -130,23 +135,21 @@ exports.postUnactivatedQuestion = async (req, res) => {
     return res.status(400).json({ body: "Cannot ask yourself question" });
   }
 
-  const secretToken = generateToken();
-
   // no contract address yet!!!
   let newQuestion = {
     body: req.body.body,
     questionerUid: req.user.uid,
     questioneeUid: req.body.questioneeUid,
     createdAt: new Date().toISOString(),
-    contractAddress: null,
+    txHash: null,
+    bountyId: null,
     answerId: null,
     rewardTokenType: req.body.rewardTokenType,
     rewardTokenAmount: req.body.rewardTokenAmount,
     purchasePrice: 0,
-    secretToken: secretToken,
   };
 
-  const upperCaseRewardTokenType = req.body.rewardTokenType.toUpperCase();
+  const upperCaseRewardTokenType = getTokenSymbol(req.body.rewardTokenType);
   const fetchPriceUrl = `https://api.kucoin.com/api/v1/market/orderbook/level1?symbol=${upperCaseRewardTokenType}-USDT`;
   const axios = require("axios");
   let resQuestion;
@@ -163,7 +166,6 @@ exports.postUnactivatedQuestion = async (req, res) => {
     .then((doc) => {
       resQuestion = newQuestion;
       resQuestion.questionId = doc.id;
-      // includes secretToken
       return res.status(200).json(resQuestion);
     })
     .catch((err) => {
@@ -172,15 +174,21 @@ exports.postUnactivatedQuestion = async (req, res) => {
     });
 };
 
-/**
- *
- * @param {smartContractAddress} req
- */
-
 exports.updateActivateQuestion = async (req, res) => {
-  const questionId = await getEscrowQuestionId(req.params.contractAddress);
+  const txHash = req.params.txHash;
+  const { questionId, bountyId } =
+    await getBountyIdAndQuestionIdFromBountyIssueAndContributeHash(txHash);
+  const { tokenAddress, depositAmount } =
+    await getTokenTypeAndDepositAmountFromIssueAndContributeHash(txHash);
 
-  // const questionId = req.params.questionId;
+  /**
+   * Need to match questionId, rewardTokenAmount, rewardTokenType
+   * !!!hack example:
+   * 1. post a question with high rewards
+   * 2. cancel confirm tx
+   * 3. send tx to smart contract with prev questionId with low money
+   * 4. call activatequestion api with the hash matching questionId
+   */
   let questionerUid;
   let questioneeUid;
   let question;
@@ -188,17 +196,21 @@ exports.updateActivateQuestion = async (req, res) => {
   db.doc(`/questions/${questionId}`)
     .get()
     .then((doc) => {
-      console.log("questiondata: ", doc);
       if (!doc.exists) {
+        return res.status(404).json({ error: "questionId in hash not found" });
+      }
+      if (
+        tokenAddress != doc.data().rewardTokenType ||
+        depositAmount != doc.data().rewardTokenAmount
+      ) {
         return res
           .status(404)
-          .json({ error: "Escrow SC QuesitonId not found in database" });
+          .json({ error: "Unmatched token amount or token type" });
       }
       question = doc.data();
-      console.log("questiondata: ", question);
       questionerUid = question.questionerUid;
       questioneeUid = question.questioneeUid;
-      return doc.ref.update({ contractAddress: req.params.contractAddress });
+      return doc.ref.update({ txHash: req.params.txHash, bountyId: bountyId });
     })
     .then(() => {
       return db.doc(`/users/${questionerUid}`).get();
@@ -233,6 +245,119 @@ exports.updateActivateQuestion = async (req, res) => {
       });
     });
 };
+
+// exports.postUnactivatedQuestion = async (req, res) => {
+//   if (req.body.body.trim() === "") {
+//     return res.status(400).json({ body: "Body must not be empty" });
+//   }
+//   if (req.user.uid == req.body.questioneeUid) {
+//     return res.status(400).json({ body: "Cannot ask yourself question" });
+//   }
+
+//   const secretToken = generateToken();
+
+//   // no contract address yet!!!
+//   let newQuestion = {
+//     body: req.body.body,
+//     questionerUid: req.user.uid,
+//     questioneeUid: req.body.questioneeUid,
+//     createdAt: new Date().toISOString(),
+//     contractAddress: null,
+//     answerId: null,
+//     rewardTokenType: req.body.rewardTokenType,
+//     rewardTokenAmount: req.body.rewardTokenAmount,
+//     purchasePrice: 0,
+//     secretToken: secretToken,
+//   };
+
+//   const upperCaseRewardTokenType = req.body.rewardTokenType.toUpperCase();
+//   const fetchPriceUrl = `https://api.kucoin.com/api/v1/market/orderbook/level1?symbol=${upperCaseRewardTokenType}-USDT`;
+//   const axios = require("axios");
+//   let resQuestion;
+//   axios
+//     .get(fetchPriceUrl)
+//     .then((token) => {
+//       const price = token.data.data.price;
+//       const totalPrice = price * Number(req.body.rewardTokenAmount);
+//       newQuestion.purchasePrice = totalPrice;
+//     })
+//     .then(() => {
+//       return db.collection("questions").add(newQuestion);
+//     })
+//     .then((doc) => {
+//       resQuestion = newQuestion;
+//       resQuestion.questionId = doc.id;
+//       // includes secretToken
+//       return res.status(200).json(resQuestion);
+//     })
+//     .catch((err) => {
+//       res.status(500).json({ error: "something went wrong" });
+//       console.error(err);
+//     });
+// };
+
+/**
+ *
+ * @param {smartContractAddress} req
+ * Need questionId, hash
+ */
+
+// exports.updateActivateQuestion = async (req, res) => {
+//   const questionId = await getEscrowQuestionId(req.params.contractAddress);
+
+//   // const questionId = req.params.questionId;
+//   let questionerUid;
+//   let questioneeUid;
+//   let question;
+
+//   db.doc(`/questions/${questionId}`)
+//     .get()
+//     .then((doc) => {
+//       console.log("questiondata: ", doc);
+//       if (!doc.exists) {
+//         return res
+//           .status(404)
+//           .json({ error: "Escrow SC QuesitonId not found in database" });
+//       }
+//       question = doc.data();
+//       console.log("questiondata: ", question);
+//       questionerUid = question.questionerUid;
+//       questioneeUid = question.questioneeUid;
+//       return doc.ref.update({ contractAddress: req.params.contractAddress });
+//     })
+//     .then(() => {
+//       return db.doc(`/users/${questionerUid}`).get();
+//     })
+//     // can use Promise.all to do concurrent updates.
+//     .then((userData) => {
+//       console.log("userData:! ", userData.data());
+//       const newQuestionsAsked = userData.data().questionsAsked;
+//       newQuestionsAsked.push(questionId);
+//       return userData.ref.update({ questionsAsked: newQuestionsAsked });
+//     })
+//     .then(() => {
+//       return db.doc(`/users/${questioneeUid}`).get();
+//     })
+//     .then((userData) => {
+//       const newQuestionsFor = userData.data().questionsFor;
+//       newQuestionsFor.push(questionId);
+//       return userData.ref.update({ questionsFor: newQuestionsFor });
+//     })
+//     .then(() => {
+//       // excludes secretToken
+//       return res.status(200).json({
+//         questionId: questionId,
+//         body: question.body,
+//         questionerUid: question.questionerUid,
+//         questioneeUid: question.questioneeUid,
+//         createdAt: question.createdAt,
+//         answerId: question.answerId,
+//         rewardTokenType: question.rewardTokenType,
+//         rewardTokenAmount: question.rewardTokenAmount,
+//         purchasePrice: question.purchasePrice,
+//       });
+//     });
+// };
 
 // exports.postOneQuestion = (req, res) => {
 //   if (req.body.body.trim() === "") {

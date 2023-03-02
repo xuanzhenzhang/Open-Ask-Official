@@ -1,6 +1,13 @@
 const { db } = require("../util/admin");
 
-exports.postAnswerToQuestion = (req, res) => {
+/**
+ * (not secure!!!)
+ * post answer
+ * return answerId (no answer url)
+ * send me back the tx hash, there is answerId in the input (no need event)
+ */
+
+exports.postUnactivatedAnswerToQuestion = (req, res) => {
   if (req.body.body.trim() === "") {
     return res.status(400).json({ body: "Body must not be empty" });
   }
@@ -17,29 +24,20 @@ exports.postAnswerToQuestion = (req, res) => {
           .status(400)
           .json({ error: "Question is asked to a different user" });
       }
-      // add answer
-      const allowList = [req.user.uid, question.data().questionerUid];
-
       answer = {
         body: req.body.body,
-        allowList: allowList,
+        allowList: null,
         questionId: req.params.questionId,
         quesitonerUid: question.data().questionerUid,
         questioneeUid: question.data().questioneeUid,
         createdAt: new Date().toISOString(),
-        secretToken: question.data().secretToken,
         txHash: null,
       };
       return db.collection("answers").add(answer);
     })
-    .then((doc) => {
+    .then(() => {
       resAnswer = answer;
       resAnswer.answerId = doc.id;
-      return question.ref.update({
-        answerId: resAnswer.answerId,
-      });
-    })
-    .then(() => {
       return res.status(200).json(resAnswer);
     })
     .catch((err) => {
@@ -48,27 +46,137 @@ exports.postAnswerToQuestion = (req, res) => {
     });
 };
 
-exports.updateAnswerTxHash = (req, res) => {
-  let updatedAnswerWithTxHash;
-
-  db.doc(`/answer/${answerId}`)
+exports.updateActivateAnswer = (req, res) => {
+  // get hash and read the answerId
+  const txHash = "asdfdsfads";
+  const answerId = 12345;
+  let questionId, newAnswer;
+  db.doc(`/answers/${answerId}`)
     .get()
     .then((doc) => {
-      if (!doc.exists) {
-        return res.status(404).json({ error: "Answer not found." });
-      }
-      updatedAnswerWithTxHash = doc;
-      updatedAnswerWithTxHash.txHash = req.params.txHash;
-      return doc.ref.update({ txHash: req.params.txHash });
+      const questionerUid = doc.data().questionerUid;
+      const questioneeUid = doc.data().questioneeUid;
+      questionId = doc.data().questionId;
+      const allowList = [questionerUid, questioneeUid];
+      newAnswer = {
+        body: doc.data().body,
+        allowList: allowList,
+        questionId: doc.data().questionId,
+        quesitonerUid: questionerUid,
+        questioneeUid: questioneeUid,
+        createdAt: new Date().toISOString(),
+        txHash: txHash,
+      };
+      return doc.ref.update({ allowList: allowList, txHash: txHash });
     })
     .then(() => {
-      return res.status(200).json({ updatedAnswerWithTxHash });
+      return db.doc(`/questions/${questionId}`).get();
+    })
+    .then((doc) => {
+      return doc.ref.update({
+        answerId: resAnswer.answerId,
+      });
+    })
+    .then(() => {
+      return res.status(200).json(newAnswer);
     })
     .catch((err) => {
       res.status(500).json({ error: "something went wrong" });
       console.error(err);
     });
 };
+
+// const allowList = [req.user.uid, question.data().questionerUid];
+
+//       answer = {
+//         body: req.body.body,
+//         allowList: allowList,
+//         questionId: req.params.questionId,
+//         quesitonerUid: question.data().questionerUid,
+//         questioneeUid: question.data().questioneeUid,
+//         createdAt: new Date().toISOString(),
+//         secretToken: question.data().secretToken,
+//         txHash: null,
+//       };
+//       return db.collection("answers").add(answer);
+//     })
+//     .then((doc) => {
+//       resAnswer = answer;
+//       resAnswer.answerId = doc.id;
+//       return question.ref.update({
+//         answerId: resAnswer.answerId,
+//       });
+//     })
+
+// exports.postAnswerToQuestion = (req, res) => {
+//   if (req.body.body.trim() === "") {
+//     return res.status(400).json({ body: "Body must not be empty" });
+//   }
+//   let answer, question, resAnswer;
+
+//   db.doc(`/questions/${req.params.questionId}`)
+//     .get()
+//     .then((doc) => {
+//       question = doc;
+//       if (question.data().answerId != null) {
+//         return res.status(400).json({ error: "Question already answered" });
+//       } else if (question.data().questioneeUid != req.user.uid) {
+//         return res
+//           .status(400)
+//           .json({ error: "Question is asked to a different user" });
+//       }
+//       // add answer
+//       const allowList = [req.user.uid, question.data().questionerUid];
+
+//       answer = {
+//         body: req.body.body,
+//         allowList: allowList,
+//         questionId: req.params.questionId,
+//         quesitonerUid: question.data().questionerUid,
+//         questioneeUid: question.data().questioneeUid,
+//         createdAt: new Date().toISOString(),
+//         secretToken: question.data().secretToken,
+//         txHash: null,
+//       };
+//       return db.collection("answers").add(answer);
+//     })
+//     .then((doc) => {
+//       resAnswer = answer;
+//       resAnswer.answerId = doc.id;
+//       return question.ref.update({
+//         answerId: resAnswer.answerId,
+//       });
+//     })
+//     .then(() => {
+//       return res.status(200).json(resAnswer);
+//     })
+//     .catch((err) => {
+//       res.status(500).json({ error: "something went wrong" });
+//       console.error(err);
+//     });
+// };
+
+// exports.updateAnswerTxHash = (req, res) => {
+//   let updatedAnswerWithTxHash;
+
+//   db.doc(`/answer/${answerId}`)
+//     .get()
+//     .then((doc) => {
+//       if (!doc.exists) {
+//         return res.status(404).json({ error: "Answer not found." });
+//       }
+//       updatedAnswerWithTxHash = doc;
+//       updatedAnswerWithTxHash.txHash = req.params.txHash;
+//       return doc.ref.update({ txHash: req.params.txHash });
+//     })
+//     .then(() => {
+//       return res.status(200).json({ updatedAnswerWithTxHash });
+//     })
+//     .catch((err) => {
+//       res.status(500).json({ error: "something went wrong" });
+//       console.error(err);
+//     });
+// };
 
 /**
  * For transactions page
