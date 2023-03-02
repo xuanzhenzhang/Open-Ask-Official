@@ -5,8 +5,11 @@ import axios from "axios";
 import { Box, Typography } from "@mui/material";
 
 const { ApolloClient, InMemoryCache, gql } = require("@apollo/client");
-
-const APIURL = "https://api-mumbai.lens.dev/";
+const PROFILE = {
+  TWITTER: "twitter",
+  LENS: "lens",
+};
+const APIURL = "https://api.lens.dev";
 
 const apolloClient = new ApolloClient({
   uri: APIURL,
@@ -104,8 +107,7 @@ const LensCard = ({ accessToken, setAccessError }) => {
   const [provider, setProvider] = useState();
   const [signer, setSigner] = useState();
   const [lensAccessToken, setLensAccessToken] = useState();
-  const [profile, setProfile] = useState({});
-  const [lensPrompt, setLensPrompt] = useState("Lens Login");
+  const [lensProfile, setLensProfile] = useState({});
 
   // Connect wallet method
   const connectWallet = async () => {
@@ -163,14 +165,6 @@ const LensCard = ({ accessToken, setAccessError }) => {
     checkIfWalletIsConnected();
   }, []);
 
-  useEffect(() => {
-    if (lensAccessToken) {
-      setLensPrompt("Use Lens Profile");
-    } else {
-      setLensPrompt("Lens Login");
-    }
-  }, [lensAccessToken]);
-
   // Set Event
   const setupEventListener = async () => {
     try {
@@ -225,28 +219,37 @@ const LensCard = ({ accessToken, setAccessError }) => {
   };
 
   const useLensProfile = async () => {
-    const profileResponse = await profileQuery(
-      "0x3A5bd1E37b099aE3386D13947b6a90d97675e5e3"
-    );
+    const profileResponse = await profileQuery(currentAccount);
     if (profileResponse.defaultProfile != null) {
-      setProfile(profileResponse.defaultProfile);
-    }
-    console.log("accesstoken: ", accessToken);
+      const defaultProfile = profileResponse.defaultProfile;
+      const profile = {
+        type: PROFILE.LENS,
+        id: defaultProfile.id,
+        handle: defaultProfile.handle,
+        displayName: defaultProfile?.name,
+        imageUrl: defaultProfile?.picture?.original?.url,
+        bio: defaultProfile?.bio,
+        followers_count: defaultProfile?.stats?.totalFollowers,
+        following_count: defaultProfile?.stats?.totalFollowing,
+        posts_count: defaultProfile?.stats?.totalPosts,
+      };
+      setLensProfile(profile);
 
-    axios
-      .put(
-        // "https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/lens",
-        "http://localhost:5001/open-ask-dbbe2/us-central1/api/user/lens",
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
+      axios
+        .put(
+          "https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/user/lens",
+          // "http://localhost:5001/open-ask-dbbe2/us-central1/api/user/lens",
+          {
+            profile: profile,
           },
-        }
-      )
-      .then((res) => {
-        console.log(res);
-      });
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        )
+        .then(() => {});
+    }
   };
 
   return (
@@ -255,7 +258,7 @@ const LensCard = ({ accessToken, setAccessError }) => {
         <Box onClick={useLensProfile} className='wallet-btn'>
           <Typography sx={{ display: "flex", justifyContent: "center" }}>
             {" "}
-            {profile.handle ? profile.handle : "Use Lens Profile"}
+            {lensProfile.handle ? lensProfile.handle : "Use Lens Profile"}
           </Typography>
         </Box>
       ) : (
