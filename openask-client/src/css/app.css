@@ -257,6 +257,8 @@ body {
   border: 1px solid var(--gray-3);
   padding: 6px 8px;
   border-radius: 16px;
+  display: flex;
+  gap: 6px;
 }
 .feed-purchase {
   cursor: pointer;
