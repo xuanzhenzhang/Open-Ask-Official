@@ -1,287 +1,118 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import {
-  Container,
+  Box,
   Card,
-  Typography,
   CardContent,
-  CardHeader,
   Avatar,
-  CardActions,
-  Button,
-  TextField,
-  Stack,
-  Backdrop,
-  Link,
-  InputAdornment,
-} from "@mui/material";
-import { useLocation, useNavigate } from "react-router-dom";
-import Congratulations from "./Congratulations.js";
+  Typography,
+  Divider,
+} from "@material-ui/core";
+import { Autocomplete, TextField, Chip, CircularProgress } from "@mui/material";
+import { getUsers } from "./functions/getUsers";
+import { useNavigate } from "react-router-dom";
+import { deployEthContract } from "./functions/ethContract";
+import { ethMatureTime } from "./functions/ethMatureTime";
+import { ethBountyContract } from "./functions/ethBountyContract";
+import AskButton from "./subcomponents/AskButton";
+import { ethers } from "ethers";
 import confetti from "canvas-confetti";
-import axios, * as others from "axios";
+import axios from "axios";
+import PriceButton from "./subcomponents/PriceButton";
+import SubmitAnswerButton from "./subcomponents/SubmitAnswerButton";
 
-import { receivePayment } from "./functions/receivePayment.js";
-import { receiveEthPayment } from "./functions/receiveEthPayment.js";
-import Loader from "./Loader.js";
-import SnackbarError from "./subcomponents/SnackbarError.js";
+const AnswerQuestion = (props) => {
+  const { handleCloseBackdrop } = props;
+  const { handle, avatar, displayName, rewardAmount, answerQuestion } = props;
 
-const AnswerQuestion = ({ accessToken, setAccessError }) => {
-  const location = useLocation();
-  const {
-    question,
-    questionId,
-    avatar,
-    twitter,
-    displayName,
-    tokenType,
-    tokenAmount,
-    contractAddress,
-    timestamp,
-  } = location.state;
+  const [answer, setAnswer] = useState();
 
-  const [answer, setAnswer] = useState("");
-  const [tokenPayAmount, setTokenPayAmount] = useState(0.001);
+  const [askLoader, setAskLoader] = useState(false);
+  const [askLoaderText, setAskLoaderText] = useState("Continue on Metamask");
 
-  const [open, setOpen] = useState(false);
-  const [openLoader, setOpenLoader] = useState(false);
-
-  const [congrats, setCongrats] = useState();
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-
-  const navigate = useNavigate();
-
-  const handleTokenAmountChange = (e) => {
-    e.preventDefault();
-    setTokenPayAmount(e.target.value);
-  };
-
-  const handleCloseBackdrop = () => {
-    setOpen(false);
-  };
-  const handleOpenBackdrop = () => {
-    setOpen(!open);
-  };
-
-  // Receive payment from Smart Contract
-  const handleCongrats = async () => {
-    try {
-      setOpenLoader(true);
-      console.log(tokenType);
-      tokenType === "ETH"
-        ? await receivePayment(contractAddress)
-        : await receiveEthPayment(contractAddress);
-
-      await answerQuestion();
-      setOpenLoader(false);
-      setCongrats(!congrats);
-      confetti({
-        zIndex: "3002",
-        particleCount: 300,
-        spread: 150,
-        shapes: ["circle", "square"],
-        origin: {
-          y: 0.65,
-        },
-      });
-    } catch (error) {
-      console.log(error);
-      setOpenLoader(false);
-      setSnackbarOpen(true);
-    }
-  };
-
-  const handleCloseCongrats = () => {
-    setCongrats(false);
-    navigate("/questions_answered");
-  };
-
-  // POST answer to question
-  const answerQuestion = async () => {
-    try {
-      await axios.post(
-        `https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/answer/${questionId}`,
-        {
-          body: answer,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-      console.log("Question answered successfully!");
-    } catch (error) {
-      if (error.response.status === 403) {
-        setAccessError(true);
-      }
-      throw new Error(error);
-    }
+  const handleEthBountyReceive = async () => {
+    console.log("handleEthBountyReceive");
   };
 
   return (
-    <>
-      <Container
-        sx={{
-          width: { md: `calc(100% - 300px)` },
-          ml: { md: `300px` },
-          mt: "74px",
-        }}
-      >
-        <Card className="answer-card-full">
-          <CardHeader
-            avatar={
-              <Avatar
-                // sx={{ cursor: "pointer" }}
-                src={avatar}
-                // onClick={(event) => {
-                //   event.stopPropagation();
-                //   handleAvatarClick(user && user[0]?.twitterHandle);
-                // }}
-              ></Avatar>
-            }
-            title={
-              <>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  }}
-                >
-                  <Typography>{displayName}</Typography>
-                  <Typography>{`${tokenAmount} ${tokenType}`}</Typography>
-                </div>
-              </>
-            }
-            subheader={
-              <Link
-                className="feed-link"
-                underline="none"
-                href={`https://twitter.com/${twitter}`}
-                target="_blank"
-                rel="noreferrer"
-              >
-                @{twitter}
-              </Link>
-            }
-          ></CardHeader>
-          <CardContent>
-            <Typography>{question}</Typography>
-          </CardContent>
-          <CardActions className="answered-actions-backdrop">
-            <Typography variant="caption">{timestamp}</Typography>
-          </CardActions>
-        </Card>
-        <Stack direction="column" spacing={2} justifyContent="center">
-          <TextField
-            required
-            label={"Answer..."}
-            multiline
-            rows={5}
-            variant="outlined"
-            value={answer}
-            fullWidth
-            onChange={(e) => setAnswer(e.target.value)}
-          />
-          <TextField
-            required
-            disabled
-            label="ETH Payment Amount"
-            type="number"
-            variant="outlined"
-            value={`${tokenPayAmount}`}
-            onChange={handleTokenAmountChange}
-            InputProps={{
-              endAdornment: <InputAdornment position="end">ETH</InputAdornment>,
-              inputProps: {
-                step: 0.001,
-              },
-            }}
-          />
-          <Button
-            disabled={answer === "" || tokenPayAmount === ""}
-            className="answer-btn"
-            variant="contained"
-            onClick={handleOpenBackdrop}
-          >
-            Submit
-          </Button>
-        </Stack>
-      </Container>
-
-      <Backdrop
-        className="backdrop-ask"
-        open={open}
-        onClick={handleCloseBackdrop}
-      >
-        <Card className="answer-card">
-          <CardHeader
-            avatar={
-              <Avatar
-                // sx={{ cursor: "pointer" }}
-                src={avatar}
-                // onClick={(event) => {
-                //   event.stopPropagation();
-                //   handleAvatarClick(user && user[0]?.twitterHandle);
-                // }}
-              ></Avatar>
-            }
-            title={
-              <>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  }}
-                >
-                  <Typography>{displayName}</Typography>
-                  <Typography>{`${tokenAmount} ${tokenType}`}</Typography>
-                </div>
-              </>
-            }
-            subheader={
-              <Link
-                className="feed-link"
-                underline="none"
-                href={`https://twitter.com/${twitter}`}
-                target="_blank"
-                rel="noreferrer"
-              >
-                @{twitter}
-              </Link>
-            }
-          ></CardHeader>
-          <CardContent>
-            <Typography>{question}</Typography>
-          </CardContent>
-          <CardActions className="answered-actions-backdrop">
-            <Typography variant="caption">{timestamp}</Typography>
-          </CardActions>
-        </Card>
-        <Card className="answer-card">
-          <CardHeader title="Your Answer:" />
-          <CardContent>
-            <Typography>{answer}</Typography>
-          </CardContent>
-        </Card>
-
-        <Button color="success" variant="contained" onClick={handleCongrats}>
-          Confirm
-        </Button>
-      </Backdrop>
-
-      <Backdrop open={openLoader} sx={{ zIndex: "5000" }}>
-        <Loader />
-      </Backdrop>
-
-      {congrats && (
-        <Congratulations handleCloseCongrats={handleCloseCongrats} answer />
+    <Card className="ask-question-container">
+      {askLoader && (
+        <Box className="ask-question-loader">
+          <CircularProgress />
+          <Box className="ask-question-loader-text">
+            <Typography>{askLoaderText}</Typography>
+          </Box>
+        </Box>
       )}
-      <SnackbarError
-        snackbarOpen={snackbarOpen}
-        setSnackbarOpen={setSnackbarOpen}
-      />
-    </>
+      {!askLoader && (
+        <>
+          <CardContent className="ask-question-header">
+            <svg
+              cursor="pointer"
+              onClick={handleCloseBackdrop}
+              width="40"
+              height="40"
+              viewBox="0 0 40 40"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <rect
+                x="0.5"
+                y="0.5"
+                width="39"
+                height="39"
+                rx="19.5"
+                fill="#FDFDFD"
+              />
+              <path
+                fillRule="evenodd"
+                clipRule="evenodd"
+                d="M16.4642 23.5355C16.1387 23.21 16.1387 22.6824 16.4642 22.357L18.8212 19.9999L16.4642 17.6429C16.1387 17.3175 16.1387 16.7898 16.4642 16.4644C16.7896 16.139 17.3172 16.139 17.6427 16.4644L19.9997 18.8214L22.3567 16.4644C22.6821 16.139 23.2098 16.139 23.5352 16.4644C23.8607 16.7898 23.8607 17.3175 23.5352 17.6429L21.1782 19.9999L23.5352 22.357C23.8607 22.6824 23.8607 23.21 23.5352 23.5355C23.2098 23.8609 22.6821 23.8609 22.3567 23.5355L19.9997 21.1784L17.6427 23.5355C17.3172 23.8609 16.7896 23.8609 16.4642 23.5355Z"
+                fill="black"
+              />
+              <rect
+                x="0.5"
+                y="0.5"
+                width="39"
+                height="39"
+                rx="19.5"
+                stroke="#E8E8E8"
+              />
+            </svg>
+          </CardContent>
+          {/* From */}
+          <CardContent className="ask-question-from">
+            <Typography className="ask-question-text">from: </Typography>
+            <Avatar className="ask-question-avatar" alt={handle} src={avatar} />
+            <Typography> {displayName}</Typography>
+            <PriceButton tokenAmount={rewardAmount} tokenType="ETH" />
+          </CardContent>
+          <CardContent className="answer-question-question">
+            <Typography>{answerQuestion}</Typography>
+          </CardContent>
+          <Divider variant="middle" />
+          <CardContent className="answer-question-body">
+            <TextField
+              className="ask-question-autocomplete-textfield"
+              required
+              fullWidth
+              label="Your answer..."
+              multiline
+              minRows={4}
+              variant="outlined"
+              value={answer}
+              onChange={(e) => setAnswer(e.target.value)}
+            />
+          </CardContent>
+          <CardContent className="answer-question-footer">
+            <SubmitAnswerButton
+              disabled={answer ? false : true}
+              handleEthBountyReceive={handleEthBountyReceive}
+            />
+          </CardContent>
+        </>
+      )}
+    </Card>
   );
 };
 
