@@ -23,9 +23,11 @@
     "gql": "^1.1.2",
     "graphql": "^16.6.0",
     "install": "^0.13.0",
+    "node-fetch": "^2.6.1",
     "npm": "^9.5.1",
     "react": "^18.2.0",
-    "twitter-api-v2": "^1.14.2"
+    "twitter-api-v2": "^1.14.2",
+    "urql": "^3.0.3"
   },
   "devDependencies": {
     "firebase-functions-test": "^0.2.0"
