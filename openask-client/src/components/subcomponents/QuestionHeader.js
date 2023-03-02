@@ -14,7 +14,7 @@ const QuestionHeader = (props) => {
   // Navigate to Sensei Detail page
   const handleAvatarClick = (twitter) => {
     navigate(`/sensei/${twitter}`);
-  };
+  };  
 
   return (
     <CardHeader

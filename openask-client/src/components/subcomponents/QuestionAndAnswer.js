@@ -15,17 +15,32 @@ import {
 const QuestionAndAnswer = ({ data }) => {
   const [allUsers, setAllUsers] = useState();
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   // Get all users
   useEffect(() => {
-    getUsers().then((response) => {
-      setAllUsers(response);
+    getUsers().then((users) => {
+      const modifiedUsers = users.map((user) => {
+        if (user?.profile?.imageUrl?.startsWith("ipfs")) {
+          return {
+            ...user,
+            profile: {
+              ...user.profile,
+              imageUrl: `https://ipfs.io/ipfs/${
+                user.profile.imageUrl.split("/")[2]
+              }`,
+            },
+          };
+        } else {
+          return user;
+        }
+      });
+      setAllUsers(modifiedUsers);
     });
   }, []);
 
-   // Navigate to sensei details page
-   const handleAvatarClick = (twitter) => {
+  // Navigate to sensei details page
+  const handleAvatarClick = (twitter) => {
     navigate(`/sensei/${twitter}`);
   };
 
@@ -37,7 +52,6 @@ const QuestionAndAnswer = ({ data }) => {
   return (
     <>
       {data?.map((content) => {
-
         const user = allUsers?.filter((id) => {
           return id.userId === content.questionerUid;
         });

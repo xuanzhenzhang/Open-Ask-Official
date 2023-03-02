@@ -44,9 +44,24 @@ const Sensei = ({ userInfo, accessToken, setAccessError }) => {
   // Get all users
   useEffect(() => {
     setLoading(true);
-    getUsers().then((response) => {
-      setFilteredSensei(response);
-      setAutocompleteSensei(response);
+    getUsers().then((users) => {
+      const modifiedUsers = users.map((user) => {
+        if (user?.profile?.imageUrl?.startsWith("ipfs")) {
+          return {
+            ...user,
+            profile: {
+              ...user.profile,
+              imageUrl: `https://ipfs.io/ipfs/${
+                user.profile.imageUrl.split("/")[2]
+              }`,
+            },
+          };
+        } else {
+          return user;
+        }
+      });
+      setFilteredSensei(modifiedUsers);
+      setAutocompleteSensei(modifiedUsers);
       setLoading(false);
     });
   }, []);
@@ -360,8 +375,9 @@ const Sensei = ({ userInfo, accessToken, setAccessError }) => {
                         onAskQuestion={onAskQuestion}
                         senseiDisplayName={profile.profile.displayName}
                         askSensei={
-                          profile.profile.displayName !==
-                          userInfo.profile.displayName
+                          profile &&
+                          profile?.profile.displayName !==
+                            userInfo?.profile.displayName
                         }
                       />
                       <SenseiBody

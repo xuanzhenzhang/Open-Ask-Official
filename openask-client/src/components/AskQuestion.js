@@ -42,8 +42,23 @@ const AskQuestion = (props) => {
   // Get all users
   useEffect(() => {
     let isMounted = true;
-    getUsers().then((response) => {
-      const filteredResponse = response.filter(
+    getUsers().then((users) => {
+      const modifiedUsers = users.map((user) => {
+        if (user?.profile?.imageUrl?.startsWith("ipfs")) {
+          return {
+            ...user,
+            profile: {
+              ...user.profile,
+              imageUrl: `https://ipfs.io/ipfs/${
+                user.profile.imageUrl.split("/")[2]
+              }`,
+            },
+          };
+        } else {
+          return user;
+        }
+      });
+      const filteredResponse = modifiedUsers.filter(
         (user) => user.userId !== userInfo?.userUid
       );
       if (isMounted) {

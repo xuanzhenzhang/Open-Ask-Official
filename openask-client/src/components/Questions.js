@@ -127,8 +127,23 @@ const Questions = ({ userInfo, accessToken, setAccessError }) => {
 
   // Get all users
   useEffect(() => {
-    getUsers().then((response) => {
-      setAllUsers(response);
+    getUsers().then((users) => {
+      const modifiedUsers = users.map((user) => {
+        if (user?.profile?.imageUrl?.startsWith("ipfs")) {
+          return {
+            ...user,
+            profile: {
+              ...user.profile,
+              imageUrl: `https://ipfs.io/ipfs/${
+                user.profile.imageUrl.split("/")[2]
+              }`,
+            },
+          };
+        } else {
+          return user;
+        }
+      });
+      setAllUsers(modifiedUsers);
     });
   }, []);
 

@@ -31,9 +31,24 @@ const FeedCards = ({ data, price }) => {
   // Get all users
   useEffect(() => {
     let isMounted = true;
-    getUsers().then((response) => {
+    getUsers().then((users) => {
+      const modifiedUsers = users.map((user) => {
+        if (user?.profile?.imageUrl?.startsWith("ipfs")) {
+          return {
+            ...user,
+            profile: {
+              ...user.profile,
+              imageUrl: `https://ipfs.io/ipfs/${
+                user.profile.imageUrl.split("/")[2]
+              }`,
+            },
+          };
+        } else {
+          return user;
+        }
+      });
       if (isMounted) {
-        setUserInfo(response);
+        setUserInfo(modifiedUsers);
       }
     });
     return () => {
