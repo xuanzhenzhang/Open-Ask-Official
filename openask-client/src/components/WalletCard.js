@@ -63,11 +63,6 @@ const WalletCard = ({ accessToken, setAccessError }) => {
       return;
     } else {
       console.log("We have the ethereum object", ethereum);
-      console.log(
-        await ethereum.request({
-          method: "eth_accounts",
-        })
-      );
     }
 
     // Check access to user's wallet

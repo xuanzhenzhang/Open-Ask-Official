@@ -88,7 +88,7 @@ const SidebarList = ({
     },
     {
       text: "Profile",
-      link: `/sensei/${userInfo && userInfo?.profile.handle}`,
+      link: `/sensei/${userInfo && userInfo?.profile?.handle}`,
       svg: selectedIndex === 4 ? profileFilled : profileOutlined,
     },
   ];
