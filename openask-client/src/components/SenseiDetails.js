@@ -258,7 +258,7 @@ const SenseiDetails = ({ accessToken, setAccessError, userInfo }) => {
                     rel="noreferrer"
                     underline="none"
                   >
-                    ricefarmer.io
+                    {/* ricefarmer.io */}
                   </Link>
                 </Box>
               </Box>

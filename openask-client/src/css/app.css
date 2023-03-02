@@ -56,6 +56,8 @@ body {
   top: 0;
   right: 0;
   z-index: 3;
+  background: var(--gray-2);
+  border-radius: 50%;
 }
 .user-avatar img {
   width: 30px;
@@ -636,7 +638,7 @@ body {
 }
 .ask-question-footer {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   gap: 10px;
 }
@@ -652,6 +654,7 @@ body {
   color: var(--gray-2);
   border-radius: 20px;
   opacity: 0.5;
+  margin-left: auto;
 }
 .answer-ask-btn {
   cursor: pointer;
@@ -664,6 +667,7 @@ body {
   );
   color: var(--gray-2);
   border-radius: 20px;
+  margin-left: auto;
 }
 .answer-ask-btn:hover {
   opacity: 0.8;

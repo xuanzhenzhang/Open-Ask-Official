@@ -28,7 +28,7 @@ const Sidebar = (props) => {
         sx={{
           display: { xs: "flex", sm: "flex", md: "none" },
           "& .MuiDrawer-paper": {
-            width: "300px",
+            width: "200px",
           },
         }}
       >
