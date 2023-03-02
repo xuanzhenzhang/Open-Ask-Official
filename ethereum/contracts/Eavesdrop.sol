@@ -15,7 +15,7 @@ contract Eavesdrop is Ownable, ERC721 {
     mapping(address => uint256) public eth_balances;
     mapping(IERC20 => mapping(address => uint256)) public token_balances;
 
-    event Purchased(uint256 questionId, address listener);
+    event Purchased(uint256 answerId, address listener);
     event Paid(address payee, uint256 amount);
     event PaidERC20(address payee, uint256 amount, IERC20 token);
     event ChangeFee(address token, uint256 fee);
@@ -31,7 +31,7 @@ contract Eavesdrop is Ownable, ERC721 {
         return token_balances[token][account];
     }
 
-    function eavesdrop(uint256 questionId, address[] calldata _payees, uint256[] calldata _shares) public payable {
+    function eavesdrop(uint256 answerId, address[] calldata _payees, uint256[] calldata _shares) public payable {
         require(_payees.length == _shares.length, "Payees and shares mismatch");
         require(_payees.length > 0, "No payees");
         require(eavesdropFee[address(0)] > 0, "Ether is not supported");
@@ -43,12 +43,12 @@ contract Eavesdrop is Ownable, ERC721 {
             eth_balances[_payees[i]] += (msg.value * _shares[i] / FEE_DENOMINATOR);
         }
 
-        emit Purchased(questionId, msg.sender);
+        emit Purchased(answerId, msg.sender);
         _mint(msg.sender, _tokenIds.current());
         _tokenIds.increment();
     }
 
-    function eavesdrop(uint256 questionId, address[] calldata _payees, uint256[] calldata _shares, IERC20 token, uint256 amount) public {
+    function eavesdrop(uint256 answerId, address[] calldata _payees, uint256[] calldata _shares, IERC20 token, uint256 amount) public {
         require(_payees.length == _shares.length, "Payees and shares mismatch");
         require(_payees.length > 0, "No payees");
         require(eavesdropFee[address(token)] > 0, "Token is not supported");
@@ -62,18 +62,18 @@ contract Eavesdrop is Ownable, ERC721 {
             token_balances[token][_payees[i]] += (amount * _shares[i] / FEE_DENOMINATOR);
         }
 
-        emit Purchased(questionId, msg.sender);
+        emit Purchased(answerId, msg.sender);
         _mint(msg.sender, _tokenIds.current());
         _tokenIds.increment();
     }
 
-    function eavesdropAndPay(uint256 questionId, address[] calldata _payees, uint256[] calldata _shares) public payable {
+    function eavesdropAndPay(uint256 answerId, address[] calldata _payees, uint256[] calldata _shares) public payable {
         require(_payees.length == _shares.length, "Payees and shares mismatch");
         require(_payees.length > 0, "No payees");
         require(eavesdropFee[address(0)] > 0, "Ether is not supported");
         require(msg.value == eavesdropFee[address(0)], "Incorrect payment amount");
 
-        emit Purchased(questionId, msg.sender);
+        emit Purchased(answerId, msg.sender);
 
         for (uint256 i = 0; i < _payees.length; i++) {
             uint256 amount = (msg.value * _shares[i]) / FEE_DENOMINATOR;
@@ -85,7 +85,7 @@ contract Eavesdrop is Ownable, ERC721 {
         _tokenIds.increment();
     }
 
-    function eavesdropAndPay(uint256 questionId, address[] calldata _payees, uint256[] calldata _shares, IERC20 token, uint256 amount) public {
+    function eavesdropAndPay(uint256 answerId, address[] calldata _payees, uint256[] calldata _shares, IERC20 token, uint256 amount) public {
         require(_payees.length == _shares.length, "Payees and shares mismatch");
         require(_payees.length > 0, "No payees");
         require(eavesdropFee[address(token)] > 0, "Token is not supported");
@@ -98,7 +98,7 @@ contract Eavesdrop is Ownable, ERC721 {
             emit PaidERC20(_payees[i], paymentAmount, token);
         }
 
-        emit Purchased(questionId, msg.sender);
+        emit Purchased(answerId, msg.sender);
         _mint(msg.sender, _tokenIds.current());
         _tokenIds.increment();
     }
