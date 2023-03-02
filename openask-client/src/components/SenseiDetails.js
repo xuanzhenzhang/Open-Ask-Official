@@ -67,10 +67,25 @@ const SenseiDetails = ({ accessToken, setAccessError, userInfo }) => {
         const { data } = await axios.get(
           `https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/users`
         );
-        let userProfile = data.filter((user) => {
+        const modifiedUsers = data.map((user) => {
+          if (user?.profile?.imageUrl?.startsWith("ipfs")) {
+            return {
+              ...user,
+              profile: {
+                ...user.profile,
+                imageUrl: `https://ipfs.io/ipfs/${
+                  user.profile.imageUrl.split("/")[2]
+                }`,
+              },
+            };
+          } else {
+            return user;
+          }
+        });
+        let userProfile = modifiedUsers.filter((user) => {
           return user.profile.handle === twitter;
         });
-        setAllUsers(data);
+        setAllUsers(modifiedUsers);
         setProfile(userProfile);
       } catch (error) {
         console.error(error);
