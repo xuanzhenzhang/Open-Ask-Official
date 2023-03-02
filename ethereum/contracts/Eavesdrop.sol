@@ -11,11 +11,11 @@ contract Eavesdrop is Ownable, ERC721 {
     Counters.Counter private _tokenIds;
     uint256 public constant FEE_DENOMINATOR = 10000;
 
-    mapping(address => uint256) private eavesdropFee;
+    mapping(address => uint256) public eavesdropFee;
     mapping(address => uint256) public eth_balances;
     mapping(IERC20 => mapping(address => uint256)) public token_balances;
 
-    event Eavesdrop(uint256 questionId, address listener);
+    event Purchased(uint256 questionId, address listener);
     event Paid(address payee, uint256 amount);
     event PaidERC20(address payee, uint256 amount, IERC20 token);
     event ChangeFee(address token, uint256 fee);
@@ -27,7 +27,7 @@ contract Eavesdrop is Ownable, ERC721 {
         return eth_balances[account];
     }
 
-    function rewardsBalanceERC20(address account, IERC20 token) public view returns (uint256) {
+    function rewardsBalance(address account, IERC20 token) public view returns (uint256) {
         return token_balances[token][account];
     }
 
@@ -43,7 +43,7 @@ contract Eavesdrop is Ownable, ERC721 {
             eth_balances[_payees[i]] += (msg.value * _shares[i] / FEE_DENOMINATOR);
         }
 
-        emit Eavesdrop(questionId, msg.sender);
+        emit Purchased(questionId, msg.sender);
         _mint(msg.sender, _tokenIds.current());
         _tokenIds.increment();
     }
@@ -55,14 +55,14 @@ contract Eavesdrop is Ownable, ERC721 {
         require(amount == eavesdropFee[address(token)], "Incorrect payment amount");
         require(token.balanceOf(msg.sender) >= amount, "Insufficient balance");
 
-        SafeERC20.safeTransfer(token, address(this), amount);
+        SafeERC20.safeTransferFrom(token, msg.sender, address(this), amount);
         for (uint256 i = 0; i < _payees.length; i++) {
             require(_payees[i] != address(0), "Payee is zero address");
             require(_shares[i] > 0, "Share is zero");
             token_balances[token][_payees[i]] += (amount * _shares[i] / FEE_DENOMINATOR);
         }
 
-        emit Eavesdrop(questionId, msg.sender);
+        emit Purchased(questionId, msg.sender);
         _mint(msg.sender, _tokenIds.current());
         _tokenIds.increment();
     }
@@ -73,7 +73,7 @@ contract Eavesdrop is Ownable, ERC721 {
         require(eavesdropFee[address(0)] > 0, "Ether is not supported");
         require(msg.value == eavesdropFee[address(0)], "Incorrect payment amount");
 
-        emit Eavesdrop(questionId, msg.sender);
+        emit Purchased(questionId, msg.sender);
 
         for (uint256 i = 0; i < _payees.length; i++) {
             uint256 amount = (msg.value * _shares[i]) / FEE_DENOMINATOR;
@@ -94,11 +94,11 @@ contract Eavesdrop is Ownable, ERC721 {
 
         for (uint256 i = 0; i < _payees.length; i++) {
             uint256 paymentAmount = (amount * _shares[i]) / FEE_DENOMINATOR;
-            SafeERC20.safeTransfer(token, _payees[i], paymentAmount);
+            SafeERC20.safeTransferFrom(token, msg.sender, _payees[i], paymentAmount);
             emit PaidERC20(_payees[i], paymentAmount, token);
         }
 
-        emit Eavesdrop(questionId, msg.sender);
+        emit Purchased(questionId, msg.sender);
         _mint(msg.sender, _tokenIds.current());
         _tokenIds.increment();
     }
