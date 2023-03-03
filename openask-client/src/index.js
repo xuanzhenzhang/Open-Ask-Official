@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom";
 import AppProvider from "./components/context/AppProvider";
+import { ThemeProvider, createTheme } from "@material-ui/core/styles";
 
 import { initializeApp } from "firebase/app";
 
@@ -26,16 +27,31 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 
+// Breakpoints
+const theme = createTheme({
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 600,
+      md: 750,
+      lg: 1200,
+      xl: 1536,
+    },
+  },
+});
+
 const App = require("./App").default;
 
 function renderApp() {
   ReactDOM.render(
     <AppProvider>
-      <BrowserRouter
-        basename={inIframe() ? window.location.pathname : undefined}
-      >
-        <App />
-      </BrowserRouter>
+      <ThemeProvider theme={theme}>
+        <BrowserRouter
+          basename={inIframe() ? window.location.pathname : undefined}
+        >
+          <App />
+        </BrowserRouter>
+      </ThemeProvider>
     </AppProvider>,
     document.getElementById("root")
   );
