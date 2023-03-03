@@ -20,7 +20,7 @@ exports.getAllQuestions = (req, res) => {
           body: doc.data().body,
           questionerUid: doc.data().questionerUid,
           questioneeUid: doc.data().questioneeUid,
-          contractAddress: doc.data().contractAddress,
+          txHash: doc.data().txHash,
           createdAt: doc.data().createdAt,
           answerId: doc.data().answerId,
           rewardTokenType: doc.data().rewardTokenType,
@@ -48,7 +48,7 @@ exports.getAllQuestionsByDescPrice = (req, res) => {
           body: doc.data().body,
           questionerUid: doc.data().questionerUid,
           questioneeUid: doc.data().questioneeUid,
-          contractAddress: doc.data().contractAddress,
+          txHash: doc.data().txHash,
           createdAt: doc.data().createdAt,
           answerId: doc.data().answerId,
           rewardTokenType: doc.data().rewardTokenType,
@@ -80,7 +80,7 @@ exports.getAllQuestionsForUser = (req, res) => {
             body: doc.data().body,
             questionerUid: doc.data().questionerUid,
             questioneeUid: doc.data().questioneeUid,
-            contractAddress: doc.data().contractAddress,
+            txHash: doc.data().txHash,
             createdAt: doc.data().createdAt,
             answerId: doc.data().answerId,
             rewardTokenType: doc.data().rewardTokenType,
@@ -110,7 +110,7 @@ exports.getAllQuestionsByUser = (req, res) => {
             body: doc.data().body,
             questionerUid: doc.data().questionerUid,
             questioneeUid: doc.data().questioneeUid,
-            contractAddress: doc.data().contractAddress,
+            txHash: doc.data().txHash,
             createdAt: doc.data().createdAt,
             answerId: doc.data().answerId,
             rewardTokenType: doc.data().rewardTokenType,
@@ -149,7 +149,10 @@ exports.postUnactivatedQuestion = async (req, res) => {
     purchasePrice: 0,
   };
 
-  const upperCaseRewardTokenType = getTokenSymbol(req.body.rewardTokenType);
+  const upperCaseRewardTokenType = await getTokenSymbol(
+    req.body.rewardTokenType
+  );
+  console.log("upperCaseRewardTokenType: ", upperCaseRewardTokenType);
   const fetchPriceUrl = `https://api.kucoin.com/api/v1/market/orderbook/level1?symbol=${upperCaseRewardTokenType}-USDT`;
   const axios = require("axios");
   let resQuestion;

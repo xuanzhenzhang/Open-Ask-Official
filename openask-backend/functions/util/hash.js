@@ -1,6 +1,6 @@
 const Web3 = require("web3");
 const provider = new Web3.providers.HttpProvider(
-  "https://goerli.infura.io/v3/ad8bc3258461465caec6501141cb764b"
+  "https://mainnet.infura.io/v3/ad8bc3258461465caec6501141cb764b"
 );
 const BigNumber = require("bignumber.js");
 const InputDataDecoder = require("ethereum-input-data-decoder");
@@ -933,7 +933,22 @@ const getTokenTypeAndDepositAmountFromIssueAndContributeHash = async (
   return { tokenAddress, depositAmount };
 };
 
+const getAnswerIdFromBountyFulfillHash = async (transactionHash) => {
+  const tx = await web3.eth.getTransaction(transactionHash);
+
+  const decoder = new InputDataDecoder(abi);
+
+  const inputs = tx.input;
+
+  const decodedInput = decoder.decodeData(inputs);
+  const answerId = decodedInput.inputs[3];
+  console.log("answerId: ", answerId);
+  // get Data (answerId)
+  return answerId;
+};
+
 module.exports = {
   getBountyIdAndQuestionIdFromBountyIssueAndContributeHash,
   getTokenTypeAndDepositAmountFromIssueAndContributeHash,
+  getAnswerIdFromBountyFulfillHash,
 };

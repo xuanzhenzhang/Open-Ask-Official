@@ -1,4 +1,5 @@
 const { db } = require("../util/admin");
+const { getAnswerIdFromBountyFulfillHash } = require("../util/hash");
 
 /**
  * (not secure!!!)
@@ -46,10 +47,10 @@ exports.postUnactivatedAnswerToQuestion = (req, res) => {
     });
 };
 
-exports.updateActivateAnswer = (req, res) => {
+exports.updateActivateAnswer = async (req, res) => {
   // get hash and read the answerId
-  const txHash = "asdfdsfads";
-  const answerId = 12345;
+  const txHash = req.params.hash;
+  const answerId = await getAnswerIdFromBountyFulfillHash(txHash);
   let questionId, newAnswer;
   db.doc(`/answers/${answerId}`)
     .get()

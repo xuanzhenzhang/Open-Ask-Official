@@ -48,7 +48,7 @@ app.get("/questions-by/:uid", getAllQuestionsByUser);
 // app.post("/question", FBAuth, postOneQuestion);
 app.get("/question/:questionId", getQuestion);
 app.post("/question", FBAuth, postUnactivatedQuestion);
-app.put("/question/:contractAddress", FBAuth, updateActivateQuestion);
+app.put("/question/:txHash", FBAuth, updateActivateQuestion);
 
 app.get("/user/:uid", getUser);
 app.post("/login", FBAuth, createUserIfNotExist);
