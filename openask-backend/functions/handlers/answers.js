@@ -1,3 +1,4 @@
+const { DocumentBuilder } = require("firebase-functions/v1/firestore");
 const { db } = require("../util/admin");
 const { getAnswerIdFromBountyFulfillHash } = require("../util/hash");
 
@@ -224,6 +225,7 @@ exports.getAnswer = (req, res) => {
         createdAt: doc.data().createdAt,
         body: doc.data().body,
         quesitonerUid: doc.data().quesitonerUid,
+        txHash: doc.data().txHash,
       };
       return res.status(200).json(answer);
     })
@@ -284,6 +286,7 @@ exports.getAnswerToQuestion = (req, res) => {
             createdAt: doc.data().createdAt,
             body: doc.data().body,
             quesitonerUid: doc.data().quesitonerUid,
+            txHash: doc.data().txHash,
           };
           return res.status(200).json(answer);
         })
