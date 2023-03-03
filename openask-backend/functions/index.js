@@ -16,6 +16,7 @@ const {
   getAllQuestionsForUser,
   getAllQuestionsByUser,
   getAllQuestionPurhcasedByUser,
+  updateQuestionWithdrawnAfterExpiry,
 } = require("./handlers/questions");
 
 const {
@@ -49,6 +50,11 @@ app.get("/questions-by/:uid", getAllQuestionsByUser);
 app.get("/question/:questionId", getQuestion);
 app.post("/question", FBAuth, postUnactivatedQuestion);
 app.put("/question/:txHash", FBAuth, updateActivateQuestion);
+app.put(
+  "/question-withdrawn/:questionId",
+  FBAuth,
+  updateQuestionWithdrawnAfterExpiry
+);
 
 app.get("/user/:uid", getUser);
 app.post("/login", FBAuth, createUserIfNotExist);
