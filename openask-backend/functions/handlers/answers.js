@@ -49,7 +49,7 @@ exports.postUnactivatedAnswerToQuestion = (req, res) => {
 
 exports.updateActivateAnswer = async (req, res) => {
   // get hash and read the answerId
-  const txHash = req.params.hash;
+  const txHash = req.params.txHash;
   const answerId = await getAnswerIdFromBountyFulfillHash(txHash);
   let questionId, newAnswer;
   db.doc(`/answers/${answerId}`)
