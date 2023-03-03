@@ -195,10 +195,6 @@ exports.updateActivateQuestion = async (req, res) => {
   let questioneeUid;
   let question;
 
-  if (questionerUid != req.user.uid) {
-    return res.status(404).json({ error: "User not the same as questioner" });
-  }
-
   db.doc(`/questions/${questionId}`)
     .get()
     .then((doc) => {
@@ -215,6 +211,13 @@ exports.updateActivateQuestion = async (req, res) => {
       }
       question = doc.data();
       questionerUid = question.questionerUid;
+
+      if (questionerUid != req.user.uid) {
+        return res
+          .status(404)
+          .json({ error: "User not the same as questioner" });
+      }
+
       questioneeUid = question.questioneeUid;
       return doc.ref.update({ txHash: req.params.txHash, bountyId: bountyId });
     })
@@ -223,7 +226,6 @@ exports.updateActivateQuestion = async (req, res) => {
     })
     // can use Promise.all to do concurrent updates.
     .then((userData) => {
-      console.log("userData:! ", userData.data());
       const newQuestionsAsked = userData.data().questionsAsked;
       newQuestionsAsked.push(questionId);
       return userData.ref.update({ questionsAsked: newQuestionsAsked });
@@ -248,6 +250,8 @@ exports.updateActivateQuestion = async (req, res) => {
         rewardTokenType: question.rewardTokenType,
         rewardTokenAmount: question.rewardTokenAmount,
         purchasePrice: question.purchasePrice,
+        txHash: question.hash,
+        bountyId: question.bountyId,
       });
     });
 };
@@ -449,6 +453,8 @@ exports.getQuestion = (req, res) => {
         rewardTokenType: question.rewardTokenType,
         rewardTokenAmount: question.rewardTokenAmount,
         purchasePrice: question.purchasePrice,
+        txHash: question.hash,
+        bountyId: question.bountyId,
       });
     })
     .catch((err) => {
@@ -483,6 +489,8 @@ exports.getAllQuestionPurhcasedByUser = (req, res) => {
           rewardTokenType: question.rewardTokenType,
           rewardTokenAmount: question.rewardTokenAmount,
           purchasePrice: question.purchasePrice,
+          txHash: question.hash,
+          bountyId: question.bountyId,
         });
       });
       return res.status(200).json(questionsPurchased);
