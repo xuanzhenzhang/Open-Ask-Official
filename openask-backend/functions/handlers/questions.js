@@ -26,6 +26,7 @@ exports.getAllQuestions = (req, res) => {
           rewardTokenType: doc.data().rewardTokenType,
           rewardTokenAmount: doc.data().rewardTokenAmount,
           purchasePrice: doc.data().purchasePrice,
+          withdrawnAfterExpiry: doc.data().withdrawnAfterExpiry,
         });
       });
       return res.status(200).json(questions);
@@ -54,6 +55,7 @@ exports.getAllQuestionsByDescPrice = (req, res) => {
           rewardTokenType: doc.data().rewardTokenType,
           rewardTokenAmount: doc.data().rewardTokenAmount,
           purchasePrice: doc.data().purchasePrice,
+          withdrawnAfterExpiry: doc.data().withdrawnAfterExpiry,
         });
       });
       return res.status(200).json(questions);
@@ -86,6 +88,8 @@ exports.getAllQuestionsForUser = (req, res) => {
             rewardTokenType: doc.data().rewardTokenType,
             rewardTokenAmount: doc.data().rewardTokenAmount,
             purchasePrice: doc.data().purchasePrice,
+            bountyId: doc.data().bountyId,
+            withdrawnAfterExpiry: doc.data().withdrawnAfterExpiry,
           });
         }
       });
@@ -116,6 +120,8 @@ exports.getAllQuestionsByUser = (req, res) => {
             rewardTokenType: doc.data().rewardTokenType,
             rewardTokenAmount: doc.data().rewardTokenAmount,
             purchasePrice: doc.data().purchasePrice,
+            bountyId: doc.data().bountyId,
+            withdrawnAfterExpiry: doc.data().withdrawnAfterExpiry,
           });
         }
       });
@@ -147,6 +153,7 @@ exports.postUnactivatedQuestion = async (req, res) => {
     rewardTokenType: req.body.rewardTokenType,
     rewardTokenAmount: req.body.rewardTokenAmount,
     purchasePrice: 0,
+    withdrawnAfterExpiry: false,
   };
 
   const upperCaseRewardTokenType = await getTokenSymbol(
@@ -252,6 +259,7 @@ exports.updateActivateQuestion = async (req, res) => {
         purchasePrice: question.purchasePrice,
         txHash: question.hash,
         bountyId: question.bountyId,
+        withdrawnAfterExpiry: question.withdrawnAfterExpiry,
       });
     });
 };
@@ -455,6 +463,7 @@ exports.getQuestion = (req, res) => {
         purchasePrice: question.purchasePrice,
         txHash: question.hash,
         bountyId: question.bountyId,
+        withdrawnAfterExpiry: question.withdrawnAfterExpiry,
       });
     })
     .catch((err) => {
@@ -491,9 +500,40 @@ exports.getAllQuestionPurhcasedByUser = (req, res) => {
           purchasePrice: question.purchasePrice,
           txHash: question.hash,
           bountyId: question.bountyId,
+          withdrawnAfterExpiry: question.withdrawnAfterExpiry,
         });
       });
       return res.status(200).json(questionsPurchased);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).json({ error: err.code });
+    });
+};
+
+exports.updateQuestionWithdrawnAfterExpiry = (req, res) => {
+  let question;
+
+  db.doc(`/questions/${req.params.questionId}`)
+    .get()
+    .then((doc) => {
+      if (!doc.exists) {
+        return res.status(404).json({ error: "questionId in hash not found" });
+      }
+      if (doc.data().questionerUid != req.user.uid) {
+        return res
+          .status(404)
+          .json({ error: "Can't set withdrawal status if not questioner" });
+      }
+      question = doc.data();
+      if (doc.data().withdrawnAfterExpiry) {
+        return res.status(200).json(question);
+      }
+      return doc.ref.update({ withdrawnAfterExpiry: true });
+    })
+    .then(() => {
+      question.withdrawnAfterExpiry = true;
+      return res.status(200).json(question);
     })
     .catch((err) => {
       console.error(err);
