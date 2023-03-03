@@ -30,8 +30,8 @@ exports.postUnactivatedAnswerToQuestion = (req, res) => {
         body: req.body.body,
         allowList: null,
         questionId: req.params.questionId,
-        quesitonerUid: question.data().questionerUid,
-        questioneeUid: question.data().questioneeUid,
+        questionerUid: question.data().questionerUid,
+        questionerUid: question.data().questioneeUid,
         createdAt: new Date().toISOString(),
         txHash: null,
       };
@@ -61,10 +61,11 @@ exports.updateActivateAnswer = async (req, res) => {
       questionId = doc.data().questionId;
       const allowList = [questionerUid, questioneeUid];
       newAnswer = {
+        answerId: answerId,
         body: doc.data().body,
         allowList: allowList,
         questionId: doc.data().questionId,
-        quesitonerUid: questionerUid,
+        questionerUid: questionerUid,
         questioneeUid: questioneeUid,
         createdAt: new Date().toISOString(),
         txHash: txHash,
@@ -76,7 +77,7 @@ exports.updateActivateAnswer = async (req, res) => {
     })
     .then((doc) => {
       return doc.ref.update({
-        answerId: resAnswer.answerId,
+        answerId: answerId,
       });
     })
     .then(() => {
@@ -94,7 +95,7 @@ exports.updateActivateAnswer = async (req, res) => {
 //         body: req.body.body,
 //         allowList: allowList,
 //         questionId: req.params.questionId,
-//         quesitonerUid: question.data().questionerUid,
+//         questionerUid: question.data().questionerUid,
 //         questioneeUid: question.data().questioneeUid,
 //         createdAt: new Date().toISOString(),
 //         secretToken: question.data().secretToken,
@@ -134,7 +135,7 @@ exports.updateActivateAnswer = async (req, res) => {
 //         body: req.body.body,
 //         allowList: allowList,
 //         questionId: req.params.questionId,
-//         quesitonerUid: question.data().questionerUid,
+//         questionerUid: question.data().questionerUid,
 //         questioneeUid: question.data().questioneeUid,
 //         createdAt: new Date().toISOString(),
 //         secretToken: question.data().secretToken,
@@ -224,7 +225,7 @@ exports.getAnswer = (req, res) => {
         questioneeUid: doc.data().questioneeUid,
         createdAt: doc.data().createdAt,
         body: doc.data().body,
-        quesitonerUid: doc.data().quesitonerUid,
+        questionerUid: doc.data().questionerUid,
         txHash: doc.data().txHash,
       };
       return res.status(200).json(answer);
@@ -285,7 +286,7 @@ exports.getAnswerToQuestion = (req, res) => {
             questioneeUid: doc.data().questioneeUid,
             createdAt: doc.data().createdAt,
             body: doc.data().body,
-            quesitonerUid: doc.data().quesitonerUid,
+            questionerUid: doc.data().questionerUid,
             txHash: doc.data().txHash,
           };
           return res.status(200).json(answer);
@@ -335,7 +336,7 @@ exports.purchaseAnswer = async (req, res) => {
       questioneeUid: updatedAnswer.questioneeUid,
       createdAt: updatedAnswer.createdAt,
       body: updatedAnswer.body,
-      quesitonerUid: updatedAnswer.quesitonerUid,
+      questionerUid: updatedAnswer.questionerUid,
     });
   } catch {
     res.status(500).json({ error: "something went wrong" });
@@ -376,7 +377,7 @@ exports.purchaseAnswer = async (req, res) => {
 //       questioneeUid: updatedAnswer.questioneeUid,
 //       createdAt: updatedAnswer.createdAt,
 //       body: updatedAnswer.body,
-//       quesitonerUid: updatedAnswer.quesitonerUid,
+//       questionerUid: updatedAnswer.questionerUid,
 //     });
 //   } catch {
 //     res.status(500).json({ error: "something went wrong" });
