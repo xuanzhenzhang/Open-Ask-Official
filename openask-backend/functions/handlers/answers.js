@@ -36,7 +36,7 @@ exports.postUnactivatedAnswerToQuestion = (req, res) => {
       };
       return db.collection("answers").add(answer);
     })
-    .then(() => {
+    .then((doc) => {
       resAnswer = answer;
       resAnswer.answerId = doc.id;
       return res.status(200).json(resAnswer);
