@@ -88,3 +88,16 @@ To run tests, run the command
 forge test -vv --fork-url https://cloudflare-eth.com/    
 ```
 Other rpc urls are available. See https://ethereumnodes.com/ for the list.
+
+# Deployment
+
+To deploy the contracts, run the command:
+```bash
+npx hardhat run scripts/deploy.ts --network NETWORK_NAME
+```
+where `NETWORK_NAME` is the name of the network you want to deploy to. For example, `optimism` or `mainnet`.
+
+To verify the contracts, run:
+```bash
+npx hardhat verify --network NETWORK_NAME DEPLOYED_CONTRACT_ADDRESS "CONSTRUCTOR_ARGUMENTS"
+```
