@@ -14,7 +14,14 @@ const QuestionHeader = (props) => {
   // Navigate to Sensei Detail page
   const handleAvatarClick = (twitter) => {
     navigate(`/sensei/${twitter}`);
-  };  
+  };
+
+  const etherAmount = tokenAmount / 10 / 10 ** 17;
+  const tokenSymbol = (tokenType) => {
+    if (tokenType === "0x0000000000000000000000000000000000000000") {
+      return "ETH";
+    }
+  };
 
   return (
     <CardHeader
@@ -60,7 +67,10 @@ const QuestionHeader = (props) => {
             </div>
 
             {price && (
-              <PriceButton tokenAmount={tokenAmount} tokenType={tokenType} />
+              <PriceButton
+                tokenAmount={etherAmount}
+                tokenType={tokenSymbol(tokenType)}
+              />
             )}
             {askSensei === true && (
               <AskSenseiButton
