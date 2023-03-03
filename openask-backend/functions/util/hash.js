@@ -1,7 +1,5 @@
 const Web3 = require("web3");
-const provider = new Web3.providers.HttpProvider(
-  "https://mainnet.infura.io/v3/ad8bc3258461465caec6501141cb764b"
-);
+const { provider } = require("./provider");
 const BigNumber = require("bignumber.js");
 const InputDataDecoder = require("ethereum-input-data-decoder");
 const abi = [
@@ -866,7 +864,7 @@ const abi = [
   },
 ];
 
-const actionPerformedEventAbi = {
+const bountyIssuedAbi = {
   anonymous: false,
   inputs: [
     {
@@ -877,16 +875,45 @@ const actionPerformedEventAbi = {
     },
     {
       indexed: false,
-      internalType: "address",
-      name: "_fulfiller",
+      internalType: "address payable",
+      name: "_creator",
       type: "address",
     },
+    {
+      indexed: false,
+      internalType: "address payable[]",
+      name: "_issuers",
+      type: "address[]",
+    },
+    {
+      indexed: false,
+      internalType: "address[]",
+      name: "_approvers",
+      type: "address[]",
+    },
     { indexed: false, internalType: "string", name: "_data", type: "string" },
+    {
+      indexed: false,
+      internalType: "uint256",
+      name: "_deadline",
+      type: "uint256",
+    },
+    {
+      indexed: false,
+      internalType: "address",
+      name: "_token",
+      type: "address",
+    },
+    {
+      indexed: false,
+      internalType: "uint256",
+      name: "_tokenVersion",
+      type: "uint256",
+    },
   ],
-  name: "ActionPerformed",
+  name: "BountyIssued",
   type: "event",
 };
-
 const web3 = new Web3(provider);
 const decoder = new InputDataDecoder(abi);
 
@@ -904,9 +931,8 @@ const getBountyIdAndQuestionIdFromBountyIssueAndContributeHash = async (
 ) => {
   const logs = await getParsedIssueAndContributeEvents(transactionHash);
   const actionPerformedLog = logs[0];
-  //   console.log("logs: ", logs[0].data);
   const decodedLog = web3.eth.abi.decodeLog(
-    actionPerformedEventAbi.inputs,
+    bountyIssuedAbi.inputs,
     actionPerformedLog.data,
     actionPerformedLog.topics.slice(1)
   );
@@ -928,7 +954,7 @@ const getTokenTypeAndDepositAmountFromIssueAndContributeHash = async (
   const decodedInputs = await getParsedBountyIssueAndContributeInputs(
     transactionHash
   );
-  const tokenAddress = decodedInputs.inputs[5];
+  const tokenAddress = "0x" + decodedInputs.inputs[5];
   const depositAmount = new BigNumber(decodedInputs.inputs[7]._hex).toNumber();
   return { tokenAddress, depositAmount };
 };
@@ -942,7 +968,6 @@ const getAnswerIdFromBountyFulfillHash = async (transactionHash) => {
 
   const decodedInput = decoder.decodeData(inputs);
   const answerId = decodedInput.inputs[3];
-  console.log("answerId: ", answerId);
   // get Data (answerId)
   return answerId;
 };

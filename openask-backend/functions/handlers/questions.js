@@ -152,7 +152,6 @@ exports.postUnactivatedQuestion = async (req, res) => {
   const upperCaseRewardTokenType = await getTokenSymbol(
     req.body.rewardTokenType
   );
-  console.log("upperCaseRewardTokenType: ", upperCaseRewardTokenType);
   const fetchPriceUrl = `https://api.kucoin.com/api/v1/market/orderbook/level1?symbol=${upperCaseRewardTokenType}-USDT`;
   const axios = require("axios");
   let resQuestion;
@@ -195,6 +194,10 @@ exports.updateActivateQuestion = async (req, res) => {
   let questionerUid;
   let questioneeUid;
   let question;
+
+  if (questionerUid != req.user.uid) {
+    return res.status(404).json({ error: "User not the same as questioner" });
+  }
 
   db.doc(`/questions/${questionId}`)
     .get()

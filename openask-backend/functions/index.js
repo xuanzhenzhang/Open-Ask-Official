@@ -65,7 +65,8 @@ app.get("/answers-by-user/:userId", FBAuth, getAllAnswersByUser);
 // app.post("/answer/:questionId", FBAuth, postAnswerToQuestion);
 app.post("/answer/:questionId", FBAuth, postUnactivatedAnswerToQuestion);
 app.put("answer/:answerId", FBAuth, updateActivateAnswer);
-app.put("/answer/payment/:answerId", FBAuth, purchaseAnswer);
+app.put("/answer/payment/:txHash", FBAuth, purchaseAnswer);
+// app.put("/answer/payment/:answerId", FBAuth, purchaseAnswer);
 // app.put("/answer/tx/:answerId", FBAuth, updateAnswerTxHash);
 
 exports.api = functions
