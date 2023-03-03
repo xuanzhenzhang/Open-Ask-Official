@@ -338,3 +338,44 @@ exports.purchaseAnswer = async (req, res) => {
     res.status(500).json({ error: "something went wrong" });
   }
 };
+
+// exports.purchaseAnswer = async (req, res) => {
+//   const batch = db.batch();
+//   let updatedAnswer;
+//   const answerAndUserPromises = [];
+//   const answerRef = db.doc(`/answers/${req.params.answerId}`);
+//   const userRef = db.doc(`/users/${req.user.uid}`);
+//   answerAndUserPromises.push(answerRef.get());
+//   answerAndUserPromises.push(userRef.get());
+//   try {
+//     const answerAndUser = await Promise.all(answerAndUserPromises);
+//     const answer = answerAndUser[0];
+//     // assert allowList includes == quesstionsPurchased includes answer.questionId
+//     if (answer.data().allowList.includes(req.user.uid)) {
+//       return res
+//         .status(400)
+//         .json({ error: "User already permitted to see answer" });
+//     }
+//     const newAllowList = answer.data().allowList;
+//     newAllowList.push(req.user.uid);
+//     updatedAnswer = answer.data();
+//     updatedAnswer.allowList = newAllowList;
+//     batch.update(answerRef, { allowList: newAllowList });
+
+//     const user = answerAndUser[1];
+//     const newQuestionsPurchased = user.data().questionsPurchased;
+//     newQuestionsPurchased.push(answer.data().questionId);
+//     batch.update(userRef, { questionsPurchased: newQuestionsPurchased });
+//     await batch.commit();
+//     // user should not be able to see who puchased answer (no allowlist in response)
+//     return res.status(200).json({
+//       questionId: updatedAnswer.questionId,
+//       questioneeUid: updatedAnswer.questioneeUid,
+//       createdAt: updatedAnswer.createdAt,
+//       body: updatedAnswer.body,
+//       quesitonerUid: updatedAnswer.quesitonerUid,
+//     });
+//   } catch {
+//     res.status(500).json({ error: "something went wrong" });
+//   }
+// };
