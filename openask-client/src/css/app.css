@@ -51,7 +51,11 @@ body {
   color: var(--brand-vibrant) !important;
 }
 .user-avatar-container {
-  display: block;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   position: fixed;
   top: 0;
   right: 0;
@@ -60,8 +64,8 @@ body {
   border-radius: 50%;
 }
 .user-avatar img {
-  width: 30px;
-  height: 30px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
 }
 /* Header */
@@ -119,8 +123,8 @@ body {
   display: flex;
   flex-direction: column;
   background-color: var(--gray-2);
-  padding-left: 10px;
-  padding-right: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
   height: 100vh;
 }
 .sidebar-list {
@@ -214,6 +218,11 @@ body {
 }
 .wallet-btn:hover {
   background-color: var(--gray-2);
+}
+@media (min-width: 1200px) {
+  .css-1oqqzyl-MuiContainer-root {
+    max-width: 1600px !important;
+  }
 }
 
 /* Feed */
@@ -690,7 +699,7 @@ body {
 .ask-question-backdrop {
   z-index: 2000;
 }
-.answer-question-question{
+.answer-question-question {
   padding-bottom: 20px !important;
 }
 .answer-question-body {
@@ -720,7 +729,7 @@ body {
 }
 .submit-answer-btn-disabled {
   cursor: default;
-  opacity: .5;
+  opacity: 0.5;
   display: flex;
   padding: 16px 20px;
   color: var(--white);
@@ -820,4 +829,23 @@ body {
   background: var(--white);
   border-bottom: 1px solid var(--gray-3);
   box-shadow: none !important;
+}
+.lens-btn-container {
+  display: flex;
+  justify-content: flex-end;
+  margin: 10px;
+}
+.lens-btn {
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--accent-green);
+  padding: 4px 6px;
+  color: var(--brand-black);
+  border-radius: 16px;
+  width: 100px;
+}
+.lens-btn:hover {
+  opacity: .8;
 }

@@ -27,6 +27,7 @@ import TweetBtn from "./TweetBtn";
 
 import axios, * as others from "axios";
 import { payForAnswer } from "./functions/payForAnswer.js";
+import LensButton from "./subcomponents/LensButton";
 
 const QuestionId = ({ accessToken, setAccessError }) => {
   const [loading, setLoading] = useState(false);
@@ -200,18 +201,23 @@ const QuestionId = ({ accessToken, setAccessError }) => {
               )}
             </Card>
             {answer && answerExists && (
-              <Card className="question-landing-card">
-                <QuestionHeader
-                  twitterPfp={answerer?.profile.imageUrl}
-                  twitterHandle={answerer?.profile.handle}
-                  twitterDisplayName={answerer?.profile.displayName}
-                />
-                <QuestionBody
-                  body={answer?.body}
-                  createdAt={answer?.createdAt}
-                />
-                <QuestionFooter eavesdrop eavesdropCount={answer} />
-              </Card>
+              <>
+                <Card className="question-landing-card">
+                  <QuestionHeader
+                    twitterPfp={answerer?.profile.imageUrl}
+                    twitterHandle={answerer?.profile.handle}
+                    twitterDisplayName={answerer?.profile.displayName}
+                  />
+                  <QuestionBody
+                    body={answer?.body}
+                    createdAt={answer?.createdAt}
+                  />
+                  <QuestionFooter eavesdrop eavesdropCount={answer} />
+                </Card>
+                <Box className="lens-btn-container">
+                  <LensButton />
+                </Box>
+              </>
             )}
           </Box>
           {/* {answer && <TweetBtn />} */}
