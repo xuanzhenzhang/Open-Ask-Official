@@ -49,7 +49,7 @@ const Questions = ({ userInfo, accessToken, setAccessError }) => {
             `https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/questions-by/${userInfo.userUid}`
           );
           const filteredQuestions = response.data.filter(
-            (data) => data.contractAddress
+            (data) => data.txHash
           );
           // Set all questions
           setAllQuestionsAsked(filteredQuestions);
@@ -75,7 +75,7 @@ const Questions = ({ userInfo, accessToken, setAccessError }) => {
             `https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/questions-for/${userInfo.userUid}`
           );
           const filteredQuestions = data.filter(
-            (response) => response.contractAddress
+            (response) => response.txHash
           );
           // Set all questions for
           setAllQuestionsFor(filteredQuestions);
@@ -259,6 +259,8 @@ const Questions = ({ userInfo, accessToken, setAccessError }) => {
                   return id.userId === content.questioneeUid;
                 });
 
+                console.log(content)
+
                 const specificDate = new Date(content.createdAt);
                 const now = new Date();
                 const diffInMs = now - specificDate;
@@ -312,6 +314,7 @@ const Questions = ({ userInfo, accessToken, setAccessError }) => {
                         avatar={user && user[0]?.profile.imageUrl}
                         rewardAmount={content.rewardTokenAmount}
                         answerQuestion={content.body}
+                        questionId={content.questionId}
 
                       />
                     </Card>
@@ -367,9 +370,9 @@ const Questions = ({ userInfo, accessToken, setAccessError }) => {
           sx={{ ml: "0px !important" }}
         >
           <AnswerQuestion
-            // userInfo={userInfo}
-            // accessToken={accessToken}
-            // setAccessError={setAccessError}
+            userInfo={userInfo}
+            accessToken={accessToken}
+            setAccessError={setAccessError}
             handle={answerHandle}
             avatar={answerAvatar}
             displayName={answerDisplayName}
