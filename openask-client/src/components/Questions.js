@@ -38,6 +38,8 @@ const Questions = ({ userInfo, accessToken, setAccessError }) => {
   const [answerAvatar, setAnswerAvatar] = useState();
   const [answerRewardAmount, setAnswerRewardAmount] = useState();
   const [answerQuestion, setAnswerQuestion] = useState();
+  const [answerQuestionId, setAnswerQuestionId] = useState();
+  const [answerBountyId, setAnswerBountyId] = useState();
 
   // Get all questions asked by user
   useEffect(() => {
@@ -259,8 +261,6 @@ const Questions = ({ userInfo, accessToken, setAccessError }) => {
                   return id.userId === content.questioneeUid;
                 });
 
-                console.log(content)
-
                 const specificDate = new Date(content.createdAt);
                 const now = new Date();
                 const diffInMs = now - specificDate;
@@ -308,6 +308,8 @@ const Questions = ({ userInfo, accessToken, setAccessError }) => {
                         setAnswerDisplayName={setAnswerDisplayName}
                         setAnswerRewardAmount={setAnswerRewardAmount}
                         setAnswerQuestion={setAnswerQuestion}
+                        setAnswerQuestionId={setAnswerQuestionId}
+                        setAnswerBountyId={setAnswerBountyId}
 
                         handle={user && user[0]?.profile.handle}
                         displayName={user && user[0]?.profile.displayName}
@@ -315,6 +317,7 @@ const Questions = ({ userInfo, accessToken, setAccessError }) => {
                         rewardAmount={content.rewardTokenAmount}
                         answerQuestion={content.body}
                         questionId={content.questionId}
+                        bountyId={content.bountyId}
 
                       />
                     </Card>
@@ -378,6 +381,8 @@ const Questions = ({ userInfo, accessToken, setAccessError }) => {
             displayName={answerDisplayName}
             rewardAmount={answerRewardAmount}
             answerQuestion={answerQuestion}
+            questionId={answerQuestionId}
+            bountyId={answerBountyId}
             handleCloseBackdrop={handleCloseBackdrop}
           />
         </Backdrop>

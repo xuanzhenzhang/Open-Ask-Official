@@ -10,8 +10,18 @@ const AnswerButton = (props) => {
     setAnswerHandle,
     setAnswerRewardAmount,
     setAnswerQuestion,
+    setAnswerQuestionId,
+    setAnswerBountyId,
   } = props;
-  const { handle, avatar, displayName, rewardAmount, answerQuestion } = props;
+  const {
+    handle,
+    avatar,
+    displayName,
+    rewardAmount,
+    answerQuestion,
+    questionId,
+    bountyId,
+  } = props;
 
   // const onAskQuestion = () => {
   //   setOpen(!open);
@@ -33,6 +43,8 @@ const AnswerButton = (props) => {
           setAnswerDisplayName(displayName);
           setAnswerRewardAmount(rewardAmount);
           setAnswerQuestion(answerQuestion);
+          setAnswerQuestionId(questionId);
+          setAnswerBountyId(bountyId);
         }}
       >
         <Typography>Answer</Typography>

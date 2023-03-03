@@ -18,11 +18,15 @@ const QuestionFooter = (props) => {
     setAnswerHandle,
     setAnswerRewardAmount,
     setAnswerQuestion,
+    setAnswerQuestionId,
+    setAnswerBountyId,
     avatar,
     displayName,
     handle,
     rewardAmount,
-    answerQuestion
+    answerQuestion,
+    questionId,
+    bountyId,
   } = props;
 
   return (
@@ -85,7 +89,11 @@ const QuestionFooter = (props) => {
             </Link>
           </Typography>
           <Typography className="feed-expired">Expired</Typography>
-          <WithdrawButton />
+          <WithdrawButton
+            contractAddress={"0x5AE8138B79ad83184Eb484Ba3C0889F297820482"}
+            bountyId={bountyId}
+            contributionId={0}
+          />
         </CardActions>
       )}
 
@@ -105,11 +113,15 @@ const QuestionFooter = (props) => {
             setAnswerDisplayName={setAnswerDisplayName}
             setAnswerRewardAmount={setAnswerRewardAmount}
             setAnswerQuestion={setAnswerQuestion}
+            setAnswerQuestionId={setAnswerQuestionId}
+            setAnswerBountyId={setAnswerBountyId}
             avatar={avatar}
             displayName={displayName}
             handle={handle}
             rewardAmount={rewardAmount}
             answerQuestion={answerQuestion}
+            questionId={questionId}
+            bountyId={bountyId}
           />
         </CardActions>
       )}
