@@ -190,10 +190,13 @@ const AskQuestion = (props) => {
         // Add Contract to Backend
         const data = await askQuestion(tokenAmount * 10 ** 18);
 
+        const currentTimestamp = Math.floor(Date.now() / 1000);
+        const futureTimestamp = currentTimestamp + 172800; // 48 Hours
+
         // Add Bounty
         const txHash = await ethBountyContract(
           [`${paymentSensei.walletAddress}`], // Sensei Address
-          172800, //48 Hours
+          futureTimestamp, //48 Hours
           tokenAmountUpdated, // Token Amount
           data.data.questionId, // Data
           setAskLoaderText // Set Loader Text
@@ -252,7 +255,7 @@ const AskQuestion = (props) => {
           },
         }
       );
-      console.log("Question Sent to Backend. Retrieve Question ID and Secret");
+      console.log("Question Posted to Backend");
       return data;
     } catch (error) {
       console.log(error);
