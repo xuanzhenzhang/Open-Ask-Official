@@ -7,9 +7,11 @@ import { useNavigate } from "react-router-dom";
 import { deployEthContract } from "./functions/ethContract";
 import { ethMatureTime } from "./functions/ethMatureTime";
 import { ethBountyContract } from "./functions/ethBountyContract";
+import PriceButton from "./subcomponents/PriceButton";
 import AskButton from "./subcomponents/AskButton";
 import { ethers } from "ethers";
 import confetti from "canvas-confetti";
+import { ethereumSVG, homeFilled } from "./subcomponents/VectorSVGs";
 import axios from "axios";
 
 const AskQuestion = (props) => {
@@ -24,7 +26,9 @@ const AskQuestion = (props) => {
 
   const [question, setQuestion] = useState("");
   const [sensei, setSensei] = useState();
-  const [tokenType, setTokenType] = useState("ETH");
+  const [tokenType, setTokenType] = useState(
+    "0x0000000000000000000000000000000000000000"
+  );
   const [tokenAmount, setTokenAmount] = useState();
   const [senseiId, setSenseiId] = useState();
   const [senseiName, setSenseiName] = useState("");
@@ -96,71 +100,75 @@ const AskQuestion = (props) => {
       window.location.reload();
     }, 3000);
   }
+  //Clear Form
+  const clearForm = () => {
+    setQuestion("");
+    setSensei("");
+    setTokenAmount("");
+  };
 
   // ETH Contract
-  const handleDeployEthContract = async () => {
-    // Check sensei wallet address
-    const paymentSensei = allSenseis.find((data) => {
-      return data.profile.displayName === sensei;
-    });
+  // const handleDeployEthContract = async () => {
+  //   // Check sensei wallet address
+  //   const paymentSensei = allSenseis.find((data) => {
+  //     return data.profile.displayName === sensei;
+  //   });
 
-    if (paymentSensei.walletAddress) {
-      try {
-        setAskLoader(true);
-        const tokenAmountString = tokenAmount.toString();
-        const tokenAmountUpdated = ethers.utils.parseUnits(
-          tokenAmountString,
-          18
-        );
+  //   if (paymentSensei.walletAddress) {
+  //     try {
+  //       setAskLoader(true);
+  //       const tokenAmountString = tokenAmount.toString();
+  //       const tokenAmountUpdated = ethers.utils.parseUnits(
+  //         tokenAmountString,
+  //         18
+  //       );
 
-        // Add Contract to Backend
-        const data = await askQuestion();
+  //       // Add Contract to Backend
+  //       const data = await askQuestion();
 
-        // Deploy Contract
-        const deployedAddress = await deployEthContract(
-          paymentSensei.walletAddress, // Sensei Address
-          tokenAmountUpdated, // Token Amount
-          172800, //48 Hours
-          data.data.questionId, //questionId
-          data.data.secretToken, // secret
-          setAskLoaderText
-        );
-        console.log(`Contract Deployed: ${deployedAddress.toString()}`);
+  //       // Deploy Contract
+  //       const deployedAddress = await deployEthContract(
+  //         paymentSensei.walletAddress, // Sensei Address
+  //         tokenAmountUpdated, // Token Amount
+  //         172800, //48 Hours
+  //         data.data.questionId, //questionId
+  //         data.data.secretToken, // secret
+  //         setAskLoaderText
+  //       );
+  //       console.log(`Contract Deployed: ${deployedAddress}`);
 
-        // Update Question with Contract Address
-        await updateQuestion(deployedAddress);
-        setAskLoader(false);
+  //       // Update Question with Contract Address
+  //       await updateQuestion(deployedAddress);
+  //       setAskLoader(false);
 
-        confetti({
-          zIndex: "3002",
-          particleCount: 300,
-          spread: 150,
-          shapes: ["circle", "square"],
-          origin: {
-            y: 0.65,
-          },
-        });
-        // Clear Form
-        setQuestion("");
-        setSensei("");
-        setTokenAmount("");
-        // Close Backdrop
-        await handleCloseBackdrop();
-        if (location.pathname === "/questions") {
-          refreshPage();
-        } else {
-          navigate("/questions");
-        }
-      } catch (error) {
-        setAskLoader(false);
-        console.log(error);
-      }
-    } else {
-      alert(
-        "This Sensei does not have a wallet address. Please select another Sensei."
-      );
-    }
-  };
+  //       confetti({
+  //         zIndex: "3002",
+  //         particleCount: 300,
+  //         spread: 150,
+  //         shapes: ["circle", "square"],
+  //         origin: {
+  //           y: 0.65,
+  //         },
+  //       });
+  //       // Clear Form
+  //       clearForm();
+  //       // Close Backdrop
+  //       await handleCloseBackdrop();
+  //       if (location.pathname === "/questions") {
+  //         refreshPage();
+  //       } else {
+  //         navigate("/questions");
+  //       }
+  //     } catch (error) {
+  //       setAskLoader(false);
+  //       console.log(error);
+  //     }
+  //   } else {
+  //     alert(
+  //       "This Sensei does not have a wallet address. Please select another Sensei."
+  //     );
+  //   }
+  // };
 
   // NEW ETH Contract
   const handleEthBountyContract = async () => {
@@ -169,7 +177,7 @@ const AskQuestion = (props) => {
       return data.profile.displayName === sensei;
     });
 
-    if (tokenAmount) {
+    if (paymentSensei) {
       try {
         setAskLoader(true);
         const tokenAmountString = tokenAmount.toString();
@@ -177,24 +185,24 @@ const AskQuestion = (props) => {
           tokenAmountString,
           18
         );
+        const tokenAmountBackend = tokenAmount * 10 ** 18;
 
         // Add Contract to Backend
-        const data = await askQuestion();
+        const data = await askQuestion(tokenAmount * 10 ** 18);
 
         // Add Bounty
-        const bountyId = await ethBountyContract(
-          ["0xc8fb0913a8e36487710f838a08d4e66367d07924"], // paymentSensei.walletAddress, // Sensei Address
+        const txHash = await ethBountyContract(
+          [`${paymentSensei.walletAddress}`], // Sensei Address
           172800, //48 Hours
           tokenAmountUpdated, // Token Amount
-          // data.data.questionId, //questionId
-          // data.data.secretToken, // secret
-          setAskLoaderText
+          data.data.questionId, // Data
+          setAskLoaderText // Set Loader Text
         );
 
-        console.log(`Bounty ID: ${bountyId}`);
+        console.log(`TX Hash: ${txHash}`);
 
-        // Update Question with Contract Address
-        await updateQuestion(bountyId);
+        // Update Question with TX Hash
+        await updateQuestion(txHash);
 
         setAskLoader(false);
 
@@ -208,9 +216,7 @@ const AskQuestion = (props) => {
           },
         });
         // Clear Form
-        setQuestion("");
-        setSensei("");
-        setTokenAmount("");
+        clearForm();
         // Close Backdrop
         await handleCloseBackdrop();
         if (location.pathname === "/questions") {
@@ -230,7 +236,7 @@ const AskQuestion = (props) => {
   };
 
   // POST question to sensei
-  const askQuestion = async () => {
+  const askQuestion = async (tokenAmontBackend) => {
     try {
       const data = await axios.post(
         `https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/question`,
@@ -238,7 +244,7 @@ const AskQuestion = (props) => {
           body: question,
           questioneeUid: senseiId,
           rewardTokenType: tokenType,
-          rewardTokenAmount: tokenAmount,
+          rewardTokenAmount: tokenAmontBackend,
         },
         {
           headers: {
@@ -257,10 +263,10 @@ const AskQuestion = (props) => {
     }
   };
   // PUT question to sensei
-  const updateQuestion = async (contractAddress) => {
+  const updateQuestion = async (txHash) => {
     try {
       const data = await axios.put(
-        `https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/question/${contractAddress}`,
+        `https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/question/${txHash}`,
         {},
         {
           headers: {
@@ -268,7 +274,7 @@ const AskQuestion = (props) => {
           },
         }
       );
-      console.log("Contract Address added to Backend.");
+      console.log("TX hash added to Backend.");
       return data;
     } catch (error) {
       console.log(error);
@@ -295,7 +301,10 @@ const AskQuestion = (props) => {
             <CardContent className="ask-question-header">
               <svg
                 cursor="pointer"
-                onClick={handleCloseBackdrop}
+                onClick={() => {
+                  handleCloseBackdrop();
+                  clearForm();
+                }}
                 width="40"
                 height="40"
                 viewBox="0 0 40 40"
@@ -416,7 +425,7 @@ const AskQuestion = (props) => {
                 className="ask-question-autocomplete-textfield"
                 required
                 size="small"
-                id="outlined-number"
+                // id="outlined-number"
                 label={`Token Amount`}
                 type="number"
                 variant="outlined"
@@ -424,14 +433,10 @@ const AskQuestion = (props) => {
                 onChange={handleTokenAmountChange}
                 inputProps={{ min: 0.01, step: "0.01" }}
               />
-              <Chip
-                // icon={
-
-                // }
-                sx={{ marginRight: "auto" }}
-                label="ETH"
-                variant="outlined"
-              />
+              <Box className="feed-price">
+                {/* {ethereumSVG} */}
+                <Typography>ETH</Typography>
+              </Box>
               <AskButton
                 disabled={tokenAmount > 0 && sensei && question ? true : false}
                 handleDeployEthContract={handleEthBountyContract}

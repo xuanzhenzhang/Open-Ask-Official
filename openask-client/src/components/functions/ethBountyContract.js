@@ -12,6 +12,7 @@ export const ethBountyContract = async (
   approvers,
   deadline,
   depositAmount,
+  questionId,
   setText
 ) => {
   if (window.ethereum) {
@@ -24,7 +25,7 @@ export const ethBountyContract = async (
 
       const sender = await signer.getAddress();
       const issuers = ["0x0000000000000000000000000000000000000000"];
-      const data = [];
+      const data = questionId;
       const token = "0x0000000000000000000000000000000000000000";
       const tokenVersion = 0;
       //   const depositAmount = ethers.utils.parseEther("1"); // deposit amount in ether
@@ -51,7 +52,7 @@ export const ethBountyContract = async (
 
       const bountyId = receipt.events[0].args[0].toNumber();
       console.log("Bounty ID:", bountyId);
-      return bountyId;
+      return transaction.hash;
     } catch (error) {
       console.log(error);
       throw new Error("Contract deployment failed");
