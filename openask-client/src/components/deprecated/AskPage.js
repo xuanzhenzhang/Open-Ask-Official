@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { deployContract } from "./functions/deployContract";
-import { approveTokens } from "./functions/approveTokens";
-import { depositToContract } from "./functions/depositToContract";
-import { deployEthContract } from "./functions/ethContract";
-import { ethMatureTime } from "./functions/ethMatureTime";
-import { tonyABI } from "./data/tokenABI";
+import { deployContract } from "../functions/deployContract";
+import { approveTokens } from "../functions/approveTokens";
+import { depositToContract } from "../functions/depositToContract";
+import { deployEthContract } from "../functions/ethContract";
+import { ethMatureTime } from "../functions/ethMatureTime";
+import { tonyABI } from "../data/tokenABI";
 import { ethers } from "ethers";
-import Loader from "./Loader";
+import Loader from "../Loader";
 
 import { Backdrop, TextField, Paper } from "@material-ui/core";
 import {
@@ -28,8 +28,8 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import confetti from "canvas-confetti";
-import Congratulations from "./Congratulations";
-import { getUsers } from "./functions/getUsers";
+import Congratulations from "../Congratulations";
+import { getUsers } from "../functions/getUsers";
 import axios, * as others from "axios";
 
 const AskPage = ({ userInfo, accessToken, setAccessError }) => {

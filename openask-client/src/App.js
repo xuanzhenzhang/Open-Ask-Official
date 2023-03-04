@@ -4,7 +4,6 @@ import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 
 import { Routes, Route } from "react-router-dom";
-import AskPage from "./components/AskPage";
 import LoginPage from "./components/LoginPage";
 import { AppHeader } from "./components/AppHeader";
 import Sensei from "./components/Sensei";

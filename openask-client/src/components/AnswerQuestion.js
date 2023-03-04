@@ -117,9 +117,7 @@ const AnswerQuestion = (props) => {
     try {
       const data = await axios.put(
         `https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/answer/${txHash}`,
-        {
-          body: answer,
-        },
+        {},
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,

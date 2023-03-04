@@ -20,6 +20,8 @@ const QuestionFooter = (props) => {
     setAnswerQuestion,
     setAnswerQuestionId,
     setAnswerBountyId,
+    setOpenWithdraw,
+    setAskLoaderWithdrawText,
     avatar,
     displayName,
     handle,
@@ -27,7 +29,9 @@ const QuestionFooter = (props) => {
     answerQuestion,
     questionId,
     bountyId,
+    withdrawn,
   } = props;
+  const { setAccessError, accessToken } = props;
 
   return (
     <>
@@ -93,6 +97,12 @@ const QuestionFooter = (props) => {
             contractAddress={"0x5AE8138B79ad83184Eb484Ba3C0889F297820482"}
             bountyId={bountyId}
             contributionId={0}
+            questionId={questionId}
+            accessToken={accessToken}
+            setAccessError={setAccessError}
+            setOpenWithdraw={setOpenWithdraw}
+            setAskLoaderWithdrawText={setAskLoaderWithdrawText}
+            withdrawn={withdrawn}
           />
         </CardActions>
       )}
