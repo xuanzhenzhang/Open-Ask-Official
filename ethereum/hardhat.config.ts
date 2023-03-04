@@ -17,6 +17,7 @@ const config: HardhatUserConfig = {
       apiKey: {
         goerli: process.env.ETHERSCAN_API_KEY,
         scroll_alpha: process.env.SCROLL_API_KEY,
+        base: process.env.BASE_API_KEY,
       },
       customChains: [
           {
@@ -25,6 +26,14 @@ const config: HardhatUserConfig = {
             urls: {
               apiURL: "https://blockscout.scroll.io/api",
               browserURL: "https://blockscout.scroll.io/"
+            }
+          },
+          {
+            network: "base",
+            chainId: 84531,
+            urls: {
+              apiURL: "https://api-goerli.basescan.org/api",
+              browserURL: "https://goerli.basescan.org/"
             }
           }
         ]
@@ -38,16 +47,16 @@ const config: HardhatUserConfig = {
         url: process.env.GOERLI_URL || "",
         accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
       },
+      ropsten: {
+        url: process.env.ROPSTEN_URL || "",
+        accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+      },
       scroll_alpha: {
         url: process.env.SCROLL_TESTNET_URL || "",
         accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
       },
       scroll_prealpha: {
         url: process.env.SCROLL_PREALPHA_TESTNET_URL || "",
-        accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
-      },
-      ropsten: {
-        url: process.env.ROPSTEN_URL || "",
         accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
       },
       optimism: {
@@ -62,6 +71,10 @@ const config: HardhatUserConfig = {
       // for the local dev environment
       optimism_local: {
         url: process.env.OPTIMISM_LOCAL_URL || "",
+        accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+      },
+      base: {
+        url: process.env.BASE_URL || "",
         accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
       },
     },
