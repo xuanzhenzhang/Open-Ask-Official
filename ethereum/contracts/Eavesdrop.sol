@@ -32,7 +32,7 @@ contract Eavesdrop is Ownable, ERC721 {
         return token_balances[token][account];
     }
 
-    function eavesdrop(uint256 answerId, address[] calldata _payees, uint256[] calldata _shares) public payable {
+    function eavesdropEth(uint256 answerId, address[] calldata _payees, uint256[] calldata _shares) public payable {
         require(_payees.length == _shares.length, "Payees and shares mismatch");
         require(_payees.length > 0, "No payees");
         require(_checkShares(_shares), "Shares don't add up to 100%");
