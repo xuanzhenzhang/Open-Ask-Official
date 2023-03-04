@@ -1,3 +1,5 @@
+import { Web3Auth } from "@web3auth/modal";
+import { ethers } from "ethers";
 import { useEffect, useState, useContext } from "react";
 import AppContext from "./components/context/AppContext";
 import Container from "@mui/material/Container";
@@ -32,7 +34,20 @@ import { Avatar } from "@mui/material";
 
 const provider = new TwitterAuthProvider();
 
-// var provider = new firebase.auth.TwitterAuthProvider();
+const web3auth = new Web3Auth({
+  uiConfig: {
+    appLogo: "https://images.web3auth.io/web3auth-logo-w.svg",
+    theme: "light",
+    loginMethodsOrder: ["twitter"],
+    defaultLanguage: "en",
+  },
+  clientId:
+    "BJsOkD91JES7aVales0sTJYBsRxwlofa9YsWs_y2KIjyOgdRlk41Sgfmpt8luQE52UaKp2pD9ajDNy7yjaaYQvc", // Get your Client ID from Web3Auth Dashboard
+  chainConfig: {
+    chainNamespace: "eip155",
+    chainId: "0x5", // Please use 0x5 for Goerli Testnet
+  },
+});
 
 function App() {
   // const [loginUser, setLoginUser] = useState(null);
@@ -43,6 +58,14 @@ function App() {
 
   const { userInfo, setUserInfo } = useContext(AppContext);
   const { accessToken } = userInfo;
+
+  useEffect(() => {
+    const init = async () => {
+      await web3auth.initModal();
+    };
+    console.log("initialized");
+    init();
+  }, []);
 
   const signInTwitter = async (reload) => {
     const auth = getAuth();
@@ -150,6 +173,7 @@ function App() {
             mobileOpen={mobileOpen}
             setMobileOpen={setMobileOpen}
             signInTwitter={signInTwitter}
+            // web3Connect={web3Connect}
           />
         )}
         <Routes>

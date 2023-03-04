@@ -39,6 +39,7 @@ const SidebarList = ({
   setAccessError,
   setMobileOpen,
   mobileOpen,
+  // web3Connect,
 }) => {
   const [open, setOpen] = useState(false);
 
@@ -187,6 +188,7 @@ const SidebarList = ({
           <WalletCard
             accessToken={accessToken}
             setAccessError={setAccessError}
+            // web3Connect={web3Connect}
           />
           <LensCard accessToken={accessToken} setAccessError={setAccessError} />
         </Box>

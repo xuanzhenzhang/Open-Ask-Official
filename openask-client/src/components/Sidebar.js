@@ -12,6 +12,7 @@ const Sidebar = (props) => {
     mobileOpen,
     setMobileOpen,
     signInTwitter,
+    web3Connect
   } = props;
 
   return (
@@ -39,6 +40,7 @@ const Sidebar = (props) => {
           signInTwitter={signInTwitter}
           accessToken={accessToken}
           setAccessError={setAccessError}
+          // web3Connect={web3Connect}
         />
       </Drawer>
 
@@ -59,6 +61,7 @@ const Sidebar = (props) => {
           signInTwitter={signInTwitter}
           accessToken={accessToken}
           setAccessError={setAccessError}
+          // web3Connect={web3Connect}
         />
       </Drawer>
     </>
