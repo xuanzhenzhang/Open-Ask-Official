@@ -21,6 +21,7 @@ import QuestionHeader from "./subcomponents/QuestionHeader";
 import QuestionBody from "./subcomponents/QuestionBody";
 import QuestionFooter from "./subcomponents/QuestionFooter";
 import AnswerQuestion from "./AnswerQuestion";
+import WithdrawQuestion from "./subcomponents/WithdrawQuestion";
 
 const Questions = ({ userInfo, accessToken, setAccessError }) => {
   const [loading, setLoading] = useState(false);
@@ -41,6 +42,9 @@ const Questions = ({ userInfo, accessToken, setAccessError }) => {
   const [answerQuestionId, setAnswerQuestionId] = useState();
   const [answerBountyId, setAnswerBountyId] = useState();
 
+  const [openWithdraw, setOpenWithdraw] = useState(false);
+  const [askLoaderWithdrawText, setAskLoaderWithdrawText] = useState();
+
   // Get all questions asked by user
   useEffect(() => {
     setLoading(true);
@@ -50,9 +54,7 @@ const Questions = ({ userInfo, accessToken, setAccessError }) => {
           const response = await axios.get(
             `https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/questions-by/${userInfo.userUid}`
           );
-          const filteredQuestions = response.data.filter(
-            (data) => data.txHash
-          );
+          const filteredQuestions = response.data.filter((data) => data.txHash);
           // Set all questions
           setAllQuestionsAsked(filteredQuestions);
           setLoading(false);
@@ -76,9 +78,7 @@ const Questions = ({ userInfo, accessToken, setAccessError }) => {
           const { data } = await axios.get(
             `https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/questions-for/${userInfo.userUid}`
           );
-          const filteredQuestions = data.filter(
-            (response) => response.txHash
-          );
+          const filteredQuestions = data.filter((response) => response.txHash);
           // Set all questions for
           setAllQuestionsFor(filteredQuestions);
         } catch (error) {
@@ -245,6 +245,13 @@ const Questions = ({ userInfo, accessToken, setAccessError }) => {
                       expired={content.answerId === null && diffInHours >= 48}
                       twitterHandle={answerer && answerer[0]?.profile.handle}
                       waitingTime={waitingTime}
+                      bountyId={content.bountyId}
+                      accessToken={accessToken}
+                      setAccessError={setAccessError}
+                      questionId={content.questionId}
+                      setOpenWithdraw={setOpenWithdraw}
+                      setAskLoaderWithdrawText={setAskLoaderWithdrawText}
+                      withdrawn={content.withdrawnAfterExpiry}
                     />
                   </Card>
                 );
@@ -301,7 +308,6 @@ const Questions = ({ userInfo, accessToken, setAccessError }) => {
                         }
                         twitterHandle={answerer && answerer[0]?.profile.handle}
                         waitingTime={waitingTime}
-
                         setOpenAnswer={setOpenAnswer}
                         setAnswerAvatar={setAnswerAvatar}
                         setAnswerHandle={setAnswerHandle}
@@ -310,7 +316,6 @@ const Questions = ({ userInfo, accessToken, setAccessError }) => {
                         setAnswerQuestion={setAnswerQuestion}
                         setAnswerQuestionId={setAnswerQuestionId}
                         setAnswerBountyId={setAnswerBountyId}
-
                         handle={user && user[0]?.profile.handle}
                         displayName={user && user[0]?.profile.displayName}
                         avatar={user && user[0]?.profile.imageUrl}
@@ -318,7 +323,6 @@ const Questions = ({ userInfo, accessToken, setAccessError }) => {
                         answerQuestion={content.body}
                         questionId={content.questionId}
                         bountyId={content.bountyId}
-
                       />
                     </Card>
                   </>
@@ -366,7 +370,7 @@ const Questions = ({ userInfo, accessToken, setAccessError }) => {
             </TabPanel>
           </>
         )}
-        {/* Answer Question */}
+        {/* Answer Question Backdrop */}
         <Backdrop
           className="ask-question-backdrop"
           open={openAnswer}
@@ -385,6 +389,14 @@ const Questions = ({ userInfo, accessToken, setAccessError }) => {
             bountyId={answerBountyId}
             handleCloseBackdrop={handleCloseBackdrop}
           />
+        </Backdrop>
+        {/* Withdraw Backdrop */}
+        <Backdrop
+          className="ask-question-backdrop"
+          open={openWithdraw}
+          sx={{ ml: "0px !important" }}
+        >
+          <WithdrawQuestion askLoaderWithdrawText={askLoaderWithdrawText} />
         </Backdrop>
       </Container>
     </>

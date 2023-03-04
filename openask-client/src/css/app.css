@@ -393,6 +393,17 @@ body {
   border-radius: 16px;
   margin-left: 8px;
 }
+.withdrawn {
+  cursor: default;
+  padding: 4px 6px;
+  background: var(--gray-6);
+  color: var(--gray-2);
+  border-radius: 16px;
+  margin-left: 8px;
+}
+.withdraw:hover {
+  background-color: var(--gray-6);
+}
 .question-filter {
   padding: 12px 12px 12px 12px;
   border-radius: 12px 12px 0px 0px;
@@ -847,5 +858,5 @@ body {
   width: 100px;
 }
 .lens-btn:hover {
-  opacity: .8;
+  opacity: 0.8;
 }
