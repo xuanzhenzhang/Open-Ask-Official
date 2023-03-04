@@ -121,7 +121,7 @@ function App() {
 
   return (
     <>
-      <Container maxWidth="lg">
+      <Container>
         {userInfo.userUid && (
           <AccessErrorLogin
             signInTwitter={signInTwitter}
