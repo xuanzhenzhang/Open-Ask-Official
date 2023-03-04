@@ -32,6 +32,8 @@ const QuestionFooter = (props) => {
     withdrawn,
   } = props;
   const { setAccessError, accessToken } = props;
+  // Eavesdrop Props
+  const {id, payees, setAskLoaderEavesdropText, setOpenEavesdrop, answerId} = props;
 
   return (
     <>
@@ -52,7 +54,7 @@ const QuestionFooter = (props) => {
               @{twitterHandle}
             </Link>
           </Typography>
-          {notAnswered && <EavesdropButton />}
+          {notAnswered && <EavesdropButton id={id} payees={payees} setAskLoaderEavesdropText={setAskLoaderEavesdropText} setOpenEavesdrop={setOpenEavesdrop} answerId={answerId} accessToken={accessToken} setAccessError={setAccessError} />}
         </CardActions>
       )}
 

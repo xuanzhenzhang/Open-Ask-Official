@@ -19,6 +19,7 @@ import { backSvg } from "./subcomponents/VectorSVGs";
 import QuestionHeader from "./subcomponents/QuestionHeader";
 import QuestionBody from "./subcomponents/QuestionBody";
 import QuestionFooter from "./subcomponents/QuestionFooter";
+import EavesdropQuestion from "./subcomponents/EavesdropQuestion";
 
 import IconButton from "@mui/material/IconButton";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -39,6 +40,9 @@ const QuestionId = ({ accessToken, setAccessError }) => {
 
   const [answerExists, setAnswerExists] = useState(true);
   const [open, setOpen] = useState(false);
+
+  const [askLoaderEavesdropText, setAskLoaderEavesdropText] = useState("Continue on Metamask");
+  const [openEavesdrop, setOpenEavesdrop] = useState(false);
 
   const params = useParams();
   const { id } = params;
@@ -69,8 +73,20 @@ const QuestionId = ({ accessToken, setAccessError }) => {
           const { data } = await axios.get(
             `https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/user/${question?.questionerUid}`
           );
-          console.log(data);
-          setUser(data);
+
+          let modifiedUser = data?.profile?.imageUrl?.startsWith("ipfs")
+            ? {
+                ...data,
+                profile: {
+                  ...data.profile,
+                  imageUrl: `https://ipfs.io/ipfs/${
+                    data.profile.imageUrl.split("/")[2]
+                  }`,
+                },
+              }
+            : data;
+
+          setUser(modifiedUser);
         }
       } catch (error) {
         console.error(error);
@@ -101,8 +117,8 @@ const QuestionId = ({ accessToken, setAccessError }) => {
   // Get answer by question id
   useEffect(() => {
     const getAnswerToQuestion = async () => {
-      try {
-        if (question) {
+      if (question.answerId) {
+        try {
           const { data } = await axios.get(
             `https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/answer-to-question/${id}`,
             {
@@ -113,26 +129,22 @@ const QuestionId = ({ accessToken, setAccessError }) => {
           );
           setAnswer(data);
           setLoading(false);
+        } catch (error) {
+          if (error.response.status === 403) {
+            setAccessError(true);
+          }
+          setAnswer(null);
+          setLoading(false);
+          console.log("Unauthorized Answer");
         }
-      } catch (error) {
-        if (error.response.status === 403) {
-          setAccessError(true);
-        } else if (error.response.status === 404) {
-          setAnswerExists(false);
-        }
-        setAnswer(null);
-        console.log("Unauthorized Answer");
+      } else {
+        setAnswerExists(false);
+        setLoading(false);
       }
-      setLoading(false);
     };
 
     getAnswerToQuestion();
   }, [question]);
-
-  // Confetti, Pay to See Answer Request
-  const handlePurchaseAnswer = (id, answerId, toAddress, tokenAmount) => {
-    payForAnswer(accessToken, id, answerId, toAddress, tokenAmount);
-  };
 
   const navigate = useNavigate();
 
@@ -140,17 +152,6 @@ const QuestionId = ({ accessToken, setAccessError }) => {
   function handleGoBack() {
     navigate(-1);
   }
-
-  const handleAvatarClick = (twitter) => {
-    navigate(`/sensei/${twitter}`);
-  };
-
-  const handleCloseBackdrop = () => {
-    setOpen(false);
-  };
-  const handleOpenBackdrop = () => {
-    setOpen(!open);
-  };
 
   return (
     <Container
@@ -197,6 +198,13 @@ const QuestionId = ({ accessToken, setAccessError }) => {
                   answeredBy
                   notAnswered
                   twitterHandle={answerer?.profile.handle}
+                  id={id}
+                  payees={[user?.walletAddress, answerer?.walletAddress]}
+                  setAskLoaderEavesdropText={setAskLoaderEavesdropText}
+                  setOpenEavesdrop={setOpenEavesdrop}
+                  accessToken={accessToken}
+                  setAccessError={setAccessError}
+                  answerId={question?.answerId}
                 />
               )}
             </Card>
@@ -220,7 +228,13 @@ const QuestionId = ({ accessToken, setAccessError }) => {
               </>
             )}
           </Box>
-          {/* {answer && <TweetBtn />} */}
+          <Backdrop
+            className="ask-question-backdrop"
+            open={openEavesdrop}
+            sx={{ ml: "0px !important" }}
+          >
+            <EavesdropQuestion askLoaderEavesdropText={askLoaderEavesdropText} />
+          </Backdrop>
         </>
       )}
     </Container>

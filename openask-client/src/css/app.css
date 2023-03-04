@@ -472,6 +472,7 @@ body {
 }
 /* Sensei Details */
 .eavesdrop-btn {
+  cursor: pointer;
   padding: 4px 6px;
   background: var(--brand-black);
   color: var(--gray-2);
