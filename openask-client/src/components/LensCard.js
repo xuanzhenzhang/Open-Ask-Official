@@ -219,8 +219,6 @@ const LensCard = ({ accessToken, setAccessError }) => {
   };
 
   const useLensProfile = async () => {
-    console.log("asdfajdskhfksdakjf?");
-    console.log("currentAccount: ", currentAccount);
     const profileResponse = await profileQuery(currentAccount);
     if (profileResponse.defaultProfile != null) {
       const defaultProfile = profileResponse.defaultProfile;
