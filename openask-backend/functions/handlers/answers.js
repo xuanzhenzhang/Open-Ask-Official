@@ -201,7 +201,7 @@ exports.getAllAnswersByDescTimestamp = (req, res) => {
           txHash: doc.data().txHash,
         });
       });
-      return res.status(200).json(questions);
+      return res.status(200).json(answers);
     })
     .catch((err) => {
       res.status(500).json({ error: "something went wrong" });

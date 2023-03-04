@@ -1,3 +1,4 @@
+//SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
@@ -34,6 +35,7 @@ contract Eavesdrop is Ownable, ERC721 {
     function eavesdrop(uint256 answerId, address[] calldata _payees, uint256[] calldata _shares) public payable {
         require(_payees.length == _shares.length, "Payees and shares mismatch");
         require(_payees.length > 0, "No payees");
+        require(_checkShares(_shares), "Shares don't add up to 100%");
         require(eavesdropFee[address(0)] > 0, "Ether is not supported");
         require(msg.value == eavesdropFee[address(0)], "Incorrect payment amount");
 
@@ -51,6 +53,7 @@ contract Eavesdrop is Ownable, ERC721 {
     function eavesdrop(uint256 answerId, address[] calldata _payees, uint256[] calldata _shares, IERC20 token, uint256 amount) public {
         require(_payees.length == _shares.length, "Payees and shares mismatch");
         require(_payees.length > 0, "No payees");
+        require(_checkShares(_shares), "Shares don't add up to 100%");
         require(eavesdropFee[address(token)] > 0, "Token is not supported");
         require(amount == eavesdropFee[address(token)], "Incorrect payment amount");
         require(token.balanceOf(msg.sender) >= amount, "Insufficient balance");
@@ -70,6 +73,7 @@ contract Eavesdrop is Ownable, ERC721 {
     function eavesdropAndPay(uint256 answerId, address[] calldata _payees, uint256[] calldata _shares) public payable {
         require(_payees.length == _shares.length, "Payees and shares mismatch");
         require(_payees.length > 0, "No payees");
+        require(_checkShares(_shares), "Shares don't add up to 100%");
         require(eavesdropFee[address(0)] > 0, "Ether is not supported");
         require(msg.value == eavesdropFee[address(0)], "Incorrect payment amount");
 
@@ -88,6 +92,7 @@ contract Eavesdrop is Ownable, ERC721 {
     function eavesdropAndPay(uint256 answerId, address[] calldata _payees, uint256[] calldata _shares, IERC20 token, uint256 amount) public {
         require(_payees.length == _shares.length, "Payees and shares mismatch");
         require(_payees.length > 0, "No payees");
+        require(_checkShares(_shares), "Shares don't add up to 100%");
         require(eavesdropFee[address(token)] > 0, "Token is not supported");
         require(amount == eavesdropFee[address(token)], "Incorrect payment amount");
         require(token.balanceOf(msg.sender) >= amount, "Insufficient balance");
@@ -120,5 +125,13 @@ contract Eavesdrop is Ownable, ERC721 {
     function changeEavesdropFee(address token, uint256 _eavesdropFee) public onlyOwner {
         eavesdropFee[token] = _eavesdropFee;
         emit ChangeFee(token, _eavesdropFee);
+    }
+
+    function _checkShares(uint256[] memory _shares) internal pure returns (bool) {
+        uint256 sum = 0;
+        for (uint256 i = 0; i < _shares.length; i++) {
+            sum += _shares[i];
+        }
+        return sum == FEE_DENOMINATOR;
     }
 }

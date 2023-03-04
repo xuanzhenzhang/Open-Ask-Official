@@ -106,122 +106,40 @@ const LensCard = ({ accessToken, setAccessError }) => {
   const [currentAccount, setCurrentAccount] = useState();
   const [provider, setProvider] = useState();
   const [signer, setSigner] = useState();
-  const [lensAccessToken, setLensAccessToken] = useState();
-  const [lensProfile, setLensProfile] = useState({});
+  const [lensAccessToken, setLensAccessToken] = useState(
+    localStorage.getItem("lensAccessToken")
+  );
+  const [lensProfile, setLensProfile] = useState();
+  const [usedLensProfile, setUsedLensProfile] = useState(
+    localStorage.getItem("usedLensProfile") === "true"
+  );
 
-  // Connect wallet method
-  const connectWallet = async () => {
-    try {
-      const { ethereum } = window;
-
-      if (!ethereum) {
-        console.log("Need to install MetaMask");
-        alert("Please install MetaMask browser extension to interact.");
-        return;
-      }
-      // Request account access
-      const accounts = await ethereum.request({
-        method: "eth_requestAccounts",
-      });
-
-      setCurrentAccount(accounts[0]);
-      setupEventListener();
-      await setUserWallet(accounts[0]);
-      return accounts[0];
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  // Check if wallet is connected
-  const checkIfWalletIsConnected = async () => {
+  const setWalletAddress = async () => {
     const { ethereum } = window;
 
     if (!ethereum) {
-      console.log("Please install metamask!");
+      console.log("Need to install MetaMask");
+      alert("Please install MetaMask browser extension to interact.");
       return;
-    } else {
-      console.log(
-        await ethereum.request({
-          method: "eth_accounts",
-        })
-      );
     }
+    // Request account access
+    const accounts = await ethereum.request({
+      method: "eth_requestAccounts",
+    });
 
-    // Check access to user's wallet
-    const accounts = await ethereum.request({ method: "eth_accounts" });
+    setCurrentAccount(accounts[0]);
 
-    // Use first account if multiple authorized accounts
-    if (accounts.length !== 0) {
-      const account = accounts[0];
-      setCurrentAccount(account);
-      setupEventListener();
-      await setUserWallet(account);
-    } else {
-      console.log("No authorized account found");
-    }
+    const provider = new ethers.providers.Web3Provider(ethereum);
+    const signer = provider.getSigner();
+    setSigner(signer);
+    setProvider(provider);
   };
   useEffect(() => {
-    checkIfWalletIsConnected();
+    setWalletAddress();
   }, []);
 
-  // Set Event
-  const setupEventListener = async () => {
-    try {
-      const { ethereum } = window;
-
-      if (ethereum) {
-        const provider = new ethers.providers.Web3Provider(ethereum);
-        const signer = provider.getSigner();
-        setSigner(signer);
-        setProvider(provider);
-      } else {
-        console.log("Ethereum object doesn't exist");
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  // POST Wallet Address to Backend
-  const setUserWallet = async (userWallet) => {
-    try {
-      await axios.post(
-        `https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/user-wallet`,
-        {
-          body: userWallet,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-    } catch (error) {
-      if (error.response.status === 403) {
-        setAccessError(true);
-      }
-      console.log(error);
-    }
-  };
-
-  //   Lens Function
-  const connectLens = async () => {
-    const account = await connectWallet();
-    // const profile = await profileQueryExample();
-    const loginInfo = await loginQuery(account);
-    const challenge = loginInfo.challenge;
-    const signature = await signer.signMessage(challenge.text);
-    const authenticateResponse = await authenticateMutation(account, signature);
-
-    setLensAccessToken(authenticateResponse.authenticate.accessToken);
-    // console.log("account: ", account);
-  };
-
-  const useLensProfile = async () => {
-    console.log("asdfajdskhfksdakjf?");
-    console.log("currentAccount: ", currentAccount);
-    const profileResponse = await profileQuery(currentAccount);
+  const setupLensProfile = async (crAccount) => {
+    const profileResponse = await profileQuery(crAccount);
     if (profileResponse.defaultProfile != null) {
       const defaultProfile = profileResponse.defaultProfile;
       const profile = {
@@ -236,43 +154,188 @@ const LensCard = ({ accessToken, setAccessError }) => {
         posts_count: defaultProfile?.stats?.totalPosts,
       };
       setLensProfile(profile);
-
-      axios
-        .put(
-          "https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/user/lens",
-          // "http://localhost:5001/open-ask-dbbe2/us-central1/api/user/lens",
-          {
-            profile: profile,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        )
-        .then(() => {});
     }
   };
+  useEffect(() => {
+    setupLensProfile(currentAccount);
+  }, [currentAccount]);
 
-  return (
-    <>
-      {lensAccessToken != null ? (
-        <Box onClick={useLensProfile} className='wallet-btn'>
-          <Typography sx={{ display: "flex", justifyContent: "center" }}>
-            {" "}
-            {lensProfile.handle ? lensProfile.handle : "Use Lens Profile"}
-          </Typography>
-        </Box>
-      ) : (
-        <Box onClick={connectLens} className='wallet-btn'>
-          <Typography sx={{ display: "flex", justifyContent: "center" }}>
-            {" "}
-            {lensAccessToken ? "Use Lens Profile" : "Lens Login"}
-          </Typography>
-        </Box>
-      )}
-    </>
-  );
+  // Connect wallet method
+  // const connectWallet = async () => {
+  //   try {
+  //     const { ethereum } = window;
+
+  //     if (!ethereum) {
+  //       console.log("Need to install MetaMask");
+  //       alert("Please install MetaMask browser extension to interact.");
+  //       return;
+  //     }
+  //     // Request account access
+  //     const accounts = await ethereum.request({
+  //       method: "eth_requestAccounts",
+  //     });
+
+  //     setCurrentAccount(accounts[0]);
+  //     setupEventListener();
+  //     await setUserWallet(accounts[0]);
+  //     return accounts[0];
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
+  // Check if wallet is connected
+  // const checkIfWalletIsConnected = async () => {
+  //   const { ethereum } = window;
+
+  //   if (!ethereum) {
+  //     console.log("Please install metamask!");
+  //     return;
+  //   } else {
+  //     console.log(
+  //       await ethereum.request({
+  //         method: "eth_accounts",
+  //       })
+  //     );
+  //   }
+
+  //   // Check access to user's wallet
+  //   const accounts = await ethereum.request({ method: "eth_accounts" });
+
+  //   // Use first account if multiple authorized accounts
+  //   if (accounts.length !== 0) {
+  //     const account = accounts[0];
+  //     setCurrentAccount(account);
+  //     setupEventListener();
+  //     await setUserWallet(account);
+  //   } else {
+  //     console.log("No authorized account found");
+  //   }
+  // };
+  // useEffect(() => {
+  //   checkIfWalletIsConnected();
+  // }, []);
+
+  // Set Event
+  // const setupEventListener = async () => {
+  //   try {
+  //     const { ethereum } = window;
+
+  //     if (ethereum) {
+  //       const provider = new ethers.providers.Web3Provider(ethereum);
+  //       const signer = provider.getSigner();
+  //       setSigner(signer);
+  //       setProvider(provider);
+  //     } else {
+  //       console.log("Ethereum object doesn't exist");
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
+  // POST Wallet Address to Backend
+  // const setUserWallet = async (userWallet) => {
+  //   try {
+  //     await axios.post(
+  //       `https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/user-wallet`,
+  //       {
+  //         body: userWallet,
+  //       },
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${accessToken}`,
+  //         },
+  //       }
+  //     );
+  //   } catch (error) {
+  //     if (error.response.status === 403) {
+  //       setAccessError(true);
+  //     }
+  //     console.log(error);
+  //   }
+  // };
+
+  //   Lens Function
+  const connectLens = async () => {
+    // const account = await connectWallet();
+    const loginInfo = await loginQuery(currentAccount);
+    const challenge = loginInfo.challenge;
+    const signature = await signer.signMessage(challenge.text);
+    const authenticateResponse = await authenticateMutation(
+      currentAccount,
+      signature
+    );
+
+    setLensAccessToken(authenticateResponse.authenticate.accessToken);
+    localStorage.setItem(
+      "lensAccessToken",
+      authenticateResponse.authenticate.accessToken
+    );
+    // console.log("account: ", account);
+  };
+
+  const useLensProfile = async () => {
+    axios
+      .put(
+        "https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/user/lens",
+        // "http://localhost:5001/open-ask-dbbe2/us-central1/api/user/lens",
+        {
+          profile: lensProfile,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      )
+      .then(() => {
+        setUsedLensProfile(true);
+        localStorage.setItem("usedLensProfile", "true");
+        window.location.reload(false);
+      });
+  };
+
+  if (lensProfile) {
+    return (
+      <>
+        {lensAccessToken == null ? (
+          <Box onClick={connectLens} className='wallet-btn'>
+            <Typography sx={{ display: "flex", justifyContent: "center" }}>
+              {" "}
+              {"Lens Login"}
+            </Typography>
+          </Box>
+        ) : (
+          <Box onClick={useLensProfile} className='wallet-btn'>
+            <Typography sx={{ display: "flex", justifyContent: "center" }}>
+              {" "}
+              {usedLensProfile ? lensProfile.handle : "Use Lens Profile"}
+            </Typography>
+          </Box>
+        )}
+      </>
+      // <>
+      //   {lensAccessToken != null ? (
+      //     <Box onClick={useLensProfile} className='wallet-btn'>
+      //       <Typography sx={{ display: "flex", justifyContent: "center" }}>
+      //         {" "}
+      //         {lensProfile.handle ? lensProfile.handle : "Use Lens Profile"}
+      //       </Typography>
+      //     </Box>
+      //   ) : (
+      //     <Box onClick={connectLens} className='wallet-btn'>
+      //       <Typography sx={{ display: "flex", justifyContent: "center" }}>
+      //         {" "}
+      //         {lensAccessToken ? "Use Lens Profile" : "Lens Login"}
+      //       </Typography>
+      //     </Box>
+      //   )}
+      // </>
+    );
+  } else {
+    return <></>;
+  }
 };
 
 export default LensCard;

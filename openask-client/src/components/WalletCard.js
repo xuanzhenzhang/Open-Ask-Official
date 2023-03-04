@@ -3,6 +3,7 @@ import { ethers } from "ethers";
 import Button from "@mui/material/Button";
 import axios from "axios";
 import { Box, Typography } from "@mui/material";
+import { LensCard } from "./LensCard";
 
 const WalletCard = ({ accessToken, setAccessError }) => {
   const [userBalance, setUserBalance] = useState(null);
@@ -11,6 +12,7 @@ const WalletCard = ({ accessToken, setAccessError }) => {
   const [errorMessage, setErrorMessage] = useState();
   const [provider, setProvider] = useState();
   const [signer, setSigner] = useState();
+  const [lensProfile, setLensProfile] = useState();
 
   const currentAccountString = (account) =>
     account?.slice(0, 4) + "..." + account?.slice(-4);
@@ -34,6 +36,11 @@ const WalletCard = ({ accessToken, setAccessError }) => {
       console.log("Connected", accounts[0]);
       checkNetwork();
       setCurrentAccount(currentAccountString(accounts[0]));
+      // const profileResponse = await profileQuery(
+      //   currentAccountString(accounts[0])
+      // );
+      // console.log("profileResponse:1!! ", profileResponse);
+      // setLensProfile(profileResponse.defaultProfile);
       setupEventListener();
       setUserWallet(accounts[0]);
     } catch (error) {
@@ -151,14 +158,39 @@ const WalletCard = ({ accessToken, setAccessError }) => {
     checkIfWalletIsConnected();
   }, []);
 
+  // useEffect(
+  //   () => async () => {
+  //     // eslint-disable-next-line no-lone-blocks
+  //     {
+  //       console.log("currentAccount!!!!!: ", currentAccount);
+  //       const profileResponse = await profileQuery(currentAccount);
+  //       console.log(
+  //         "profileResponse.defaultProfile: ",
+  //         profileResponse.defaultProfile
+  //       );
+  //       if (profileResponse.defaultProfile != null) {
+  //         setLensProfile(profileResponse.defaultProfile);
+  //       }
+  //     }
+  //   },
+  //   [currentAccount]
+  // );
+
   return (
     <>
-      <Box onClick={connectWallet} className="wallet-btn">
+      <Box onClick={connectWallet} className='wallet-btn'>
         <Typography sx={{ display: "flex", justifyContent: "center" }}>
           {" "}
           {currentAccount ? currentAccount : "Connect Wallet"}
         </Typography>
       </Box>
+      {/* {lensProfile && (
+        <LensCard
+          accessToken={accessToken}
+          setAccessError={setAccessError}
+          defaultProfile={lensProfile}
+        />
+      )} */}
     </>
   );
 };
