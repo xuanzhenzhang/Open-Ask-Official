@@ -59,16 +59,12 @@ function fulfillAndAccept(
 ### Withdraw funds if the question is not answered and the deadline has passed
 When a user's question has not been answered within the deadline, they can withdraw their deposit. If they don't withdraw their deposit, then the questioner will lose their deposit. To withdraw the deposit, a user will need to sign a transaction with the following parameters:
 ```solidity
-function refundContributions(
+function refundMyContributions(
     address _sender,
     uint _bountyId,
-    uint _issuerId,
     uint[] memory _contributionIds)
     public
     senderIsValid(_sender)
-    validateBountyArrayIndex(_bountyId)
-    onlyIssuer(_sender, _bountyId, _issuerId)
-    callNotStarted
 ```
 
 - `_sender` is the address of the user who is withdrawing their deposit

@@ -17,6 +17,7 @@ const config: HardhatUserConfig = {
       apiKey: {
         goerli: process.env.ETHERSCAN_API_KEY,
         scroll_alpha: process.env.SCROLL_API_KEY,
+        base: process.env.BASE_API_KEY,
       },
       customChains: [
           {
@@ -25,6 +26,14 @@ const config: HardhatUserConfig = {
             urls: {
               apiURL: "https://blockscout.scroll.io/api",
               browserURL: "https://blockscout.scroll.io/"
+            }
+          },
+          {
+            network: "base",
+            chainId: 84531,
+            urls: {
+              apiURL: "https://api-goerli.basescan.org/api",
+              browserURL: "https://goerli.basescan.org/"
             }
           }
         ]
