@@ -106,9 +106,13 @@ const LensCard = ({ accessToken, setAccessError }) => {
   const [currentAccount, setCurrentAccount] = useState();
   const [provider, setProvider] = useState();
   const [signer, setSigner] = useState();
-  const [lensAccessToken, setLensAccessToken] = useState();
+  const [lensAccessToken, setLensAccessToken] = useState(
+    localStorage.getItem("lensAccessToken")
+  );
   const [lensProfile, setLensProfile] = useState();
-  const [usedLensProfile, setUsedLensProfile] = useState(false);
+  const [usedLensProfile, setUsedLensProfile] = useState(
+    localStorage.getItem("usedLensProfile") === "true"
+  );
 
   const setWalletAddress = async () => {
     const { ethereum } = window;
@@ -264,6 +268,10 @@ const LensCard = ({ accessToken, setAccessError }) => {
     );
 
     setLensAccessToken(authenticateResponse.authenticate.accessToken);
+    localStorage.setItem(
+      "lensAccessToken",
+      authenticateResponse.authenticate.accessToken
+    );
     // console.log("account: ", account);
   };
 
@@ -283,7 +291,8 @@ const LensCard = ({ accessToken, setAccessError }) => {
       )
       .then(() => {
         setUsedLensProfile(true);
-        // window.location.reload(false);
+        localStorage.setItem("usedLensProfile", "true");
+        window.location.reload(false);
       });
   };
 
