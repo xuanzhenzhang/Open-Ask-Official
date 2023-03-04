@@ -31,7 +31,7 @@ exports.postUnactivatedAnswerToQuestion = (req, res) => {
         allowList: null,
         questionId: req.params.questionId,
         questionerUid: question.data().questionerUid,
-        questionerUid: question.data().questioneeUid,
+        questioneeUid: question.data().questioneeUid,
         createdAt: new Date().toISOString(),
         txHash: null,
       };
