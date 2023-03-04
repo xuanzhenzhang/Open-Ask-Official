@@ -213,7 +213,7 @@ const QuestionId = ({ accessToken, setAccessError }) => {
                   <QuestionFooter eavesdrop eavesdropCount={answer} />
                 </Card>
                 <Box className='lens-btn-container'>
-                  <LensButton />
+                  <LensButton answer={answer} question={question} />
                 </Box>
               </>
             )}
