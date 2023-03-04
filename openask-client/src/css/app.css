@@ -363,6 +363,7 @@ body {
   box-shadow: none !important;
 }
 .ask-sensei {
+  cursor: pointer;
   padding: 8px 12px;
   background: var(--brand-black);
   color: var(--gray-2);

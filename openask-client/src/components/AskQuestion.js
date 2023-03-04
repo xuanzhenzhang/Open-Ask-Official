@@ -373,8 +373,9 @@ const AskQuestion = (props) => {
                 onInputChange={(event, newInputValue) => {
                   if (askedSensei) {
                     return newInputValue === askedSensei;
+                  } else {
+                    setSenseiName(newInputValue);
                   }
-                  setSenseiName(newInputValue);
                 }}
                 renderInput={(params) => {
                   const displayName = params?.inputProps?.value;
@@ -441,7 +442,9 @@ const AskQuestion = (props) => {
                 <Typography>ETH</Typography>
               </Box>
               <AskButton
-                disabled={tokenAmount > 0 && sensei && question ? true : false}
+                disabled={
+                  tokenAmount > 0 && senseiName && question ? true : false
+                }
                 handleDeployEthContract={handleEthBountyContract}
               />
             </CardContent>
