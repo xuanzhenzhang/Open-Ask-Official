@@ -40,7 +40,7 @@ const AnswerQuestion = (props) => {
 
   const handleEthBountyReceive = async () => {
     try {
-      const contractAddress = "0x5AE8138B79ad83184Eb484Ba3C0889F297820482";
+      const contractAddress = "0x34141bE35aC2aB6568D9cD7a23281101Fe79edb3";
       setAskLoader(true);
       // const tokenAmountString = rewardAmount.toString();
       // const tokenAmountUpdated = ethers.utils.parseUnits(

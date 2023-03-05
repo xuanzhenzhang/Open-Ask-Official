@@ -2,7 +2,7 @@ import { ethers } from "ethers";
 import { eavesdropABI } from "../data/eavesdropABI";
 import { GaslessOnboarding } from "@gelatonetwork/gasless-onboarding";
 
-const contractAddress = "0x836f653E7F1015D9f78D50CAeC0f8c6C71075E84";
+const contractAddress = "0xD836288Df42e0Df860ec683F2c78702d05eceF02";
 
 const init = async () => {
   const gaslessWalletConfig = {
@@ -12,8 +12,8 @@ const init = async () => {
   const loginConfig = {
     domains: [window.location.origin],
     chain: {
-      id: 5,
-      rpcUrl: "https://goerli.infura.io/v3/ad8bc3258461465caec6501141cb764b",
+      id: 84531,
+      rpcUrl: "https://api-goerli.basescan.org/api",
     },
     openLogin: {
       redirectUrl: `${window.location.origin}`,
