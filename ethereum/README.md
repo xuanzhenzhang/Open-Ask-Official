@@ -97,3 +97,14 @@ To verify the contracts, run:
 ```bash
 npx hardhat verify --network NETWORK_NAME DEPLOYED_CONTRACT_ADDRESS "CONSTRUCTOR_ARGUMENTS"
 ```
+
+# Networks
+The Standard Bounties contract is deployed at:
+- Goerli [0x5AE8138B79ad83184Eb484Ba3C0889F297820482](https://goerli.etherscan.io/address/0x5AE8138B79ad83184Eb484Ba3C0889F297820482)
+- Base [0x34141bE35aC2aB6568D9cD7a23281101Fe79edb3](https://goerli.basescan.org/address/0x34141bE35aC2aB6568D9cD7a23281101Fe79edb3)
+- Scroll Alpha [0x5AE8138B79ad83184Eb484Ba3C0889F297820482](https://blockscout.scroll.io/address/0x5AE8138B79ad83184Eb484Ba3C0889F297820482)
+
+The Eavesdrop contract is deployed at:
+- Goerli [0x71eF71145a1C2cb479A1289703A306D17338821B](https://goerli.etherscan.io/address/0x71eF71145a1C2cb479A1289703A306D17338821B)
+- Base [0xD836288Df42e0Df860ec683F2c78702d05eceF02](https://goerli.basescan.org/address/0xD836288Df42e0Df860ec683F2c78702d05eceF02)
+- Scroll Alpha [0xaE21E3f880A0eFf32e9f21a85f8B89F665E0E240](https://blockscout.scroll.io/address/0xaE21E3f880A0eFf32e9f21a85f8B89F665E0E240)

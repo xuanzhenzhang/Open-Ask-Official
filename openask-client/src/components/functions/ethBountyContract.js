@@ -1,7 +1,6 @@
 import { ethers } from "ethers";
 import {
   ethBountyContractABI,
-  ethBountryContractBytecode,
 } from "../data/ethBountyContracyABI";
 
 const contractAddress = "0x5AE8138B79ad83184Eb484Ba3C0889F297820482";
