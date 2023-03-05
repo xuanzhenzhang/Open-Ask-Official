@@ -104,7 +104,7 @@ const authenticateMutation = async (address, signature) => {
 
 const LensCard = ({ accessToken, setAccessError }) => {
   const [currentAccount, setCurrentAccount] = useState();
-  // const [provider, setProvider] = useState();
+  const [provider, setProvider] = useState();
   const [signer, setSigner] = useState();
   const [lensAccessToken, setLensAccessToken] = useState(
     localStorage.getItem("lensAccessToken")
@@ -114,34 +114,43 @@ const LensCard = ({ accessToken, setAccessError }) => {
     localStorage.getItem("usedLensProfile") === "true"
   );
 
-  window.addEventListener("storage", function (event) {
-    if (event.key === "walletAddress") {
-      setCurrentAccount(localStorage.getItem("walletAddress"));
-    }
-  });
+  let normalSigner;
 
-  const setWalletAddress = async () => {
-    const { ethereum } = window;
+  // const setupWalletListener = () => {
+  //   window.addEventListener("storage", function (event) {
+  //     console.log("!!!!!");
+  //     if (event.key === "walletAddress") {
+  //       setCurrentAccount(localStorage.getItem("walletAddress"));
+  //     }
+  //   });
+  // };
+  // useEffect(() => {
+  //   setupWalletListener();
+  // }, []);
 
-    if (!ethereum) {
-      console.log("Need to install MetaMask");
-      alert("Please install MetaMask browser extension to interact.");
-      return;
-    }
-    // Request account access
-    const accounts = await ethereum.request({
-      method: "eth_requestAccounts",
-    });
+  // const setWalletAddress = async () => {
+  //   const { ethereum } = window;
 
-    setCurrentAccount(accounts[0]);
+  //   if (!ethereum) {
+  //     console.log("Need to install MetaMask");
+  //     alert("Please install MetaMask browser extension to interact.");
+  //     return;
+  //   }
+  //   // Request account access
+  //   const accounts = await ethereum.request({
+  //     method: "eth_requestAccounts",
+  //   });
 
-    const provider = new ethers.providers.Web3Provider(ethereum);
-    const signer = provider.getSigner();
-    setSigner(signer);
-    // setProvider(provider);
-  };
+  //   setCurrentAccount(accounts[0]);
+
+  //   const provider = new ethers.providers.Web3Provider(ethereum);
+  //   const signer = provider.getSigner();
+  //   setSigner(signer);
+  //   // setProvider(provider);
+  // };
 
   const init = async () => {
+    console.log("???????");
     const gaslessWalletConfig = {
       apiKey: "Q7E6fPdBQmEA9ArUXXKP_wE_m_v_Y20WkCeU5WLsmxU_",
     };
@@ -158,18 +167,25 @@ const LensCard = ({ accessToken, setAccessError }) => {
     };
 
     const gelatoLogin = new GaslessOnboarding(loginConfig, gaslessWalletConfig);
+    console.log("gelatoLogin!!!: ", gelatoLogin);
 
     await gelatoLogin.init();
 
+    console.log("gelatoLoginafter init: ", gelatoLogin);
+
     const providerGelato = gelatoLogin.getProvider();
+    console.log("providerGelato: ", providerGelato);
 
-    const provider = new ethers.providers.Web3Provider(providerGelato);
-    const gelatoSigner = provider.getSigner();
-    const sender = await gelatoSigner.getAddress();
+    // const deployerProvider = new ethers.providers.Web3Provider(window.ethereum);
+    // normalSigner = deployerProvider.getSigner();
 
-    console.log(sender);
-    setCurrentAccount(sender);
-    setSigner(gelatoSigner);
+    // const provider = new ethers.providers.Web3Provider(providerGelato);
+    // const gelatoSigner = provider.getSigner();
+    // const sender = await gelatoSigner.getAddress();
+
+    // console.log(sender);
+
+    setSigner(normalSigner);
   };
 
   useEffect(() => {
@@ -194,6 +210,9 @@ const LensCard = ({ accessToken, setAccessError }) => {
       setLensProfile(profile);
     }
   };
+  useEffect(() => {
+    setCurrentAccount("0xfeE8E76c8d422921F76b0C10c47BB7ac43767eEf");
+  }, []);
   useEffect(() => {
     setupLensProfile(currentAccount);
   }, [currentAccount]);
@@ -297,9 +316,14 @@ const LensCard = ({ accessToken, setAccessError }) => {
   //   Lens Function
   const connectLens = async () => {
     // const account = await connectWallet();
+    console.log("here?");
     const loginInfo = await loginQuery(currentAccount);
+    console.log("currentAccount!!!!!!!: ", currentAccount);
     const challenge = loginInfo.challenge;
-    const signature = await signer.signMessage(challenge.text);
+    console.log("challenge: ", challenge);
+    const deployerProvider = new ethers.providers.Web3Provider(window.ethereum);
+    normalSigner = deployerProvider.getSigner();
+    const signature = await normalSigner.signMessage(challenge.text);
     const authenticateResponse = await authenticateMutation(
       currentAccount,
       signature
@@ -339,14 +363,14 @@ const LensCard = ({ accessToken, setAccessError }) => {
     return (
       <>
         {lensAccessToken == null ? (
-          <Box onClick={connectLens} className="wallet-btn">
+          <Box onClick={connectLens} className='wallet-btn'>
             <Typography sx={{ display: "flex", justifyContent: "center" }}>
               {" "}
               {"Lens Login"}
             </Typography>
           </Box>
         ) : (
-          <Box onClick={useLensProfile} className="wallet-btn">
+          <Box onClick={useLensProfile} className='wallet-btn'>
             <Typography sx={{ display: "flex", justifyContent: "center" }}>
               {" "}
               {usedLensProfile ? lensProfile.handle : "Use Lens Profile"}
