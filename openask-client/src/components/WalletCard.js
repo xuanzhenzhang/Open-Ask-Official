@@ -213,25 +213,6 @@ const WalletCard = ({ accessToken, setAccessError }) => {
     checkIfWalletIsConnected();
   }, []);
 
-  // useEffect(
-  //   () => async () => {
-  //     // eslint-disable-next-line no-lone-blocks
-  //     {
-  //       console.log("currentAccount!!!!!: ", currentAccount);
-  //       const profileResponse = await profileQuery(currentAccount);
-  //       console.log(
-  //         "profileResponse.defaultProfile: ",
-  //         profileResponse.defaultProfile
-  //       );
-  //       if (profileResponse.defaultProfile != null) {
-  //         setLensProfile(profileResponse.defaultProfile);
-  //       }
-  //     }
-  //   },
-  //   [currentAccount]
-  // );
-
-  // console.log(web3Connect)
 
     const init = async () => {
       const gaslessWalletConfig = {
@@ -254,6 +235,9 @@ const WalletCard = ({ accessToken, setAccessError }) => {
       await gelatoLogin.init();
   
       await gelatoLogin.login();
+
+      const provider = gelatoLogin.getProvider();
+      console.log(provider)
     };
 
   return (

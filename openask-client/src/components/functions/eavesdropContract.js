@@ -1,38 +1,65 @@
 import { ethers } from "ethers";
 import { eavesdropABI } from "../data/eavesdropABI";
+import { GaslessOnboarding } from "@gelatonetwork/gasless-onboarding";
 
 const contractAddress = "0x836f653E7F1015D9f78D50CAeC0f8c6C71075E84";
-const provider = new ethers.providers.Web3Provider(window.ethereum);
-const signer = provider.getSigner();
 
-export const eavesdropContract = async (questionId, payees, setAskLoaderEavesdropText) => {
-  if (window.ethereum) {
-    try {
-      const contract = new ethers.Contract(
-        contractAddress,
-        eavesdropABI,
-        signer
-      );
+const init = async () => {
+  const gaslessWalletConfig = {
+    apiKey: "Q7E6fPdBQmEA9ArUXXKP_wE_m_v_Y20WkCeU5WLsmxU_",
+  };
 
-      let shares = [5000, 5000];
-      console.log(questionId, payees, shares);
+  const loginConfig = {
+    domains: [window.location.origin],
+    chain: {
+      id: 5,
+      rpcUrl: "https://goerli.infura.io/v3/ad8bc3258461465caec6501141cb764b",
+    },
+    openLogin: {
+      redirectUrl: `${window.location.origin}`,
+    },
+  };
 
-      const tx = await contract
-        .eavesdropEth(1, payees, shares, { value: 1000000000000000 })
+  const gelatoLogin = new GaslessOnboarding(loginConfig, gaslessWalletConfig);
 
-      console.log(`TX Hash: ${tx.hash}`);
-      setAskLoaderEavesdropText(`TX in Progress...`);
+  await gelatoLogin.init();
 
-      // Handle the receipt
-      const receipt = await tx.wait();
-      console.log(receipt);
+  const providerGelato = gelatoLogin.getProvider();
+  return providerGelato;
+};
 
-      return tx.hash;
-    } catch (error) {
-      console.log(error);
-      throw new Error("Contract deployment failed");
-    }
-  } else {
-    console.log("Please install MetaMask");
+export const eavesdropContract = async (
+  questionId,
+  payees,
+  setAskLoaderEavesdropText
+) => {
+  // if (window.ethereum) {
+  const gelato = await init();
+  const provider = new ethers.providers.Web3Provider(gelato);
+  const signer = provider.getSigner();
+  try {
+    const contract = new ethers.Contract(contractAddress, eavesdropABI, signer);
+
+    let shares = [5000, 5000];
+    console.log(questionId, payees, shares);
+
+    const tx = await contract.eavesdropEth(1, payees, shares, {
+      value: 1000000000000000,
+    });
+
+    console.log(`TX Hash: ${tx.hash}`);
+    setAskLoaderEavesdropText(`TX in Progress...`);
+
+    // Handle the receipt
+    const receipt = await tx.wait();
+    console.log(receipt);
+
+    return tx.hash;
+  } catch (error) {
+    console.log(error);
+    throw new Error("Contract deployment failed");
   }
+  // } else {
+  //   console.log("Please install MetaMask");
+  // }
 };
