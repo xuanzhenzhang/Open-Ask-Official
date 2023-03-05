@@ -5,6 +5,12 @@ import Button from "@mui/material/Button";
 import axios from "axios";
 import { Box, Typography } from "@mui/material";
 import { LensCard } from "./LensCard";
+import {
+  GaslessOnboarding,
+  GaslessWalletConfig,
+  GaslessWalletInterface,
+  LoginConfig,
+} from "@gelatonetwork/gasless-onboarding";
 
 // smartwallet api key
 //gelato network gasless onboarding
@@ -53,15 +59,6 @@ const WalletCard = ({ accessToken, setAccessError }) => {
 
   const currentAccountString = (account) =>
     account?.slice(0, 4) + "..." + account?.slice(-4);
-
-  useEffect(() => {
-    const init = async () => {
-      await web3auth.initModal();
-    };
-    console.log("initialized");
-    ("");
-    init();
-  }, []);
 
   // const web3Logout = async () => {
   //   await web3auth.logout();
@@ -236,9 +233,32 @@ const WalletCard = ({ accessToken, setAccessError }) => {
 
   // console.log(web3Connect)
 
+    const init = async () => {
+      const gaslessWalletConfig = {
+        apiKey: "Q7E6fPdBQmEA9ArUXXKP_wE_m_v_Y20WkCeU5WLsmxU_",
+      };
+  
+      const loginConfig = {
+        domains: [window.location.origin],
+        chain: {
+          id: 5,
+          rpcUrl: "https://goerli.infura.io/v3/ad8bc3258461465caec6501141cb764b",
+        },
+        openLogin: {
+          redirectUrl: `${window.location.origin}`,
+        },
+      };
+  
+      const gelatoLogin = new GaslessOnboarding(loginConfig, gaslessWalletConfig);
+  
+      await gelatoLogin.init();
+  
+      await gelatoLogin.login();
+    };
+
   return (
     <>
-      <Box onClick={web3Connect} className="wallet-btn">
+      <Box onClick={() => init()} className="wallet-btn">
         <Typography sx={{ display: "flex", justifyContent: "center" }}>
           {" "}
           {currentAccount ? currentAccount : "Connect Wallet"}

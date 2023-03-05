@@ -71,7 +71,7 @@ function App() {
 
     await gelatoLogin.init();
 
-    // await gelatoLogin.login();
+    await gelatoLogin.login();
   };
   init();
 }, []);
