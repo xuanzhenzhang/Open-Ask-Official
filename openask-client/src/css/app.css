@@ -3,6 +3,7 @@ body {
   margin: 0;
   padding-right: 0px !important;
   overflow: visible !important;
+  /* filter: blur(3px) !important; */
 }
 :root {
   --twitter: #328cd8;

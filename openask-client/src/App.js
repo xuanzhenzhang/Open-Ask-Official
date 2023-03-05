@@ -15,7 +15,7 @@ import TransactionHistory from "./components/TransactionHistory";
 import QuestionId from "./components/QuestionId";
 import { useNavigate } from "react-router-dom";
 import reloadPage from "./components/functions/reloadPage";
-import Testing from "./components/Testing";
+import { Backdrop } from "@material-ui/core";
 
 import {
   getAuth,
@@ -120,6 +120,11 @@ function App() {
 
   return (
     <>
+    {window.location.pathname === "/" && (
+          <Backdrop open={true} sx={{ zIndex: "1000" }}>
+            <LoginPage signInTwitter={signInTwitter} />
+          </Backdrop>
+        )}
       <Container>
         {userInfo.userUid && (
           <AccessErrorLogin
@@ -127,6 +132,7 @@ function App() {
             accessError={accessError}
           />
         )}
+         
         <Box
           className="user-avatar-container"
           sx={{ display: { xs: "flex", sm: "flex", md: "none" } }}
@@ -141,37 +147,23 @@ function App() {
             }}
           ></Avatar>
         </Box>
-        {window.location.pathname !== "/" && (
-          <Sidebar
-            userInfo={userInfo}
-            accessToken={accessToken}
-            setAccessError={setAccessError}
-            onAvatarClick={onAvatarClick}
-            mobileOpen={mobileOpen}
-            setMobileOpen={setMobileOpen}
-            signInTwitter={signInTwitter}
-          />
-        )}
+        <Sidebar
+          userInfo={userInfo}
+          accessToken={accessToken}
+          setAccessError={setAccessError}
+          onAvatarClick={onAvatarClick}
+          mobileOpen={mobileOpen}
+          setMobileOpen={setMobileOpen}
+          signInTwitter={signInTwitter}
+        />
+       
+
         <Routes>
-          <Route
+          {/* <Route
             path="/"
-            element={
-              <LoginPage
-                signInTwitter={signInTwitter}
-                signInGuest={signInGuest}
-              />
-            }
-          />
-          <Route
-            path="/feed"
-            element={
-              <Feed
-                userInfo={userInfo}
-                accessToken={accessToken}
-                setAccessError={setAccessError}
-              />
-            }
-          />
+            element={<Feed signInTwitter={signInTwitter} login={true} />}
+          /> */}
+          <Route path="/feed" element={<Feed />} />
           {/* <Route
             path="/sensei/ask"
             element={

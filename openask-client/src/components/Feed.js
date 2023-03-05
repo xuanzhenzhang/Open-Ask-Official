@@ -2,13 +2,15 @@ import React, { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import Container from "@mui/material/Container";
 import { Box } from "@mui/system";
+import { Backdrop } from "@mui/material";
 
 import FeedCards from "./FeedCards.js";
 import Loader from "./Loader.js";
 import axios, * as others from "axios";
 import FeedFilters from "./subcomponents/FeedFilters.js";
+import LoginPage from "./LoginPage.js";
 
-const Feed = ({ accessToken, setAccessError }) => {
+const Feed = ({ signInTwitter, login }) => {
   const [loading, setLoading] = useState(true);
   const [congrats, setCongrats] = useState();
   const [questions, setQuestions] = useState();
@@ -72,10 +74,10 @@ const Feed = ({ accessToken, setAccessError }) => {
             </Box>
           </>
         )}
+        {/* <Backdrop open={login} sx={{ zIndex: "10" }}>
+          <LoginPage signInTwitter={signInTwitter} />
+        </Backdrop> */}
       </Container>
-      {/* {congrats && (
-        <Congratulations handleCloseCongrats={handleCloseCongrats} purchase />
-      )} */}
     </>
   );
 };

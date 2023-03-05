@@ -1,38 +1,17 @@
 import React from "react";
-import { AppHeader } from "./AppHeader";
-import Button from "@mui/material/Button";
-import Container from "@mui/material/Container";
-import TwitterIcon from "@mui/icons-material/Twitter";
+import TwitterButton from "./subcomponents/TwitterButton";
+import { Card, Box } from "@mui/material";
 
-const LoginPage = ({ signInTwitter, signInGuest }) => {
+const LoginPage = ({ signInTwitter }) => {
   return (
     <>
-      {/* <AppHeader canGoBack={false} /> */}
-      <Container className="container login-container"
-      sx={{
-        mt: "74px"
-      }}>
-        <Button
-          className="btn-login"
-          onClick={signInTwitter}
-          variant="contained"
-          size="large"
-          startIcon={<TwitterIcon />}
-        >
-          {" "}
-          Sign in
-        </Button>
-        <Button
-          className="btn-guest"
-          onClick={signInGuest}
-          variant="contained"
-          size="large"
-          // startIcon={<TwitterIcon />}
-        >
-          {" "}
-          Continue as Guest
-        </Button>
-      </Container>
+      <Card>
+        <Card className="ask-question-container">
+          <Box className="ask-question-loader">
+            <TwitterButton signInTwitter={signInTwitter} />
+          </Box>
+        </Card>
+      </Card>
     </>
   );
 };
