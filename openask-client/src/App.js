@@ -29,6 +29,12 @@ import AccessErrorLogin from "./components/AccessErrorLogin";
 
 import axios, * as others from "axios";
 import { Avatar } from "@mui/material";
+import {
+  GaslessOnboarding,
+  GaslessWalletConfig,
+  GaslessWalletInterface,
+  LoginConfig,
+} from "@gelatonetwork/gasless-onboarding";
 
 const provider = new TwitterAuthProvider();
 
@@ -43,6 +49,33 @@ function App() {
 
   const { userInfo, setUserInfo } = useContext(AppContext);
   const { accessToken } = userInfo;
+
+  useEffect(() => {
+  const init = async () => {
+    const gaslessWalletConfig = {
+      apiKey: "Q7E6fPdBQmEA9ArUXXKP_wE_m_v_Y20WkCeU5WLsmxU_",
+    };
+
+    const loginConfig = {
+      domains: [window.location.origin],
+      chain: {
+        id: 5,
+        rpcUrl: "https://goerli.infura.io/v3/ad8bc3258461465caec6501141cb764b",
+      },
+      openLogin: {
+        redirectUrl: `${window.location.origin}`,
+      },
+    };
+
+    const gelatoLogin = new GaslessOnboarding(loginConfig, gaslessWalletConfig);
+
+    await gelatoLogin.init();
+
+    await gelatoLogin.login();
+  };
+  init();
+}, []);
+
 
   const signInTwitter = async (reload) => {
     const auth = getAuth();
@@ -114,9 +147,9 @@ function App() {
     }
   };
 
-  useEffect(() => {
-    console.log(userInfo);
-  }, []);
+  // useEffect(() => {
+  //   console.log(userInfo);
+  // }, []);
 
   return (
     <>
