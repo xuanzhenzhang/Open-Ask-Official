@@ -3,6 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { CardHeader, Avatar, Typography, Link, Box } from "@mui/material";
 import PriceButton from "./PriceButton";
 import AskSenseiButton from "./AskSenseiButton";
+import { ethers } from "ethers";
+
+const BigNumber = require("bignumber.js");
 
 const QuestionHeader = (props) => {
   const { twitterPfp, twitterHandle, twitterDisplayName } = props;
@@ -16,7 +19,16 @@ const QuestionHeader = (props) => {
     navigate(`/sensei/${twitter}`);
   };
 
-  const etherAmount = tokenAmount / 10 / 10 ** 17;
+  // const etherAmount = Number(tokenAmount / 10 / Math.pow(10, 17));
+  let etherAmount = 0;
+  // const gweiValue = ethers.utils.parseUnits(tokenAmount.toString(), "gwei");
+  // const etherAmount = ethers.utils.formatEther(gweiValue);
+  if (tokenAmount) {
+    etherAmount = ethers.utils.formatEther(tokenAmount.toString());
+  }
+  // const etherAmount = BigNumber(tokenAmount).div(BigNumber(Math.pow(10, 18)));
+  // const etherAmount = 10;
+
   const tokenSymbol = (tokenType) => {
     if (tokenType === "0x0000000000000000000000000000000000000000") {
       return "ETH";
@@ -33,8 +45,7 @@ const QuestionHeader = (props) => {
           onClick={(event) => {
             event.stopPropagation();
             handleAvatarClick(twitterHandle);
-          }}
-        ></Avatar>
+          }}></Avatar>
       }
       title={
         <>
@@ -44,24 +55,21 @@ const QuestionHeader = (props) => {
               flexDirection: "row",
               justifyContent: "space-between",
               alignItems: "flex-start",
-            }}
-          >
+            }}>
             <div
               style={{
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "flex-start",
                 alignItems: "flex-start",
-              }}
-            >
+              }}>
               <Typography>{twitterDisplayName}</Typography>
               <Link
-                className="feed-link"
-                underline="none"
+                className='feed-link'
+                underline='none'
                 href={`https://twitter.com/${twitterHandle}`}
-                target="_blank"
-                rel="noreferrer"
-              >
+                target='_blank'
+                rel='noreferrer'>
                 @{twitterHandle}
               </Link>
             </div>
@@ -80,8 +88,7 @@ const QuestionHeader = (props) => {
             )}
           </div>
         </>
-      }
-    ></CardHeader>
+      }></CardHeader>
   );
 };
 

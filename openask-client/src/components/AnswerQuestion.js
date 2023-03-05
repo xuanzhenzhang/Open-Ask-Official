@@ -15,6 +15,9 @@ import axios from "axios";
 import PriceButton from "./subcomponents/PriceButton";
 import SubmitAnswerButton from "./subcomponents/SubmitAnswerButton";
 import { ethBountyReceiveContract } from "./functions/ethBountyReceivePayment";
+import { ethers } from "ethers";
+
+const BigNumber = require("bignumber.js");
 
 const AnswerQuestion = (props) => {
   const { userInfo, accessToken, setAccessError } = props;
@@ -36,7 +39,14 @@ const AnswerQuestion = (props) => {
 
   const navigate = useNavigate();
   const location = useLocation();
-  const etherAmount = rewardAmount / 10 / 10 ** 17;
+  let etherAmount = 0;
+  // const etherAmount = Number(rewardAmount / 10 / Math.pow(10, 17));
+  // const etherAmount = BigNumber(rewardAmount).div(BigNumber(Math.pow(10, 18)));
+  if (rewardAmount) {
+    etherAmount = ethers.utils.formatEther(rewardAmount.toString());
+  }
+
+  // const etherAmount = 10;
 
   const handleEthBountyReceive = async () => {
     try {
@@ -47,7 +57,6 @@ const AnswerQuestion = (props) => {
       //   tokenAmountString,
       //   18
       // );
-      // const tokenAmountBackend = rewardAmount * 10 ** 18;
 
       // Add Answer to Backend
       const data = await postAnswer(questionId);

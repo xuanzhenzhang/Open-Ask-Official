@@ -39,7 +39,6 @@ const SenseiDetails = ({ accessToken, setAccessError, userInfo }) => {
 
   const sensei = useParams();
   const { twitter } = sensei;
-  console.log(sensei)
 
   // Set My Page
   useEffect(() => {
@@ -86,7 +85,6 @@ const SenseiDetails = ({ accessToken, setAccessError, userInfo }) => {
         let userProfile = modifiedUsers.filter((user) => {
           return user.profile.handle === twitter;
         });
-        console.log(userProfile)
         setAllUsers(modifiedUsers);
         setProfile(userProfile);
       } catch (error) {
@@ -157,71 +155,70 @@ const SenseiDetails = ({ accessToken, setAccessError, userInfo }) => {
 
   return (
     <Container
-      className="main-container"
+      className='main-container'
       sx={{
         width: { md: `calc(100% - 300px)` },
         mr: { md: `276px` },
         mt: "24px",
-      }}
-    >
+      }}>
       {loading ? (
         <Loader />
       ) : (
         <>
           {/* Header */}
-          <Box className="sensei-details-header">
-            <Box className="sensei-details-header-box" onClick={handleGoBack}>
+          <Box className='sensei-details-header'>
+            <Box className='sensei-details-header-box' onClick={handleGoBack}>
               {backSvg}
             </Box>
-            <Box className="sensei-details-header-box">
+            <Box className='sensei-details-header-box'>
               {profile[0]?.profile.displayName}
             </Box>
           </Box>
           {/* Content */}
           <Box
-            className="content-container"
-            sx={{ height: "calc(100vh - 98px)" }}
-          >
-            <Box className="sensei-details-body" sx={{ pt: "24px" }}>
-              <Box className="sensei-details-body-header">
+            className='content-container'
+            sx={{ height: "calc(100vh - 98px)" }}>
+            <Box className='sensei-details-body' sx={{ pt: "24px" }}>
+              <Box className='sensei-details-body-header'>
                 <Avatar
-                  className="sensei-details-avatar"
+                  className='sensei-details-avatar'
                   alt={profile && profile[0]?.profile.displayName}
                   src={profile && profile[0]?.profile.imageUrl}
                 />
                 {!myPage && (
                   <AskSenseiButton
                     onAskQuestion={onAskQuestion}
-                    senseiDisplayName={profile && profile[0]?.profile.displayName}
+                    senseiDisplayName={
+                      profile && profile[0]?.profile.displayName
+                    }
                   />
                 )}
               </Box>
             </Box>
-            <Box className="sensei-details-body" sx={{ pt: "12px" }}>
-              <Typography variant="h5">
+            <Box className='sensei-details-body' sx={{ pt: "12px" }}>
+              <Typography variant='h5'>
                 {profile && profile[0]?.profile.displayName}
               </Typography>
               <Link
-                className="link"
+                className='link'
                 href={`https://twitter.com/${twitter}`}
-                target="_blank"
-                rel="noreferrer"
-                underline="none"
+                target='_blank'
+                rel='noreferrer'
+                underline='none'
                 sx={{
                   width: "100%",
                   display: "block",
-                }}
-              >
+                }}>
                 @{twitter}
               </Link>
             </Box>
-            <Box className="sensei-details-body" sx={{ pt: "20px" }}>
+            <Box className='sensei-details-body' sx={{ pt: "20px" }}>
               <Typography>{profile && profile[0]?.profile.bio}</Typography>
             </Box>
             {/* Text Stats */}
-            <Box className="sensei-details-body" sx={{ pt: "24px" }}>
-              <Box className="sensei-details-body-stats">
-                <Typography className="sensei-details-stats">
+            <Box className='sensei-details-body' sx={{ pt: "24px" }}>
+              <Box className='sensei-details-body-stats'>
+                <Typography className='sensei-details-stats'>
                   {profile && (
                     <span>
                       {profile[0]?.profile.followers_count?.toLocaleString()}
@@ -229,7 +226,7 @@ const SenseiDetails = ({ accessToken, setAccessError, userInfo }) => {
                   )}{" "}
                   Followers
                 </Typography>
-                <Typography className="sensei-details-stats">
+                <Typography className='sensei-details-stats'>
                   {profile && (
                     <span>
                       {profile[0]?.questionsFor.length.toLocaleString()}
@@ -241,46 +238,43 @@ const SenseiDetails = ({ accessToken, setAccessError, userInfo }) => {
             </Box>
             {/* Box Stats */}
             <Box
-              className="sensei-details-body"
-              sx={{ pt: "20px", pb: "24px" }}
-            >
-              <Box className="sensei-details-fields">
-                <Box className="sensei-details-field">{calendarSVG} Joined</Box>
-                <Box className="sensei-details-field">{linkSVG} Website</Box>
+              className='sensei-details-body'
+              sx={{ pt: "20px", pb: "24px" }}>
+              <Box className='sensei-details-fields'>
+                <Box className='sensei-details-field'>{calendarSVG} Joined</Box>
+                <Box className='sensei-details-field'>{linkSVG} Website</Box>
               </Box>
-              <Box className="sensei-details-fields">
-                <Box className="sensei-details-field2">
+              <Box className='sensei-details-fields'>
+                <Box className='sensei-details-field2'>
                   {formatDate(profile[0]?.createdAt)}
                 </Box>
-                <Box className="sensei-details-field2">
+                <Box className='sensei-details-field2'>
                   <Link
-                    className="link"
+                    className='link'
                     href={`https://ricefarmer.io`}
-                    target="_blank"
-                    rel="noreferrer"
-                    underline="none"
-                  >
+                    target='_blank'
+                    rel='noreferrer'
+                    underline='none'>
                     {/* ricefarmer.io */}
                   </Link>
                 </Box>
               </Box>
             </Box>
             {/* Tabs */}
-            <Box className="sensei-details-filter">
+            <Box className='sensei-details-filter'>
               <Tabs
                 value={value}
                 onChange={handleChange}
                 centered
-                variant="fullWidth"
-              >
+                variant='fullWidth'>
                 <Tab
-                  className="sensei-details-label"
-                  label="Answers"
+                  className='sensei-details-label'
+                  label='Answers'
                   {...a11yProps(0)}
                 />
                 <Tab
-                  className="sensei-details-label"
-                  label="Questions"
+                  className='sensei-details-label'
+                  label='Questions'
                   {...a11yProps(1)}
                 />
               </Tabs>
@@ -294,10 +288,9 @@ const SenseiDetails = ({ accessToken, setAccessError, userInfo }) => {
 
                 return (
                   <Card
-                    className="feed-card"
+                    className='feed-card'
                     key={content.questionId}
-                    onClick={() => handleCardClick(content.questionId)}
-                  >
+                    onClick={() => handleCardClick(content.questionId)}>
                     <QuestionHeader
                       twitterPfp={questioner[0]?.profile.imageUrl}
                       twitterHandle={questioner[0]?.profile.handle}
@@ -329,10 +322,9 @@ const SenseiDetails = ({ accessToken, setAccessError, userInfo }) => {
 
                 return (
                   <Card
-                    className="feed-card"
+                    className='feed-card'
                     key={content.questionId}
-                    onClick={() => handleCardClick(content.questionId)}
-                  >
+                    onClick={() => handleCardClick(content.questionId)}>
                     <QuestionHeader
                       twitterPfp={profile[0]?.profile.imageUrl}
                       twitterHandle={profile[0]?.profile.handle}
@@ -357,7 +349,7 @@ const SenseiDetails = ({ accessToken, setAccessError, userInfo }) => {
             </TabPanel>
           </Box>
           {/* Backdrop */}
-          <Backdrop className="ask-question-backdrop" open={openBackdrop}>
+          <Backdrop className='ask-question-backdrop' open={openBackdrop}>
             <AskQuestion
               userInfo={userInfo}
               accessToken={accessToken}
@@ -381,12 +373,11 @@ function TabPanel(props) {
     <Box
       // className="content-container"
       // sx={{ height: "calc(100vh - 96px)" }}
-      role="tabpanel"
+      role='tabpanel'
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
       aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
+      {...other}>
       {value === index && (
         <Box>
           <Box>{children}</Box>
