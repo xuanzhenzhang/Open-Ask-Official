@@ -41,7 +41,9 @@ const QuestionId = ({ accessToken, setAccessError }) => {
   const [answerExists, setAnswerExists] = useState(true);
   const [open, setOpen] = useState(false);
 
-  const [askLoaderEavesdropText, setAskLoaderEavesdropText] = useState("Continue on Metamask");
+  const [askLoaderEavesdropText, setAskLoaderEavesdropText] = useState(
+    "Continue on Metamask"
+  );
   const [openEavesdrop, setOpenEavesdrop] = useState(false);
 
   const params = useParams();
@@ -221,17 +223,18 @@ const QuestionId = ({ accessToken, setAccessError }) => {
                   <QuestionFooter eavesdrop eavesdropCount={answer} />
                 </Card>
                 <Box className='lens-btn-container'>
-                  <LensButton answer={answer} question={question} />
+                  <LensButton questionId={id} />
                 </Box>
               </>
             )}
           </Box>
           <Backdrop
-            className="ask-question-backdrop"
+            className='ask-question-backdrop'
             open={openEavesdrop}
-            sx={{ ml: "0px !important" }}
-          >
-            <EavesdropQuestion askLoaderEavesdropText={askLoaderEavesdropText} />
+            sx={{ ml: "0px !important" }}>
+            <EavesdropQuestion
+              askLoaderEavesdropText={askLoaderEavesdropText}
+            />
           </Backdrop>
         </>
       )}

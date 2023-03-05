@@ -47,8 +47,7 @@ function renderApp() {
     <AppProvider>
       <ThemeProvider theme={theme}>
         <BrowserRouter
-          basename={inIframe() ? window.location.pathname : undefined}
-        >
+          basename={inIframe() ? window.location.pathname : undefined}>
           <App />
         </BrowserRouter>
       </ThemeProvider>

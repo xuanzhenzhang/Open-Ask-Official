@@ -292,6 +292,7 @@ const LensCard = ({ accessToken, setAccessError }) => {
       .then(() => {
         setUsedLensProfile(true);
         localStorage.setItem("usedLensProfile", "true");
+        localStorage.setItem("lensProfileId", lensProfile.id);
         window.location.reload(false);
       });
   };
