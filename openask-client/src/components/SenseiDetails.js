@@ -39,6 +39,7 @@ const SenseiDetails = ({ accessToken, setAccessError, userInfo }) => {
 
   const sensei = useParams();
   const { twitter } = sensei;
+  console.log(sensei)
 
   // Set My Page
   useEffect(() => {
@@ -85,6 +86,7 @@ const SenseiDetails = ({ accessToken, setAccessError, userInfo }) => {
         let userProfile = modifiedUsers.filter((user) => {
           return user.profile.handle === twitter;
         });
+        console.log(userProfile)
         setAllUsers(modifiedUsers);
         setProfile(userProfile);
       } catch (error) {

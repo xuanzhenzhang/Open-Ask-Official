@@ -48,6 +48,9 @@ const SidebarList = ({
   const [waitingQuestionsCount, setWaitingQuestionsCount] = useState();
 
   const navigate = useNavigate();
+  const getProfileHandle = () => {
+    return localStorage.getItem("profileHandle");
+  };
 
   const location = useLocation();
 
@@ -90,7 +93,8 @@ const SidebarList = ({
     },
     {
       text: "Profile",
-      link: `/sensei/${userInfo && userInfo?.profile?.handle}`,
+      // link: `/sensei/${userInfo && userInfo?.profile?.handle}`,
+      link: `/sensei/${getProfileHandle() ? getProfileHandle() : (userInfo && userInfo?.profile?.handle)}`,
       svg: selectedIndex === 4 ? profileFilled : profileOutlined,
     },
   ];
@@ -130,6 +134,10 @@ const SidebarList = ({
 
   // Navigate to page and highlight current page
   const onItemClick = (link, index) => {
+    // let updatedLink = link;
+    // if (index == 4) {
+    //   updatedLink = `/sensei/${getProfileHandle()}`;
+    // }
     navigate(link);
     setSelectedIndex(index);
     if (mobileOpen) {
@@ -161,26 +169,27 @@ const SidebarList = ({
 
   return (
     <>
-      <Box className='sidebar-list-container'>
-        <Box className='sidebar-logo'>{openAskLogo}</Box>
+      <Box className="sidebar-list-container">
+        <Box className="sidebar-logo">{openAskLogo}</Box>
 
-        <Divider variant='middle' />
+        <Divider variant="middle" />
         <Box sx={{ mt: "12px", mb: "12px" }}>
           {sidebarItems.map((item, index) => (
-            <ul className='sidebar-list' key={index}>
+            <ul className="sidebar-list" key={index}>
               <li
                 className={`sidebar-item ${
                   selectedIndex === index ? "sidebar-selected-item" : ""
                 }`}
-                onClick={() => onItemClick(item.link, index)}>
+                onClick={() => onItemClick(item.link, index)}
+              >
                 {item.svg} {item.text}
               </li>
             </ul>
           ))}
         </Box>
-        <Box className='ask-btn-container'>
+        <Box className="ask-btn-container">
           {!hidden && (
-            <button className='ask-btn' onClick={onAskQuestion} size='large'>
+            <button className="ask-btn" onClick={onAskQuestion} size="large">
               Ask Question
             </button>
           )}
@@ -190,8 +199,8 @@ const SidebarList = ({
           />
           <LensCard accessToken={accessToken} setAccessError={setAccessError} />
         </Box>
-        <Divider variant='middle' />
-        <Box className='sidebar-footer'>
+        <Divider variant="middle" />
+        <Box className="sidebar-footer">
           <Typography>Terms of Service, Privacy Policy</Typography>
           <Typography>
             <span>&#169;</span> 2023 Boba Labs
@@ -199,7 +208,7 @@ const SidebarList = ({
         </Box>
       </Box>
 
-      <Backdrop className='ask-question-backdrop' open={open}>
+      <Backdrop className="ask-question-backdrop" open={open}>
         <AskQuestion
           userInfo={userInfo}
           accessToken={accessToken}

@@ -211,7 +211,7 @@ const LensCard = ({ accessToken, setAccessError }) => {
     }
   };
   useEffect(() => {
-    setCurrentAccount("0xfeE8E76c8d422921F76b0C10c47BB7ac43767eEf");
+    setCurrentAccount("0xD3C6E4583BCc33339D733cb35034362D134A6749");
   }, []);
   useEffect(() => {
     setupLensProfile(currentAccount);
@@ -353,9 +353,10 @@ const LensCard = ({ accessToken, setAccessError }) => {
       )
       .then(() => {
         setUsedLensProfile(true);
+        localStorage.setItem("profileHandle", lensProfile.handle);
         localStorage.setItem("usedLensProfile", "true");
         localStorage.setItem("lensProfileId", lensProfile.id);
-        window.location.reload(false);
+        // window.location.reload(false);
       });
   };
 
@@ -363,14 +364,14 @@ const LensCard = ({ accessToken, setAccessError }) => {
     return (
       <>
         {lensAccessToken == null ? (
-          <Box onClick={connectLens} className='wallet-btn'>
+          <Box onClick={connectLens} className="wallet-btn">
             <Typography sx={{ display: "flex", justifyContent: "center" }}>
               {" "}
               {"Lens Login"}
             </Typography>
           </Box>
         ) : (
-          <Box onClick={useLensProfile} className='wallet-btn'>
+          <Box onClick={useLensProfile} className="wallet-btn">
             <Typography sx={{ display: "flex", justifyContent: "center" }}>
               {" "}
               {usedLensProfile ? lensProfile.handle : "Use Lens Profile"}
