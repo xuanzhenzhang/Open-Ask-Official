@@ -217,6 +217,7 @@ const WalletCard = ({ accessToken, setAccessError }) => {
 
     const provider = gelatoLogin.getProvider();
     console.log(provider);
+    window.location.reload();
   };
 
   return (
