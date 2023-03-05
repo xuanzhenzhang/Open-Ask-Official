@@ -43,7 +43,7 @@ export const eavesdropContract = async (
     let shares = [5000, 5000];
     console.log(questionId, payees, shares);
 
-    const tx = await contract.eavesdropEth(1, payees, shares, {
+    const tx = await contract.eavesdropETH(1, payees, shares, {
       value: 1000000000000000,
     });
 
