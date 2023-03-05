@@ -159,11 +159,11 @@ exports.createUserIfNotExist = async (req, res) => {
     .then((doc) => {
       if (doc.exists) {
         const profile = {};
-        // if (doc.data().profile.type == PROFILE.TWITTER) {
-        return updateUserProfileHelper(req, res, PROFILE.TWITTER, profile);
-        // } else {
-        //   return res.status(200).json(doc.data());
-        // }
+        if (doc.data().profile.type == PROFILE.TWITTER) {
+          return updateUserProfileHelper(req, res, PROFILE.TWITTER, profile);
+        } else {
+          return res.status(200).json(doc.data());
+        }
         // return updateUserProfileHelper(req, res, doc.data().profile.type);
       } else {
         const twClient = new TwitterApi({
