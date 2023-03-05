@@ -188,7 +188,7 @@ const SidebarList = ({
             accessToken={accessToken}
             setAccessError={setAccessError}
           />
-          {/* <LensCard accessToken={accessToken} setAccessError={setAccessError} /> */}
+          <LensCard accessToken={accessToken} setAccessError={setAccessError} />
         </Box>
         <Divider variant='middle' />
         <Box className='sidebar-footer'>

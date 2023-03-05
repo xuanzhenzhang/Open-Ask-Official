@@ -13,7 +13,7 @@ const init = async () => {
     domains: [window.location.origin],
     chain: {
       id: 84531,
-      rpcUrl: "https://api-goerli.basescan.org/api",
+      rpcUrl: "https://goerli.base.org",
     },
     openLogin: {
       redirectUrl: `${window.location.origin}`,
@@ -25,7 +25,7 @@ const init = async () => {
   await gelatoLogin.init();
 
   const providerGelato = gelatoLogin.getProvider();
-  return providerGelato
+  return providerGelato;
 };
 
 export const ethBountyContract = async (

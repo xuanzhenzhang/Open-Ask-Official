@@ -12,18 +12,13 @@ import {
   LoginConfig,
 } from "@gelatonetwork/gasless-onboarding";
 
-// smartwallet api key
-//gelato network gasless onboarding
-//redirect after login window.location.origin
-//login cofig
-
 const web3auth = new Web3Auth({
-  // uiConfig: {
-  //   appLogo: "https://images.web3auth.io/web3auth-logo-w.svg",
-  //   theme: "light",
-  //   loginMethodsOrder: ["twitter"],
-  //   defaultLanguage: "en",
-  // },
+  uiConfig: {
+    appLogo: "https://images.web3auth.io/web3auth-logo-w.svg",
+    theme: "light",
+    loginMethodsOrder: ["twitter"],
+    defaultLanguage: "en",
+  },
   clientId:
     "BJsOkD91JES7aVales0sTJYBsRxwlofa9YsWs_y2KIjyOgdRlk41Sgfmpt8luQE52UaKp2pD9ajDNy7yjaaYQvc", // Get your Client ID from Web3Auth Dashboard
   chainConfig: {
@@ -31,22 +26,6 @@ const web3auth = new Web3Auth({
     chainId: "0x5", // Please use 0x5 for Goerli Testnet
   },
 });
-
-//provider = await gelato.login
-// const web3auth = new Web3Auth({
-//   uiConfig: {
-//     appLogo: "https://images.web3auth.io/web3auth-logo-w.svg",
-//     theme: "light",
-//     loginMethodsOrder: ["twitter"],
-//     defaultLanguage: "en",
-//   },
-//   clientId:
-//     "BJsOkD91JES7aVales0sTJYBsRxwlofa9YsWs_y2KIjyOgdRlk41Sgfmpt8luQE52UaKp2pD9ajDNy7yjaaYQvc", // Get your Client ID from Web3Auth Dashboard
-//   chainConfig: {
-//     chainNamespace: "eip155",
-//     chainId: "0x5", // Please use 0x5 for Goerli Testnet
-//   },
-// });
 
 const WalletCard = ({ accessToken, setAccessError }) => {
   const [userBalance, setUserBalance] = useState(null);
@@ -137,6 +116,7 @@ const WalletCard = ({ accessToken, setAccessError }) => {
       setCurrentAccount(currentAccountString(account));
       setupEventListener();
       setUserWallet(account);
+      localStorage.setItem("walletAddress", account);
     } else {
       console.log("No authorized account found");
     }
@@ -213,32 +193,31 @@ const WalletCard = ({ accessToken, setAccessError }) => {
     checkIfWalletIsConnected();
   }, []);
 
-
-    const init = async () => {
-      const gaslessWalletConfig = {
-        apiKey: "Q7E6fPdBQmEA9ArUXXKP_wE_m_v_Y20WkCeU5WLsmxU_",
-      };
-  
-      const loginConfig = {
-        domains: [window.location.origin],
-        chain: {
-          id: 84531,
-          rpcUrl: "https://api-goerli.basescan.org/api",
-        },
-        openLogin: {
-          redirectUrl: `${window.location.origin}`,
-        },
-      };
-  
-      const gelatoLogin = new GaslessOnboarding(loginConfig, gaslessWalletConfig);
-  
-      await gelatoLogin.init();
-  
-      await gelatoLogin.login();
-
-      const provider = gelatoLogin.getProvider();
-      console.log(provider)
+  const init = async () => {
+    const gaslessWalletConfig = {
+      apiKey: "Q7E6fPdBQmEA9ArUXXKP_wE_m_v_Y20WkCeU5WLsmxU_",
     };
+
+    const loginConfig = {
+      domains: [window.location.origin],
+      chain: {
+        id: 84531,
+        rpcUrl: "https://goerli.base.org",
+      },
+      openLogin: {
+        redirectUrl: `${window.location.origin}`,
+      },
+    };
+
+    const gelatoLogin = new GaslessOnboarding(loginConfig, gaslessWalletConfig);
+
+    await gelatoLogin.init();
+
+    await gelatoLogin.login();
+
+    const provider = gelatoLogin.getProvider();
+    console.log(provider);
+  };
 
   return (
     <>

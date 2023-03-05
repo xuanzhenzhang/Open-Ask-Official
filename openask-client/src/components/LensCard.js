@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { ethers } from "ethers";
-import Button from "@mui/material/Button";
 import axios from "axios";
 import { Box, Typography } from "@mui/material";
+import { GaslessOnboarding } from "@gelatonetwork/gasless-onboarding";
 
 const { ApolloClient, InMemoryCache, gql } = require("@apollo/client");
 const PROFILE = {
@@ -104,7 +104,7 @@ const authenticateMutation = async (address, signature) => {
 
 const LensCard = ({ accessToken, setAccessError }) => {
   const [currentAccount, setCurrentAccount] = useState();
-  const [provider, setProvider] = useState();
+  // const [provider, setProvider] = useState();
   const [signer, setSigner] = useState();
   const [lensAccessToken, setLensAccessToken] = useState(
     localStorage.getItem("lensAccessToken")
@@ -113,6 +113,12 @@ const LensCard = ({ accessToken, setAccessError }) => {
   const [usedLensProfile, setUsedLensProfile] = useState(
     localStorage.getItem("usedLensProfile") === "true"
   );
+
+  window.addEventListener("storage", function (event) {
+    if (event.key === "walletAddress") {
+      setCurrentAccount(localStorage.getItem("walletAddress"));
+    }
+  });
 
   const setWalletAddress = async () => {
     const { ethereum } = window;
@@ -132,10 +138,42 @@ const LensCard = ({ accessToken, setAccessError }) => {
     const provider = new ethers.providers.Web3Provider(ethereum);
     const signer = provider.getSigner();
     setSigner(signer);
-    setProvider(provider);
+    // setProvider(provider);
   };
+
+  const init = async () => {
+    const gaslessWalletConfig = {
+      apiKey: "Q7E6fPdBQmEA9ArUXXKP_wE_m_v_Y20WkCeU5WLsmxU_",
+    };
+
+    const loginConfig = {
+      domains: [window.location.origin],
+      chain: {
+        id: 84531,
+        rpcUrl: "https://goerli.base.org",
+      },
+      openLogin: {
+        redirectUrl: `${window.location.origin}`,
+      },
+    };
+
+    const gelatoLogin = new GaslessOnboarding(loginConfig, gaslessWalletConfig);
+
+    await gelatoLogin.init();
+
+    const providerGelato = gelatoLogin.getProvider();
+
+    const provider = new ethers.providers.Web3Provider(providerGelato);
+    const gelatoSigner = provider.getSigner();
+    const sender = await gelatoSigner.getAddress();
+
+    console.log(sender);
+    setCurrentAccount(sender);
+    setSigner(gelatoSigner);
+  };
+
   useEffect(() => {
-    setWalletAddress();
+    init();
   }, []);
 
   const setupLensProfile = async (crAccount) => {
@@ -301,14 +339,14 @@ const LensCard = ({ accessToken, setAccessError }) => {
     return (
       <>
         {lensAccessToken == null ? (
-          <Box onClick={connectLens} className='wallet-btn'>
+          <Box onClick={connectLens} className="wallet-btn">
             <Typography sx={{ display: "flex", justifyContent: "center" }}>
               {" "}
               {"Lens Login"}
             </Typography>
           </Box>
         ) : (
-          <Box onClick={useLensProfile} className='wallet-btn'>
+          <Box onClick={useLensProfile} className="wallet-btn">
             <Typography sx={{ display: "flex", justifyContent: "center" }}>
               {" "}
               {usedLensProfile ? lensProfile.handle : "Use Lens Profile"}

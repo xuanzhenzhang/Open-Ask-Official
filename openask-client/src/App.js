@@ -50,33 +50,6 @@ function App() {
   const { userInfo, setUserInfo } = useContext(AppContext);
   const { accessToken } = userInfo;
 
-//   useEffect(() => {
-//   const init = async () => {
-//     const gaslessWalletConfig = {
-//       apiKey: "Q7E6fPdBQmEA9ArUXXKP_wE_m_v_Y20WkCeU5WLsmxU_",
-//     };
-
-//     const loginConfig = {
-//       domains: [window.location.origin],
-//       chain: {
-//         id: 84531,
-//         rpcUrl: "https://api-goerli.basescan.org/api",
-//       },
-//       openLogin: {
-//         redirectUrl: `${window.location.origin}`,
-//       },
-//     };
-
-//     const gelatoLogin = new GaslessOnboarding(loginConfig, gaslessWalletConfig);
-
-//     await gelatoLogin.init();
-
-//     await gelatoLogin.login();
-//   };
-//   init();
-// }, []);
-
-
   const signInTwitter = async (reload) => {
     const auth = getAuth();
     signInWithPopup(auth, provider)
@@ -147,9 +120,9 @@ function App() {
     }
   };
 
-  // useEffect(() => {
-  //   console.log(userInfo);
-  // }, []);
+  useEffect(() => {
+    console.log(userInfo);
+  }, []);
 
   return (
     <>

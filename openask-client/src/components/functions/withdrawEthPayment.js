@@ -11,7 +11,7 @@ const init = async () => {
     domains: [window.location.origin],
     chain: {
       id: 84531,
-      rpcUrl: "https://api-goerli.basescan.org/api",
+      rpcUrl: "https://goerli.base.org",
     },
     openLogin: {
       redirectUrl: `${window.location.origin}`,
