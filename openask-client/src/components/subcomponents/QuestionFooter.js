@@ -96,7 +96,7 @@ const QuestionFooter = (props) => {
           </Typography>
           <Typography className="feed-expired">Expired</Typography>
           <WithdrawButton
-            contractAddress={"0x5AE8138B79ad83184Eb484Ba3C0889F297820482"}
+            contractAddress={"0x34141bE35aC2aB6568D9cD7a23281101Fe79edb3"}
             bountyId={bountyId}
             contributionId={0}
             questionId={questionId}

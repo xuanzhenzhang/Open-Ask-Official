@@ -10,8 +10,8 @@ const init = async () => {
   const loginConfig = {
     domains: [window.location.origin],
     chain: {
-      id: 5,
-      rpcUrl: "https://goerli.infura.io/v3/ad8bc3258461465caec6501141cb764b",
+      id: 84531,
+      rpcUrl: "https://api-goerli.basescan.org/api",
     },
     openLogin: {
       redirectUrl: `${window.location.origin}`,

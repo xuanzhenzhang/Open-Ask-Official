@@ -5,9 +5,7 @@ import {
 import { tonyABI } from "../data/tokenABI";
 
 const ethers = require("ethers");
-// const provider = new ethers.getDefaultProvider(
-//   "https://goerli.infura.io/v3/ad8bc3258461465caec6501141cb764b"
-// );
+
 
 const deployerProvider = new ethers.providers.Web3Provider(window.ethereum);
 const signer = deployerProvider.getSigner();
