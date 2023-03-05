@@ -95,10 +95,9 @@ const escrowAbi = [
   },
 ];
 
-// const deployerProvider = new ethers.providers.Web3Provider(window.ethereum);
 const apiKey = "5GXAG3VT5G5PFS8V9HHTHTP1NK4C2ESRAX";
-const deployerProvider = new ethers.EtherscanProvider("goerli", apiKey);
-const { provider } = require("./provider");
+// const deployerProvider = new ethers.EtherscanProvider("goerli", apiKey);
+const { ethersProvider } = require("./provider");
 
 const getEscrowQuestionId = async (contractAddress) => {
   try {
@@ -106,7 +105,7 @@ const getEscrowQuestionId = async (contractAddress) => {
       contractAddress,
       escrowAbi,
       // deployerProvider
-      provider
+      ethersProvider
     );
 
     // Call the `matureTime` function on the contract
