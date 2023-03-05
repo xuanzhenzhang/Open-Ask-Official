@@ -215,13 +215,18 @@ const WalletCard = ({ accessToken, setAccessError }) => {
 
     await gelatoLogin.login();
 
-    const provider = gelatoLogin.getProvider();
-    console.log(provider);
+    const gelato = gelatoLogin.getProvider();
+
+    const provider = new ethers.providers.Web3Provider(gelato);
+    const signer = provider.getSigner();
+    const addr = await signer.getAddress();
+    localStorage.setItem("walletAddress", addr);
+    window.location.reload();
   };
 
   return (
     <>
-      <Box onClick={() => init()} className="wallet-btn">
+      <Box onClick={init} className='wallet-btn'>
         <Typography sx={{ display: "flex", justifyContent: "center" }}>
           {" "}
           {currentAccount ? currentAccount : "Connect Wallet"}
