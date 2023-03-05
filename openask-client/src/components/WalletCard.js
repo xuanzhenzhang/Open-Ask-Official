@@ -43,44 +43,44 @@ const WalletCard = ({ accessToken, setAccessError }) => {
   //   await web3auth.logout();
   // };
 
-  const web3Connect = async () => {
-    const userWallet = await web3auth.connect();
-    console.log(userWallet);
+  // const web3Connect = async () => {
+  //   const userWallet = await web3auth.connect();
+  //   console.log(userWallet);
 
-    const web3Provider = new ethers.providers.Web3Provider(web3auth.provider);
-    console.log(web3Provider);
-  };
+  //   const web3Provider = new ethers.providers.Web3Provider(web3auth.provider);
+  //   console.log(web3Provider);
+  // };
 
   // Connect wallet method
-  const connectWallet = async () => {
-    try {
-      const { ethereum } = window;
+  // const connectWallet = async () => {
+  //   try {
+  //     const { ethereum } = window;
 
-      if (!ethereum) {
-        console.log("Need to install MetaMask");
-        setErrorMessage(
-          "Please install MetaMask browser extension to interact."
-        );
-        return;
-      }
-      // Request account access
-      const accounts = await ethereum.request({
-        method: "eth_requestAccounts",
-      });
-      console.log("Connected", accounts[0]);
-      checkNetwork();
-      setCurrentAccount(currentAccountString(accounts[0]));
-      // const profileResponse = await profileQuery(
-      //   currentAccountString(accounts[0])
-      // );
-      // console.log("profileResponse:1!! ", profileResponse);
-      // setLensProfile(profileResponse.defaultProfile);
-      setupEventListener();
-      setUserWallet(accounts[0]);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  //     if (!ethereum) {
+  //       console.log("Need to install MetaMask");
+  //       setErrorMessage(
+  //         "Please install MetaMask browser extension to interact."
+  //       );
+  //       return;
+  //     }
+  //     // Request account access
+  //     const accounts = await ethereum.request({
+  //       method: "eth_requestAccounts",
+  //     });
+  //     console.log("Connected", accounts[0]);
+  //     checkNetwork();
+  //     setCurrentAccount(currentAccountString(accounts[0]));
+  //     // const profileResponse = await profileQuery(
+  //     //   currentAccountString(accounts[0])
+  //     // );
+  //     // console.log("profileResponse:1!! ", profileResponse);
+  //     // setLensProfile(profileResponse.defaultProfile);
+  //     setupEventListener();
+  //     setUserWallet(accounts[0]);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   // Check Blockchain Network
   const checkNetwork = async () => {

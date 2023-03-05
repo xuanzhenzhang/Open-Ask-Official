@@ -147,76 +147,75 @@ const AnswerQuestion = (props) => {
   };
 
   return (
-    <Card className="ask-question-container">
+    <Card className='ask-question-container'>
       {askLoader && (
-        <Box className="ask-question-loader">
+        <Box className='ask-question-loader'>
           <CircularProgress />
-          <Box className="ask-question-loader-text">
+          <Box className='ask-question-loader-text'>
             <Typography>{askLoaderText}</Typography>
           </Box>
         </Box>
       )}
       {!askLoader && (
         <>
-          <CardContent className="ask-question-header">
+          <CardContent className='ask-question-header'>
             <svg
-              cursor="pointer"
+              cursor='pointer'
               onClick={handleCloseBackdrop}
-              width="40"
-              height="40"
-              viewBox="0 0 40 40"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
+              width='40'
+              height='40'
+              viewBox='0 0 40 40'
+              fill='none'
+              xmlns='http://www.w3.org/2000/svg'>
               <rect
-                x="0.5"
-                y="0.5"
-                width="39"
-                height="39"
-                rx="19.5"
-                fill="#FDFDFD"
+                x='0.5'
+                y='0.5'
+                width='39'
+                height='39'
+                rx='19.5'
+                fill='#FDFDFD'
               />
               <path
-                fillRule="evenodd"
-                clipRule="evenodd"
-                d="M16.4642 23.5355C16.1387 23.21 16.1387 22.6824 16.4642 22.357L18.8212 19.9999L16.4642 17.6429C16.1387 17.3175 16.1387 16.7898 16.4642 16.4644C16.7896 16.139 17.3172 16.139 17.6427 16.4644L19.9997 18.8214L22.3567 16.4644C22.6821 16.139 23.2098 16.139 23.5352 16.4644C23.8607 16.7898 23.8607 17.3175 23.5352 17.6429L21.1782 19.9999L23.5352 22.357C23.8607 22.6824 23.8607 23.21 23.5352 23.5355C23.2098 23.8609 22.6821 23.8609 22.3567 23.5355L19.9997 21.1784L17.6427 23.5355C17.3172 23.8609 16.7896 23.8609 16.4642 23.5355Z"
-                fill="black"
+                fillRule='evenodd'
+                clipRule='evenodd'
+                d='M16.4642 23.5355C16.1387 23.21 16.1387 22.6824 16.4642 22.357L18.8212 19.9999L16.4642 17.6429C16.1387 17.3175 16.1387 16.7898 16.4642 16.4644C16.7896 16.139 17.3172 16.139 17.6427 16.4644L19.9997 18.8214L22.3567 16.4644C22.6821 16.139 23.2098 16.139 23.5352 16.4644C23.8607 16.7898 23.8607 17.3175 23.5352 17.6429L21.1782 19.9999L23.5352 22.357C23.8607 22.6824 23.8607 23.21 23.5352 23.5355C23.2098 23.8609 22.6821 23.8609 22.3567 23.5355L19.9997 21.1784L17.6427 23.5355C17.3172 23.8609 16.7896 23.8609 16.4642 23.5355Z'
+                fill='black'
               />
               <rect
-                x="0.5"
-                y="0.5"
-                width="39"
-                height="39"
-                rx="19.5"
-                stroke="#E8E8E8"
+                x='0.5'
+                y='0.5'
+                width='39'
+                height='39'
+                rx='19.5'
+                stroke='#E8E8E8'
               />
             </svg>
           </CardContent>
           {/* From */}
-          <CardContent className="ask-question-from">
-            <Typography className="ask-question-text">from: </Typography>
-            <Avatar className="ask-question-avatar" alt={handle} src={avatar} />
+          <CardContent className='ask-question-from'>
+            <Typography className='ask-question-text'>from: </Typography>
+            <Avatar className='ask-question-avatar' alt={handle} src={avatar} />
             <Typography> {displayName}</Typography>
-            <PriceButton tokenAmount={etherAmount} tokenType="ETH" />
+            <PriceButton tokenAmount={etherAmount} tokenType='ETH' />
           </CardContent>
-          <CardContent className="answer-question-question">
+          <CardContent className='answer-question-question'>
             <Typography>{answerQuestion}</Typography>
           </CardContent>
-          <Divider variant="middle" />
-          <CardContent className="answer-question-body">
+          <Divider variant='middle' />
+          <CardContent className='answer-question-body'>
             <TextField
-              className="ask-question-autocomplete-textfield"
+              className='ask-question-autocomplete-textfield'
               required
               fullWidth
-              label="Your answer..."
+              label='Your answer...'
               multiline
               minRows={4}
-              variant="outlined"
+              variant='outlined'
               value={answer}
               onChange={(e) => setAnswer(e.target.value)}
             />
           </CardContent>
-          <CardContent className="answer-question-footer">
+          <CardContent className='answer-question-footer'>
             <SubmitAnswerButton
               disabled={answer ? false : true}
               handleEthBountyReceive={handleEthBountyReceive}

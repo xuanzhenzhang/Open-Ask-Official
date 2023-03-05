@@ -69,7 +69,6 @@ function App() {
         return addUser(bearer);
       })
       .then((response) => {
-        console.log(response.data);
         setUserInfo((prevState) => ({
           ...prevState,
           ...response.data,
@@ -120,9 +119,9 @@ function App() {
     }
   };
 
-  useEffect(() => {
-    console.log(userInfo);
-  }, []);
+  // useEffect(() => {
+  //   console.log(userInfo);
+  // }, []);
 
   return (
     <>
@@ -134,18 +133,16 @@ function App() {
           />
         )}
         <Box
-          className="user-avatar-container"
-          sx={{ display: { xs: "flex", sm: "flex", md: "none" } }}
-        >
+          className='user-avatar-container'
+          sx={{ display: { xs: "flex", sm: "flex", md: "none" } }}>
           <Avatar
-            className="user-avatar"
+            className='user-avatar'
             sx={{ cursor: "pointer" }}
             src={userInfo && userInfo?.profile?.imageUrl}
             onClick={(event) => {
               event.stopPropagation();
               onAvatarClick();
-            }}
-          ></Avatar>
+            }}></Avatar>
         </Box>
         {window.location.pathname !== "/" && (
           <Sidebar
@@ -160,7 +157,7 @@ function App() {
         )}
         <Routes>
           <Route
-            path="/"
+            path='/'
             element={
               <LoginPage
                 signInTwitter={signInTwitter}
@@ -169,7 +166,7 @@ function App() {
             }
           />
           <Route
-            path="/feed"
+            path='/feed'
             element={
               <Feed
                 userInfo={userInfo}
@@ -190,7 +187,7 @@ function App() {
           /> */}
           <Route
             exact
-            path="/sensei"
+            path='/sensei'
             element={
               <Sensei
                 userInfo={userInfo}
@@ -200,7 +197,7 @@ function App() {
             }
           />
           <Route
-            path="/questions"
+            path='/questions'
             element={
               <Questions
                 userInfo={userInfo}
@@ -210,7 +207,7 @@ function App() {
             }
           />
           <Route
-            path="/sensei/:twitter"
+            path='/sensei/:twitter'
             element={
               <SenseiDetails
                 userInfo={userInfo}
@@ -219,9 +216,9 @@ function App() {
               />
             }
           />
-          <Route path="/transaction_history" element={<TransactionHistory />} />
+          <Route path='/transaction_history' element={<TransactionHistory />} />
           <Route
-            path="/id/:id"
+            path='/id/:id'
             element={
               <QuestionId
                 accessToken={accessToken}
