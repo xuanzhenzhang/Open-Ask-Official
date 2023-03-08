@@ -119,9 +119,9 @@ function App() {
     }
   };
 
-  // useEffect(() => {
-  //   console.log(userInfo);
-  // }, []);
+  useEffect(() => {
+    console.log(userInfo);
+  }, []);
 
   return (
     <>
