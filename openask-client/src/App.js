@@ -5,17 +5,16 @@ import Box from "@mui/material/Box";
 
 import { Routes, Route } from "react-router-dom";
 import LoginPage from "./components/LoginPage";
-import { AppHeader } from "./components/AppHeader";
 import Sensei from "./components/Sensei";
 import Feed from "./components/Feed";
 import Sidebar from "./components/Sidebar";
 import Questions from "./components/Questions";
+import Answers from "./components/Answers";
 import SenseiDetails from "./components/SenseiDetails";
 import TransactionHistory from "./components/TransactionHistory";
 import QuestionId from "./components/QuestionId";
 import { useNavigate } from "react-router-dom";
 import reloadPage from "./components/functions/reloadPage";
-import Testing from "./components/Testing";
 
 import {
   getAuth,
@@ -24,7 +23,6 @@ import {
   TwitterAuthProvider,
 } from "firebase/auth";
 import "./css/app.css";
-import AnswerQuestion from "./components/AnswerQuestion";
 import AccessErrorLogin from "./components/AccessErrorLogin";
 
 import axios, * as others from "axios";
@@ -41,10 +39,7 @@ const provider = new TwitterAuthProvider();
 // var provider = new firebase.auth.TwitterAuthProvider();
 
 function App() {
-  // const [loginUser, setLoginUser] = useState(null);
-  const [loggedIn, setLoggedIn] = useState(false);
   const [accessError, setAccessError] = useState(false);
-
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const { userInfo, setUserInfo } = useContext(AppContext);
@@ -133,16 +128,18 @@ function App() {
           />
         )}
         <Box
-          className='user-avatar-container'
-          sx={{ display: { xs: "flex", sm: "flex", md: "none" } }}>
+          className="user-avatar-container"
+          sx={{ display: { xs: "flex", sm: "flex", md: "none" } }}
+        >
           <Avatar
-            className='user-avatar'
+            className="user-avatar"
             sx={{ cursor: "pointer" }}
             src={userInfo && userInfo?.profile?.imageUrl}
             onClick={(event) => {
               event.stopPropagation();
               onAvatarClick();
-            }}></Avatar>
+            }}
+          ></Avatar>
         </Box>
         {window.location.pathname !== "/" && (
           <Sidebar
@@ -157,7 +154,7 @@ function App() {
         )}
         <Routes>
           <Route
-            path='/'
+            path="/"
             element={
               <LoginPage
                 signInTwitter={signInTwitter}
@@ -166,7 +163,7 @@ function App() {
             }
           />
           <Route
-            path='/feed'
+            path="/feed"
             element={
               <Feed
                 userInfo={userInfo}
@@ -175,19 +172,9 @@ function App() {
               />
             }
           />
-          {/* <Route
-            path="/sensei/ask"
-            element={
-              <AskPage
-                userInfo={userInfo}
-                accessToken={accessToken}
-                setAccessError={setAccessError}
-              />
-            }
-          /> */}
           <Route
             exact
-            path='/sensei'
+            path="/sensei"
             element={
               <Sensei
                 userInfo={userInfo}
@@ -197,7 +184,7 @@ function App() {
             }
           />
           <Route
-            path='/questions'
+            path="/questions"
             element={
               <Questions
                 userInfo={userInfo}
@@ -207,7 +194,17 @@ function App() {
             }
           />
           <Route
-            path='/sensei/:twitter'
+            path="/answers"
+            element={
+              <Answers
+                userInfo={userInfo}
+                accessToken={accessToken}
+                setAccessError={setAccessError}
+              />
+            }
+          />
+          <Route
+            path="/sensei/:twitter"
             element={
               <SenseiDetails
                 userInfo={userInfo}
@@ -216,9 +213,9 @@ function App() {
               />
             }
           />
-          <Route path='/transaction_history' element={<TransactionHistory />} />
+          <Route path="/transaction_history" element={<TransactionHistory />} />
           <Route
-            path='/id/:id'
+            path="/id/:id"
             element={
               <QuestionId
                 accessToken={accessToken}
@@ -226,7 +223,6 @@ function App() {
               />
             }
           />
-          {/* <Route path="/testing" element={<Testing />} /> */}
         </Routes>
       </Container>
     </>

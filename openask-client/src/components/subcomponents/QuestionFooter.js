@@ -33,7 +33,8 @@ const QuestionFooter = (props) => {
   } = props;
   const { setAccessError, accessToken } = props;
   // Eavesdrop Props
-  const {id, payees, setAskLoaderEavesdropText, setOpenEavesdrop, answerId} = props;
+  const { id, payees, setAskLoaderEavesdropText, setOpenEavesdrop, answerId } =
+    props;
 
   return (
     <>
@@ -54,7 +55,17 @@ const QuestionFooter = (props) => {
               @{twitterHandle}
             </Link>
           </Typography>
-          {notAnswered && <EavesdropButton id={id} payees={payees} setAskLoaderEavesdropText={setAskLoaderEavesdropText} setOpenEavesdrop={setOpenEavesdrop} answerId={answerId} accessToken={accessToken} setAccessError={setAccessError} />}
+          {notAnswered && (
+            <EavesdropButton
+              id={id}
+              payees={payees}
+              setAskLoaderEavesdropText={setAskLoaderEavesdropText}
+              setOpenEavesdrop={setOpenEavesdrop}
+              answerId={answerId}
+              accessToken={accessToken}
+              setAccessError={setAccessError}
+            />
+          )}
         </CardActions>
       )}
 
@@ -112,7 +123,7 @@ const QuestionFooter = (props) => {
       {/* // Questions for me */}
       {answered && (
         <CardActions className="feed-see-answer" sx={{ pb: "16px" }}>
-          <Typography className="feed-complete">Complete</Typography>
+          <Typography className="feed-complete">Completed</Typography>
         </CardActions>
       )}
       {toAnswer && (

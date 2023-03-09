@@ -43,7 +43,9 @@ const Questions = ({ userInfo, accessToken, setAccessError }) => {
   const [answerBountyId, setAnswerBountyId] = useState();
 
   const [openWithdraw, setOpenWithdraw] = useState(false);
-  const [askLoaderWithdrawText, setAskLoaderWithdrawText] = useState();
+  const [askLoaderWithdrawText, setAskLoaderWithdrawText] = useState(
+    "Confirm Withdrawal..."
+  );
 
   // Get all questions asked by user
   useEffect(() => {
@@ -160,22 +162,12 @@ const Questions = ({ userInfo, accessToken, setAccessError }) => {
     setValue(newValue);
   };
 
-  // Close backdrop
-  const handleCloseBackdrop = () => {
-    setOpenAnswer(false);
-  };
-
   const navigate = useNavigate();
 
   // Navigate to question landing page
   const handleCardClick = (id) => {
     navigate(`/id/${id}`);
   };
-
-  // Navigate to sensei details page
-  // const handleAvatarClick = (twitter) => {
-  //   navigate(`/sensei/${twitter}`);
-  // };
 
   return (
     <>
@@ -199,8 +191,7 @@ const Questions = ({ userInfo, accessToken, setAccessError }) => {
                 variant="fullWidth"
               >
                 <Tab label="Asked by me" {...a11yProps(0)} />
-                <Tab label="Questions for me" {...a11yProps(1)} />
-                <Tab label="Purchased" {...a11yProps(2)} />
+                <Tab label="Purchased" {...a11yProps(1)} />
               </Tabs>
             </Box>
             {/* Asked By Me */}
@@ -257,80 +248,9 @@ const Questions = ({ userInfo, accessToken, setAccessError }) => {
                 );
               })}
             </TabPanel>
-            {/* Questions for me */}
-            <TabPanel value={value} index={1}>
-              {allQuestionsFor?.map((content) => {
-                const user = allUsers?.filter((id) => {
-                  return id.userId === content.questionerUid;
-                });
 
-                const answerer = allUsers?.filter((id) => {
-                  return id.userId === content.questioneeUid;
-                });
-
-                const specificDate = new Date(content.createdAt);
-                const now = new Date();
-                const diffInMs = now - specificDate;
-                const diffInHours = Math.floor(diffInMs / (1000 * 60 * 60));
-                const diffInMinutes = Math.floor((diffInMs / (1000 * 60)) % 60);
-                const waitingTime = `${47 - diffInHours} hours and ${
-                  60 - diffInMinutes
-                } minutes`;
-
-                return (
-                  <>
-                    <Card
-                      className="feed-card"
-                      key={content.questionId}
-                      onClick={() => handleCardClick(content.questionId)}
-                    >
-                      <QuestionHeader
-                        twitterPfp={user && user[0]?.profile.imageUrl}
-                        twitterHandle={user && user[0]?.profile.handle}
-                        twitterDisplayName={
-                          user && user[0]?.profile.displayName
-                        }
-                        price
-                        tokenAmount={content.rewardTokenAmount}
-                        tokenType={content.rewardTokenType}
-                      />
-
-                      <QuestionBody
-                        body={content.body}
-                        createdAt={content.createdAt}
-                      />
-
-                      <QuestionFooter
-                        answered={content.answerId !== null}
-                        toAnswer={content.answerId === null && diffInHours < 48}
-                        userExpired={
-                          content.answerId === null && diffInHours >= 48
-                        }
-                        twitterHandle={answerer && answerer[0]?.profile.handle}
-                        waitingTime={waitingTime}
-                        setOpenAnswer={setOpenAnswer}
-                        setAnswerAvatar={setAnswerAvatar}
-                        setAnswerHandle={setAnswerHandle}
-                        setAnswerDisplayName={setAnswerDisplayName}
-                        setAnswerRewardAmount={setAnswerRewardAmount}
-                        setAnswerQuestion={setAnswerQuestion}
-                        setAnswerQuestionId={setAnswerQuestionId}
-                        setAnswerBountyId={setAnswerBountyId}
-                        handle={user && user[0]?.profile.handle}
-                        displayName={user && user[0]?.profile.displayName}
-                        avatar={user && user[0]?.profile.imageUrl}
-                        rewardAmount={content.rewardTokenAmount}
-                        answerQuestion={content.body}
-                        questionId={content.questionId}
-                        bountyId={content.bountyId}
-                      />
-                    </Card>
-                  </>
-                );
-              })}
-            </TabPanel>
             {/* Purchased */}
-            <TabPanel value={value} index={2}>
+            <TabPanel value={value} index={1}>
               {allQuestionsPurchased?.map((content) => {
                 const user = allUsers?.filter((id) => {
                   return id.userId === content.questionerUid;
@@ -370,26 +290,7 @@ const Questions = ({ userInfo, accessToken, setAccessError }) => {
             </TabPanel>
           </>
         )}
-        {/* Answer Question Backdrop */}
-        <Backdrop
-          className="ask-question-backdrop"
-          open={openAnswer}
-          sx={{ ml: "0px !important" }}
-        >
-          <AnswerQuestion
-            userInfo={userInfo}
-            accessToken={accessToken}
-            setAccessError={setAccessError}
-            handle={answerHandle}
-            avatar={answerAvatar}
-            displayName={answerDisplayName}
-            rewardAmount={answerRewardAmount}
-            answerQuestion={answerQuestion}
-            questionId={answerQuestionId}
-            bountyId={answerBountyId}
-            handleCloseBackdrop={handleCloseBackdrop}
-          />
-        </Backdrop>
+
         {/* Withdraw Backdrop */}
         <Backdrop
           className="ask-question-backdrop"
