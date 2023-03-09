@@ -23,7 +23,7 @@ const web3auth = new Web3Auth({
     "BJsOkD91JES7aVales0sTJYBsRxwlofa9YsWs_y2KIjyOgdRlk41Sgfmpt8luQE52UaKp2pD9ajDNy7yjaaYQvc", // Get your Client ID from Web3Auth Dashboard
   chainConfig: {
     chainNamespace: "eip155",
-    chainId: "0x5", // Please use 0x5 for Goerli Testnet
+    chainId: "0x84531", // Please use 0x5 for Goerli Testnet
   },
 });
 
@@ -226,7 +226,7 @@ const WalletCard = ({ accessToken, setAccessError }) => {
 
   return (
     <>
-      <Box onClick={init} className='wallet-btn'>
+      <Box onClick={init} className="wallet-btn">
         <Typography sx={{ display: "flex", justifyContent: "center" }}>
           {" "}
           {currentAccount ? currentAccount : "Connect Wallet"}
