@@ -20,7 +20,7 @@ const web3auth = new Web3Auth({
     defaultLanguage: "en",
   },
   clientId:
-    "BJsOkD91JES7aVales0sTJYBsRxwlofa9YsWs_y2KIjyOgdRlk41Sgfmpt8luQE52UaKp2pD9ajDNy7yjaaYQvc", // Get your Client ID from Web3Auth Dashboard
+    "BPcJuzkjeKmqsPAAoLiDOabr_d16MT9Iq9roMzVt2DDNT3AZrBz5iJCfvtArcvKMl0Y74Dc63LMP7Y1VZfYogtk", // Get your Client ID from Web3Auth Dashboard
   web3AuthNetwork: "cyan",
   chainConfig: {
     chainNamespace: "eip155",
@@ -242,7 +242,7 @@ const WalletCard = ({ accessToken, setAccessError }) => {
 
   return (
     <>
-      <Box onClick={web3Connect} className='wallet-btn'>
+      <Box onClick={web3Connect} className="wallet-btn">
         <Typography sx={{ display: "flex", justifyContent: "center" }}>
           {" "}
           {currentAccount ? currentAccount : "Connect Wallet"}
