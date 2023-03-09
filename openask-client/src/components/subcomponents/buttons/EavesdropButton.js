@@ -1,32 +1,43 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
-import { eavesdropContract } from "../functions/eavesdropContract";
+import { eavesdropContract } from "../../functions/eavesdropContract";
 import axios from "axios";
 import confetti from "canvas-confetti";
 
 const EavesdropButton = (props) => {
-  const { id, payees, setAskLoaderEavesdropText, setOpenEavesdrop, answerId, accessToken, setAccessError } = props;
+  const {
+    id,
+    payees,
+    setAskLoaderEavesdropText,
+    setOpenEavesdrop,
+    answerId,
+    accessToken,
+    setAccessError,
+  } = props;
 
   const handleEavesdrop = async () => {
     try {
-    setOpenEavesdrop(true);
-    const txHash = await eavesdropContract(id, payees, setAskLoaderEavesdropText);
+      setOpenEavesdrop(true);
+      const txHash = await eavesdropContract(
+        id,
+        payees,
+        setAskLoaderEavesdropText
+      );
 
-    const data = await putEavesdrop(answerId);
+      const data = await putEavesdrop(answerId);
 
-    setOpenEavesdrop(false);
+      setOpenEavesdrop(false);
 
-    confetti({
-      zIndex: "3002",
-      particleCount: 300,
-      spread: 150,
-      shapes: ["circle", "square"],
-      origin: {
-        y: 0.65,
-      },
-    });
-    refreshPage();
-
+      confetti({
+        zIndex: "3002",
+        particleCount: 300,
+        spread: 150,
+        shapes: ["circle", "square"],
+        origin: {
+          y: 0.65,
+        },
+      });
+      refreshPage();
     } catch (error) {
       console.log(error);
       setOpenEavesdrop(false);
@@ -56,13 +67,12 @@ const EavesdropButton = (props) => {
     }
   };
 
-
-    // Refresh Page
-    function refreshPage() {
-      setTimeout(() => {
-        window.location.reload();
-      }, 3000);
-    }
+  // Refresh Page
+  function refreshPage() {
+    setTimeout(() => {
+      window.location.reload();
+    }, 3000);
+  }
 
   return (
     <Box

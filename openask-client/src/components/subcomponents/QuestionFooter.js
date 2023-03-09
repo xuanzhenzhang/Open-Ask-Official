@@ -1,9 +1,9 @@
 import React from "react";
 import { CardActions, Typography, Link } from "@mui/material";
-import WithdrawButton from "./WithdrawButton";
-import AnswerButton from "./AnswerButton";
-import PurchasedButton from "./PurchasedButton";
-import EavesdropButton from "./EavesdropButton";
+import WithdrawButton from "./buttons/WithdrawButton";
+import AnswerButton from "./buttons/AnswerButton";
+import PurchasedButton from "./buttons/PurchasedButton";
+import EavesdropButton from "./buttons/EavesdropButton";
 
 const QuestionFooter = (props) => {
   const { answeredBy, waiting, expired, eavesdrop, notAnswered } = props;

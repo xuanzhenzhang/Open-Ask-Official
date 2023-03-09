@@ -12,8 +12,8 @@ import { TextField, CircularProgress } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import confetti from "canvas-confetti";
 import axios from "axios";
-import PriceButton from "./subcomponents/PriceButton";
-import SubmitAnswerButton from "./subcomponents/SubmitAnswerButton";
+import PriceButton from "./subcomponents/buttons/PriceButton";
+import SubmitAnswerButton from "./subcomponents/buttons/SubmitAnswerButton";
 import { ethBountyReceiveContract } from "./functions/ethBountyReceivePayment";
 import { ethers } from "ethers";
 

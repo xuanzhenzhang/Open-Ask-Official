@@ -1,8 +1,8 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { CardHeader, Avatar, Typography, Link, Box } from "@mui/material";
-import PriceButton from "./PriceButton";
-import AskSenseiButton from "./AskSenseiButton";
+import PriceButton from "./buttons/PriceButton";
+import AskSenseiButton from "./buttons/AskSenseiButton";
 import { ethers } from "ethers";
 
 const BigNumber = require("bignumber.js");
@@ -45,7 +45,8 @@ const QuestionHeader = (props) => {
           onClick={(event) => {
             event.stopPropagation();
             handleAvatarClick(twitterHandle);
-          }}></Avatar>
+          }}
+        ></Avatar>
       }
       title={
         <>
@@ -55,21 +56,24 @@ const QuestionHeader = (props) => {
               flexDirection: "row",
               justifyContent: "space-between",
               alignItems: "flex-start",
-            }}>
+            }}
+          >
             <div
               style={{
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "flex-start",
                 alignItems: "flex-start",
-              }}>
+              }}
+            >
               <Typography>{twitterDisplayName}</Typography>
               <Link
-                className='feed-link'
-                underline='none'
+                className="feed-link"
+                underline="none"
                 href={`https://twitter.com/${twitterHandle}`}
-                target='_blank'
-                rel='noreferrer'>
+                target="_blank"
+                rel="noreferrer"
+              >
                 @{twitterHandle}
               </Link>
             </div>
@@ -88,7 +92,8 @@ const QuestionHeader = (props) => {
             )}
           </div>
         </>
-      }></CardHeader>
+      }
+    ></CardHeader>
   );
 };
 

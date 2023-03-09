@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import questions from "./data/questionsData";
-import PriceButton from "./subcomponents/PriceButton";
+import PriceButton from "./subcomponents/buttons/PriceButton";
 
 const TransactionHistory = () => {
   const navigate = useNavigate();
@@ -35,7 +35,11 @@ const TransactionHistory = () => {
         mt: "24px",
       }}
     >
-      <TableContainer sx={{ maxWidth: "100%" }} component={Paper} className="table-container">
+      <TableContainer
+        sx={{ maxWidth: "100%" }}
+        component={Paper}
+        className="table-container"
+      >
         <Table stickyHeader>
           <TableHead>
             <TableRow>

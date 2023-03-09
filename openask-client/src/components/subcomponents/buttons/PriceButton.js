@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
-import { ethereumSVG } from "./VectorSVGs";
+import { ethereumSVG } from "../VectorSVGs";
 
 const PriceButton = (props) => {
   const { tokenAmount, tokenType } = props;

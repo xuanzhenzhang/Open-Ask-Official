@@ -28,7 +28,7 @@ import TweetBtn from "./TweetBtn";
 
 import axios, * as others from "axios";
 import { payForAnswer } from "./functions/payForAnswer.js";
-import LensButton from "./subcomponents/LensButton";
+import LensButton from "./subcomponents/buttons/LensButton";
 
 const QuestionId = ({ accessToken, setAccessError }) => {
   const [loading, setLoading] = useState(false);
@@ -157,27 +157,29 @@ const QuestionId = ({ accessToken, setAccessError }) => {
 
   return (
     <Container
-      className='main-container'
+      className="main-container"
       sx={{
         width: { md: `calc(100% - 300px)` },
         mr: { md: `276px` },
         mt: "24px",
-      }}>
+      }}
+    >
       {loading ? (
         <Loader />
       ) : (
         <>
           {/* Back Header */}
-          <Box className='sensei-details-header'>
-            <Box className='sensei-details-header-box' onClick={handleGoBack}>
+          <Box className="sensei-details-header">
+            <Box className="sensei-details-header-box" onClick={handleGoBack}>
               {backSvg}
             </Box>
           </Box>
           {/* Question and Answer Card */}
           <Box
-            className='content-container'
-            sx={{ height: "calc(100vh - 98px)" }}>
-            <Card className='question-landing-card'>
+            className="content-container"
+            sx={{ height: "calc(100vh - 98px)" }}
+          >
+            <Card className="question-landing-card">
               <QuestionHeader
                 twitterPfp={user?.profile.imageUrl}
                 twitterHandle={user?.profile.handle}
@@ -210,7 +212,7 @@ const QuestionId = ({ accessToken, setAccessError }) => {
             </Card>
             {answer && answerExists && (
               <>
-                <Card className='question-landing-card'>
+                <Card className="question-landing-card">
                   <QuestionHeader
                     twitterPfp={answerer?.profile.imageUrl}
                     twitterHandle={answerer?.profile.handle}
@@ -222,16 +224,17 @@ const QuestionId = ({ accessToken, setAccessError }) => {
                   />
                   <QuestionFooter eavesdrop eavesdropCount={answer} />
                 </Card>
-                <Box className='lens-btn-container'>
+                <Box className="lens-btn-container">
                   <LensButton questionId={id} />
                 </Box>
               </>
             )}
           </Box>
           <Backdrop
-            className='ask-question-backdrop'
+            className="ask-question-backdrop"
             open={openEavesdrop}
-            sx={{ ml: "0px !important" }}>
+            sx={{ ml: "0px !important" }}
+          >
             <EavesdropQuestion
               askLoaderEavesdropText={askLoaderEavesdropText}
             />

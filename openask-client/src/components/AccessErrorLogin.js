@@ -7,7 +7,7 @@ import {
   Typography,
   Box,
 } from "@mui/material";
-import TwitterButton from "./subcomponents/TwitterButton";
+import TwitterButton from "./subcomponents/buttons/TwitterButton";
 
 const AccessErrorLogin = ({ signInTwitter, accessError }) => {
   return (

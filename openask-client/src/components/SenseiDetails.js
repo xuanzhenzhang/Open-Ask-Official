@@ -18,7 +18,7 @@ import axios, * as others from "axios";
 import Loader from "./Loader.js";
 import AskQuestion from "./AskQuestion.js";
 
-import AskSenseiButton from "./subcomponents/AskSenseiButton.js";
+import AskSenseiButton from "./subcomponents/buttons/AskSenseiButton.js";
 import { calendarSVG, linkSVG, backSvg } from "./subcomponents/VectorSVGs.js";
 
 const SenseiDetails = ({ accessToken, setAccessError, userInfo }) => {

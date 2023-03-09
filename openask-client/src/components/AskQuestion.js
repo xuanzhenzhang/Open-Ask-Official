@@ -5,13 +5,11 @@ import { Autocomplete, TextField, Chip, CircularProgress } from "@mui/material";
 import { getUsers } from "./functions/getUsers";
 import { useNavigate } from "react-router-dom";
 import { ethBountyContract } from "./functions/ethBountyContract";
-import AskButton from "./subcomponents/AskButton";
+import AskButton from "./subcomponents/buttons/AskButton";
 import { ethers } from "ethers";
 import confetti from "canvas-confetti";
 import { ethereumSVG, homeFilled } from "./subcomponents/VectorSVGs";
 import axios from "axios";
-
-const BigNumber = require("bignumber.js");
 
 const AskQuestion = (props) => {
   const { userInfo, accessToken, setAccessError } = props;

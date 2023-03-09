@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Box, Typography, Backdrop } from "@mui/material";
-import AnswerQuestion from "../AnswerQuestion";
+import AnswerQuestion from "../../AnswerQuestion";
 
 const AnswerButton = (props) => {
   const {
