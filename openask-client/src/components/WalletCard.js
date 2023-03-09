@@ -44,6 +44,7 @@ const WalletCard = ({ accessToken, setAccessError }) => {
   const [provider, setProvider] = useState();
   const [signer, setSigner] = useState();
   const [lensProfile, setLensProfile] = useState();
+  const [isModalConnected, setIsModalConnected] = useState(false);
 
   const currentAccountString = (account) =>
     account?.slice(0, 4) + "..." + account?.slice(-4);
@@ -53,7 +54,10 @@ const WalletCard = ({ accessToken, setAccessError }) => {
   };
 
   const web3Connect = async () => {
-    await web3auth.initModal();
+    if (!isModalConnected) {
+      await web3auth.initModal();
+      setIsModalConnected(true);
+    }
 
     const userWallet = await web3auth.connect();
     console.log(userWallet);
@@ -238,7 +242,7 @@ const WalletCard = ({ accessToken, setAccessError }) => {
 
   return (
     <>
-      <Box onClick={web3Connect} className="wallet-btn">
+      <Box onClick={web3Connect} className='wallet-btn'>
         <Typography sx={{ display: "flex", justifyContent: "center" }}>
           {" "}
           {currentAccount ? currentAccount : "Connect Wallet"}
