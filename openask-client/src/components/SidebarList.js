@@ -1,18 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
 import Typography from "@mui/material/Typography";
-import Stack from "@mui/material/Stack";
-import Avatar from "@mui/material/Avatar";
-import Divider from "@mui/material/Divider";
-import { Button, Backdrop, Badge } from "@mui/material";
-import { Box } from "@mui/material";
-import PsychologyAltIcon from "@mui/icons-material/PsychologyAlt";
-import TwitterIcon from "@mui/icons-material/Twitter";
+import { Box, Backdrop, Divider } from "@mui/material";
 import AskQuestion from "./AskQuestion";
 import { WalletCard } from "./WalletCard";
 import LensCard from "./LensCard";
@@ -28,6 +17,8 @@ import {
   transactionsOutlined,
   profileFilled,
   profileOutlined,
+  answersOutlined,
+  answersFilled
 } from "./subcomponents/VectorSVGs";
 
 import { useNavigate, useParams } from "react-router-dom";
@@ -61,12 +52,14 @@ const SidebarList = ({
       setSelectedIndex(1);
     } else if (location.pathname === "/questions") {
       setSelectedIndex(2);
-    } else if (location.pathname === "/transaction_history") {
+    } else if (location.pathname === "/answers") {
       setSelectedIndex(3);
+    } else if (location.pathname === "/transaction_history") {
+      setSelectedIndex(4);
     } else if (
       location.pathname === `/sensei/${userInfo && userInfo?.profile.handle}`
     ) {
-      setSelectedIndex(4);
+      setSelectedIndex(5);
     }
   }, [location]);
 
@@ -87,15 +80,20 @@ const SidebarList = ({
       svg: selectedIndex === 2 ? questionsFilled : questionsOutlined,
     },
     {
+      text: "Answers",
+      link: "/answers",
+      svg: selectedIndex === 3 ? answersFilled : answersOutlined,
+    },
+    {
       text: "Transactions",
       link: "/transaction_history",
-      svg: selectedIndex === 3 ? transactionsFilled : transactionsOutlined,
+      svg: selectedIndex === 4 ? transactionsFilled : transactionsOutlined,
     },
     {
       text: "Profile",
       // link: `/sensei/${userInfo && userInfo?.profile?.handle}`,
       link: `/sensei/${getProfileHandle() ? getProfileHandle() : (userInfo && userInfo?.profile?.handle)}`,
-      svg: selectedIndex === 4 ? profileFilled : profileOutlined,
+      svg: selectedIndex === 5 ? profileFilled : profileOutlined,
     },
   ];
 

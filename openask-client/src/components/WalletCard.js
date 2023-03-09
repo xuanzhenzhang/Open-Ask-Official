@@ -5,12 +5,12 @@ import Button from "@mui/material/Button";
 import axios from "axios";
 import { Box, Typography } from "@mui/material";
 import { LensCard } from "./LensCard";
-import {
-  GaslessOnboarding,
-  GaslessWalletConfig,
-  GaslessWalletInterface,
-  LoginConfig,
-} from "@gelatonetwork/gasless-onboarding";
+// import {
+//   GaslessOnboarding,
+//   GaslessWalletConfig,
+//   GaslessWalletInterface,
+//   LoginConfig,
+// } from "@gelatonetwork/gasless-onboarding";
 
 const web3auth = new Web3Auth({
   uiConfig: {
@@ -21,9 +21,17 @@ const web3auth = new Web3Auth({
   },
   clientId:
     "BJsOkD91JES7aVales0sTJYBsRxwlofa9YsWs_y2KIjyOgdRlk41Sgfmpt8luQE52UaKp2pD9ajDNy7yjaaYQvc", // Get your Client ID from Web3Auth Dashboard
+  web3AuthNetwork: "cyan",
   chainConfig: {
     chainNamespace: "eip155",
-    chainId: "0x84531", // Please use 0x5 for Goerli Testnet
+    chainId: "0x14A33", // hex of 56
+    rpcTarget: "https://goerli.base.org",
+    // Avoid using public rpcTarget in production.
+    // Use services like Infura, Quicknode etc
+    displayName: "Base Goerli",
+    blockExplorer: "https://goerli.basescan.org/",
+    ticker: "ETH",
+    tickerName: "ETH",
   },
 });
 
@@ -39,17 +47,19 @@ const WalletCard = ({ accessToken, setAccessError }) => {
   const currentAccountString = (account) =>
     account?.slice(0, 4) + "..." + account?.slice(-4);
 
-  // const web3Logout = async () => {
-  //   await web3auth.logout();
-  // };
+  const web3Logout = async () => {
+    await web3auth.logout();
+  };
 
-  // const web3Connect = async () => {
-  //   const userWallet = await web3auth.connect();
-  //   console.log(userWallet);
+  const web3Connect = async () => {
+    await web3auth.initModal();
 
-  //   const web3Provider = new ethers.providers.Web3Provider(web3auth.provider);
-  //   console.log(web3Provider);
-  // };
+    const userWallet = await web3auth.connect();
+    console.log(userWallet);
+
+    const web3Provider = new ethers.providers.Web3Provider(web3auth.provider);
+    console.log(web3Provider);
+  };
 
   // Connect wallet method
   // const connectWallet = async () => {
@@ -181,52 +191,53 @@ const WalletCard = ({ accessToken, setAccessError }) => {
   };
 
   // Get wallet balance
-  useEffect(() => {
-    if (currentAccount) {
-      provider?.getBalance(currentAccount).then((balanceResult) => {
-        setUserBalance(ethers.utils.formatEther(balanceResult));
-      });
-    }
-  }, [provider]);
+  // useEffect(() => {
+  //   if (currentAccount) {
+  //     provider?.getBalance(currentAccount).then((balanceResult) => {
+  //       setUserBalance(ethers.utils.formatEther(balanceResult));
+  //     });
+  //   }
+  // }, [provider]);
 
   useEffect(() => {
+    console.log("Checking Wallet Connection");
     checkIfWalletIsConnected();
   }, []);
 
-  const init = async () => {
-    const gaslessWalletConfig = {
-      apiKey: "Q7E6fPdBQmEA9ArUXXKP_wE_m_v_Y20WkCeU5WLsmxU_",
-    };
+  // const init = async () => {
+  //   const gaslessWalletConfig = {
+  //     apiKey: "Q7E6fPdBQmEA9ArUXXKP_wE_m_v_Y20WkCeU5WLsmxU_",
+  //   };
 
-    const loginConfig = {
-      domains: [window.location.origin],
-      chain: {
-        id: 84531,
-        rpcUrl: "https://goerli.base.org",
-      },
-      openLogin: {
-        redirectUrl: `${window.location.origin}`,
-      },
-    };
+  //   const loginConfig = {
+  //     domains: [window.location.origin],
+  //     chain: {
+  //       id: 84531,
+  //       rpcUrl: "https://goerli.base.org",
+  //     },
+  //     openLogin: {
+  //       redirectUrl: `${window.location.origin}`,
+  //     },
+  //   };
 
-    const gelatoLogin = new GaslessOnboarding(loginConfig, gaslessWalletConfig);
+  //   const gelatoLogin = new GaslessOnboarding(loginConfig, gaslessWalletConfig);
 
-    await gelatoLogin.init();
+  //   await gelatoLogin.init();
 
-    await gelatoLogin.login();
+  //   await gelatoLogin.login();
 
-    const gelato = gelatoLogin.getProvider();
+  //   const gelato = gelatoLogin.getProvider();
 
-    const provider = new ethers.providers.Web3Provider(gelato);
-    const signer = provider.getSigner();
-    const addr = await signer.getAddress();
-    localStorage.setItem("walletAddress", addr);
-    window.location.reload();
-  };
+  //   const provider = new ethers.providers.Web3Provider(gelato);
+  //   const signer = provider.getSigner();
+  //   const addr = await signer.getAddress();
+  //   localStorage.setItem("walletAddress", addr);
+  //   window.location.reload();
+  // };
 
   return (
     <>
-      <Box onClick={init} className="wallet-btn">
+      <Box onClick={web3Connect} className="wallet-btn">
         <Typography sx={{ display: "flex", justifyContent: "center" }}>
           {" "}
           {currentAccount ? currentAccount : "Connect Wallet"}

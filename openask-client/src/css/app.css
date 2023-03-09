@@ -251,6 +251,7 @@ body {
   justify-content: space-between;
 }
 .feed-see-answer {
+  padding: 8px 16px 16px !important;
   justify-content: flex-end;
 }
 .feed-see-answer p {

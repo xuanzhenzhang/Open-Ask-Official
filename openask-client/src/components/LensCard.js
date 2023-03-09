@@ -105,38 +105,38 @@ const LensCard = ({ accessToken, setAccessError }) => {
     }
   };
 
-  const init = async () => {
-    const gaslessWalletConfig = {
-      apiKey: "Q7E6fPdBQmEA9ArUXXKP_wE_m_v_Y20WkCeU5WLsmxU_",
-    };
+  // const init = async () => {
+  //   const gaslessWalletConfig = {
+  //     apiKey: "Q7E6fPdBQmEA9ArUXXKP_wE_m_v_Y20WkCeU5WLsmxU_",
+  //   };
 
-    const loginConfig = {
-      domains: [window.location.origin],
-      chain: {
-        id: 84531,
-        rpcUrl: "https://goerli.base.org",
-      },
-      openLogin: {
-        redirectUrl: `${window.location.origin}`,
-      },
-    };
+  //   const loginConfig = {
+  //     domains: [window.location.origin],
+  //     chain: {
+  //       id: 84531,
+  //       rpcUrl: "https://goerli.base.org",
+  //     },
+  //     openLogin: {
+  //       redirectUrl: `${window.location.origin}`,
+  //     },
+  //   };
 
-    const gelatoLogin = new GaslessOnboarding(loginConfig, gaslessWalletConfig);
-    console.log("gelatoLogin!!!: ", gelatoLogin);
+  //   const gelatoLogin = new GaslessOnboarding(loginConfig, gaslessWalletConfig);
+  //   console.log("gelatoLogin!!!: ", gelatoLogin);
 
-    await gelatoLogin.init();
+  //   await gelatoLogin.init();
 
-    console.log("gelatoLoginafter init: ", gelatoLogin);
+  //   console.log("gelatoLoginafter init: ", gelatoLogin);
 
-    // const providerGelato = gelatoLogin.getProvider();
-    // const provider = new ethers.providers.Web3Provider(providerGelato);
-    // const gelatoSigner = provider.getSigner();
-    // const sender = await gelatoSigner.getAddress();
-  };
+  //   // const providerGelato = gelatoLogin.getProvider();
+  //   // const provider = new ethers.providers.Web3Provider(providerGelato);
+  //   // const gelatoSigner = provider.getSigner();
+  //   // const sender = await gelatoSigner.getAddress();
+  // };
 
-  useEffect(() => {
-    init();
-  }, []);
+  // useEffect(() => {
+  //   init();
+  // }, []);
 
   const setupLensProfile = async (crAccount) => {
     const profileResponse = await profileQuery(crAccount);
@@ -206,14 +206,14 @@ const LensCard = ({ accessToken, setAccessError }) => {
     return (
       <>
         {lensAccessToken == null ? (
-          <Box onClick={connectLens} className='wallet-btn'>
+          <Box onClick={connectLens} className="wallet-btn">
             <Typography sx={{ display: "flex", justifyContent: "center" }}>
               {" "}
               {"Lens Login"}
             </Typography>
           </Box>
         ) : (
-          <Box onClick={useLensProfile} className='wallet-btn'>
+          <Box onClick={useLensProfile} className="wallet-btn">
             <Typography sx={{ display: "flex", justifyContent: "center" }}>
               {" "}
               {usedLensProfile ? lensProfile.handle : "Use Lens Profile"}
