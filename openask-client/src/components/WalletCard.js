@@ -25,7 +25,8 @@ const web3auth = new Web3Auth({
   chainConfig: {
     chainNamespace: "eip155",
     chainId: "0x14A33", // hex of 56
-    rpcTarget: "https://goerli.base.org",
+    rpcTarget:
+      "https://necessary-lingering-diamond.base-goerli.discover.quiknode.pro/362df63cac65318f820cfd24b17981318cdcf514/",
     // Avoid using public rpcTarget in production.
     // Use services like Infura, Quicknode etc
     displayName: "Base Goerli",
