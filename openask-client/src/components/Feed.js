@@ -8,12 +8,9 @@ import Loader from "./subcomponents/Loader.js";
 import axios, * as others from "axios";
 import FeedFilters from "./subcomponents/FeedFilters.js";
 
-const Feed = ({ accessToken, setAccessError }) => {
+const Feed = () => {
   const [loading, setLoading] = useState(true);
-  const [congrats, setCongrats] = useState();
   const [questions, setQuestions] = useState();
-
-  const navigate = useNavigate();
 
   // Get Feed Questions and Answers
   useEffect(() => {
@@ -44,11 +41,6 @@ const Feed = ({ accessToken, setAccessError }) => {
     getQuestions();
   }, []);
 
-  const handleCloseCongrats = () => {
-    setCongrats(false);
-    navigate("/feed");
-  };
-
   return (
     <>
       <Container
@@ -73,9 +65,6 @@ const Feed = ({ accessToken, setAccessError }) => {
           </>
         )}
       </Container>
-      {/* {congrats && (
-        <Congratulations handleCloseCongrats={handleCloseCongrats} purchase />
-      )} */}
     </>
   );
 };

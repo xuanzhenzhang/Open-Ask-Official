@@ -5,6 +5,9 @@ import Button from "@mui/material/Button";
 import axios from "axios";
 import { Box, Typography } from "@mui/material";
 import { LensCard } from "./LensCard";
+import { useSelector, useDispatch } from "react-redux";
+import { setAccessErrorTrue } from "./store/store";
+
 // import {
 //   GaslessOnboarding,
 //   GaslessWalletConfig,
@@ -36,7 +39,7 @@ const web3auth = new Web3Auth({
   },
 });
 
-const WalletCard = ({ accessToken, setAccessError }) => {
+const WalletCard = () => {
   const [userBalance, setUserBalance] = useState(null);
 
   const [currentAccount, setCurrentAccount] = useState();
@@ -45,6 +48,10 @@ const WalletCard = ({ accessToken, setAccessError }) => {
   const [signer, setSigner] = useState();
   const [lensProfile, setLensProfile] = useState();
   const [isModalConnected, setIsModalConnected] = useState(false);
+
+  const dispatch = useDispatch();
+  const userInfo = useSelector((state) => state.userInfoSlice);
+  const { accessToken } = userInfo;
 
   const currentAccountString = (account) =>
     account?.slice(0, 4) + "..." + account?.slice(-4);
@@ -189,7 +196,7 @@ const WalletCard = ({ accessToken, setAccessError }) => {
       console.log(`Wallet Address Set: ${userWallet}`);
     } catch (error) {
       if (error.response.status === 403) {
-        setAccessError(true);
+        dispatch(setAccessErrorTrue());
       }
       console.log(error);
     }
@@ -248,13 +255,6 @@ const WalletCard = ({ accessToken, setAccessError }) => {
           {currentAccount ? currentAccount : "Connect Wallet"}
         </Typography>
       </Box>
-      {/* {lensProfile && (
-        <LensCard
-          accessToken={accessToken}
-          setAccessError={setAccessError}
-          defaultProfile={lensProfile}
-        />
-      )} */}
     </>
   );
 };

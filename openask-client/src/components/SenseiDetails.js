@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import {
   Container,
   Avatar,
@@ -13,15 +14,15 @@ import {
 import QuestionBody from "./subcomponents/card/QuestionBody.js";
 import QuestionHeader from "./subcomponents/card/QuestionHeader.js";
 import QuestionFooter from "./subcomponents/card/QuestionFooter.js";
-import { useParams, useNavigate, useLocation } from "react-router-dom";
-import axios, * as others from "axios";
+import { useParams, useNavigate } from "react-router-dom";
+import axios from "axios";
 import Loader from "./subcomponents/Loader.js";
 import AskQuestion from "./subcomponents/AskQuestion.js";
 
 import AskSenseiButton from "./subcomponents/buttons/AskSenseiButton.js";
 import { calendarSVG, linkSVG, backSvg } from "./data/VectorSVGs.js";
 
-const SenseiDetails = ({ accessToken, setAccessError, userInfo }) => {
+const SenseiDetails = () => {
   const [loading, setLoading] = useState(false);
   const [profile, setProfile] = useState([]);
   const [allUsers, setAllUsers] = useState();
@@ -40,6 +41,8 @@ const SenseiDetails = ({ accessToken, setAccessError, userInfo }) => {
   const sensei = useParams();
   const { twitter } = sensei;
 
+  const userInfo = useSelector((state) => state.userInfoSlice);
+
   // Set My Page
   useEffect(() => {
     if (userInfo.profile.handle === twitter) {
@@ -51,6 +54,7 @@ const SenseiDetails = ({ accessToken, setAccessError, userInfo }) => {
 
   // Click ask question
   const onAskQuestion = (senseiDisplayName) => {
+    // setAskedSensei(senseiDisplayName);
     setOpenBackdrop(true);
   };
 
@@ -73,7 +77,7 @@ const SenseiDetails = ({ accessToken, setAccessError, userInfo }) => {
               ...user,
               profile: {
                 ...user.profile,
-                imageUrl: `https://ipfs.io/ipfs/${
+                imageUrl: `https://gateway.pinata.cloud/ipfs/${
                   user.profile.imageUrl.split("/")[2]
                 }`,
               },
@@ -359,9 +363,6 @@ const SenseiDetails = ({ accessToken, setAccessError, userInfo }) => {
           {/* Backdrop */}
           <Backdrop className="ask-question-backdrop" open={openBackdrop}>
             <AskQuestion
-              userInfo={userInfo}
-              accessToken={accessToken}
-              setAccessError={setAccessError}
               handleCloseBackdrop={handleCloseBackdrop}
               askedSensei={
                 profile.length > 0 && profile[0]?.profile.displayName

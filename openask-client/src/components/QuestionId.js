@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { setAccessErrorTrue } from "./store/store";
 import { useParams, useNavigate } from "react-router-dom";
 import { Container, Card, CardContent, Box, Backdrop } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -14,7 +16,7 @@ import Loader from "./subcomponents/Loader";
 import axios from "axios";
 import LensButton from "./subcomponents/buttons/LensButton";
 
-const QuestionId = ({ accessToken, setAccessError }) => {
+const QuestionId = () => {
   const [loading, setLoading] = useState(false);
 
   const [question, setQuestion] = useState(null);
@@ -32,6 +34,11 @@ const QuestionId = ({ accessToken, setAccessError }) => {
 
   const params = useParams();
   const { id } = params;
+
+  const dispatch = useDispatch();
+
+  const userInfo = useSelector((state) => state.userInfoSlice);
+  const { accessToken } = userInfo;
 
   // Get question by ID
   useEffect(() => {
@@ -117,7 +124,7 @@ const QuestionId = ({ accessToken, setAccessError }) => {
           setLoading(false);
         } catch (error) {
           if (error.response.status === 403) {
-            setAccessError(true);
+            dispatch(setAccessErrorTrue());
           }
           setAnswer(null);
           setLoading(false);
@@ -188,8 +195,6 @@ const QuestionId = ({ accessToken, setAccessError }) => {
                   payees={[user?.walletAddress, answerer?.walletAddress]}
                   setAskLoaderEavesdropText={setAskLoaderEavesdropText}
                   setOpenEavesdrop={setOpenEavesdrop}
-                  accessToken={accessToken}
-                  setAccessError={setAccessError}
                   answerId={question?.answerId}
                 />
               )}

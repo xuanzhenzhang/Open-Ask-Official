@@ -1,13 +1,16 @@
 import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { setAccessErrorTrue } from "../store/store";
 import {
+  TextField,
+  CircularProgress,
   Box,
   Card,
   CardContent,
   Avatar,
   Typography,
   Divider,
-} from "@material-ui/core";
-import { TextField, CircularProgress } from "@mui/material";
+} from "@mui/material";
 import confetti from "canvas-confetti";
 import axios from "axios";
 import PriceButton from "./buttons/PriceButton";
@@ -16,7 +19,6 @@ import { ethBountyReceiveContract } from "../functions/smartContract/ethBountyRe
 import { ethers } from "ethers";
 
 const AnswerQuestion = (props) => {
-  const { userInfo, accessToken, setAccessError } = props;
   const { handleCloseBackdrop } = props;
   const {
     handle,
@@ -32,6 +34,10 @@ const AnswerQuestion = (props) => {
 
   const [askLoader, setAskLoader] = useState(false);
   const [askLoaderText, setAskLoaderText] = useState("Continue on Wallet");
+
+  const dispatch = useDispatch();
+  const userInfo = useSelector((state) => state.userInfoSlice);
+  const { accessToken } = userInfo;
 
   let etherAmount = 0;
   if (rewardAmount) {
@@ -101,7 +107,7 @@ const AnswerQuestion = (props) => {
     } catch (error) {
       console.log(error);
       if (error.response.status === 403) {
-        setAccessError(true);
+        dispatch(setAccessErrorTrue());
       }
       throw new Error(error);
     }
@@ -124,7 +130,7 @@ const AnswerQuestion = (props) => {
     } catch (error) {
       console.log(error);
       if (error.response.status === 403) {
-        setAccessError(true);
+        dispatch(setAccessErrorTrue());
       }
       throw new Error(error);
     }

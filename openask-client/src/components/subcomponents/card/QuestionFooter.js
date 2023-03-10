@@ -2,15 +2,16 @@ import React from "react";
 import { CardActions, Typography, Link } from "@mui/material";
 import WithdrawButton from "../buttons/WithdrawButton";
 import AnswerButton from "../buttons/AnswerButton";
-import PurchasedButton from "../buttons/PurchasedButton";
 import EavesdropButton from "../buttons/EavesdropButton";
 
 const QuestionFooter = (props) => {
+  // Ask Question props
   const { answeredBy, waiting, expired, eavesdrop, notAnswered } = props;
   const { answered, toAnswer, userExpired } = props;
   const { purchased } = props;
   const { waitingTime } = props;
   const { twitterHandle } = props;
+  // Answer Props
   const {
     setOpenAnswer,
     setAnswerAvatar,
@@ -31,7 +32,6 @@ const QuestionFooter = (props) => {
     bountyId,
     withdrawn,
   } = props;
-  const { setAccessError, accessToken } = props;
   // Eavesdrop Props
   const { id, payees, setAskLoaderEavesdropText, setOpenEavesdrop, answerId } =
     props;
@@ -62,8 +62,6 @@ const QuestionFooter = (props) => {
               setAskLoaderEavesdropText={setAskLoaderEavesdropText}
               setOpenEavesdrop={setOpenEavesdrop}
               answerId={answerId}
-              accessToken={accessToken}
-              setAccessError={setAccessError}
             />
           )}
         </CardActions>
@@ -111,8 +109,6 @@ const QuestionFooter = (props) => {
             bountyId={bountyId}
             contributionId={0}
             questionId={questionId}
-            accessToken={accessToken}
-            setAccessError={setAccessError}
             setOpenWithdraw={setOpenWithdraw}
             setAskLoaderWithdrawText={setAskLoaderWithdrawText}
             withdrawn={withdrawn}

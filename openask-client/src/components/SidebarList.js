@@ -5,8 +5,9 @@ import { Box, Backdrop, Divider } from "@mui/material";
 import AskQuestion from "./subcomponents/AskQuestion";
 import { WalletCard } from "./WalletCard";
 import LensCard from "./LensCard";
-import { openAskLogo } from "./data/VectorSVGs";
+import { useSelector } from "react-redux";
 import {
+  openAskLogo,
   homeFilled,
   homeOutlined,
   senseiFilled,
@@ -21,16 +22,10 @@ import {
   answersFilled,
 } from "./data/VectorSVGs";
 
-import { useNavigate, useParams } from "react-router-dom";
-import axios, * as others from "axios";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
-const SidebarList = ({
-  userInfo,
-  accessToken,
-  setAccessError,
-  setMobileOpen,
-  mobileOpen,
-}) => {
+const SidebarList = ({ setMobileOpen, mobileOpen }) => {
   const [open, setOpen] = useState(false);
 
   const [hidden, setHidden] = useState(false);
@@ -39,6 +34,9 @@ const SidebarList = ({
   const [waitingQuestionsCount, setWaitingQuestionsCount] = useState();
 
   const navigate = useNavigate();
+
+  const userInfo = useSelector((state) => state.userInfoSlice);
+
   const getProfileHandle = () => {
     return localStorage.getItem("profileHandle");
   };
@@ -151,20 +149,6 @@ const SidebarList = ({
     setOpen(!open);
   };
 
-  // Navigate to ask page
-  const onBtnClick = () => {
-    setSelectedIndex(null);
-    navigate("/sensei/ask");
-  };
-
-  const onProfileClick = () => {
-    navigate(`/sensei/${userInfo.profile.handle}`);
-  };
-
-  const onAvatarLogin = () => {
-    setOpen(!open);
-  };
-
   const handleCloseBackdrop = () => {
     setOpen(false);
   };
@@ -195,11 +179,8 @@ const SidebarList = ({
               Ask Question
             </button>
           )}
-          <WalletCard
-            accessToken={accessToken}
-            setAccessError={setAccessError}
-          />
-          <LensCard accessToken={accessToken} setAccessError={setAccessError} />
+          <WalletCard />
+          <LensCard />
         </Box>
         <Divider variant="middle" />
         <Box className="sidebar-footer">
@@ -211,12 +192,7 @@ const SidebarList = ({
       </Box>
 
       <Backdrop className="ask-question-backdrop" open={open}>
-        <AskQuestion
-          userInfo={userInfo}
-          accessToken={accessToken}
-          setAccessError={setAccessError}
-          handleCloseBackdrop={handleCloseBackdrop}
-        />
+        <AskQuestion handleCloseBackdrop={handleCloseBackdrop} />
       </Backdrop>
     </>
   );

@@ -12,35 +12,32 @@ import axios from "axios";
 
 import { getUsers } from "./functions/getUsers";
 import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { setAccessErrorTrue } from "./store/store";
 
 import QuestionHeader from "./subcomponents/card/QuestionHeader";
 import QuestionBody from "./subcomponents/card/QuestionBody";
 import QuestionFooter from "./subcomponents/card/QuestionFooter";
 import WithdrawQuestion from "./subcomponents/WithdrawQuestion";
 
-const Questions = ({ userInfo, accessToken, setAccessError }) => {
+const Questions = () => {
   const [loading, setLoading] = useState(false);
   const [value, setValue] = useState(0);
 
   const [allUsers, setAllUsers] = useState();
 
   const [allQuestionsAsked, setAllQuestionsAsked] = useState();
-  const [allQuestionsFor, setAllQuestionsFor] = useState();
   const [allQuestionsPurchased, setAllQuestionsPurchased] = useState();
-
-  const [openAnswer, setOpenAnswer] = useState(false);
-  const [answerHandle, setAnswerHandle] = useState();
-  const [answerDisplayName, setAnswerDisplayName] = useState();
-  const [answerAvatar, setAnswerAvatar] = useState();
-  const [answerRewardAmount, setAnswerRewardAmount] = useState();
-  const [answerQuestion, setAnswerQuestion] = useState();
-  const [answerQuestionId, setAnswerQuestionId] = useState();
-  const [answerBountyId, setAnswerBountyId] = useState();
 
   const [openWithdraw, setOpenWithdraw] = useState(false);
   const [askLoaderWithdrawText, setAskLoaderWithdrawText] = useState(
     "Confirm Withdrawal..."
   );
+
+  const dispatch = useDispatch();
+
+  const userInfo = useSelector((state) => state.userInfoSlice);
+  const { accessToken } = userInfo;
 
   // Get all questions asked by user
   useEffect(() => {
@@ -66,29 +63,6 @@ const Questions = ({ userInfo, accessToken, setAccessError }) => {
     getQuestionsBy();
   }, [userInfo]);
 
-  // Get all questions for user
-  useEffect(() => {
-    setLoading(true);
-    const getQuestionsFor = async () => {
-      if (userInfo) {
-        try {
-          const { data } = await axios.get(
-            `https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/questions-for/${userInfo.userUid}`
-          );
-          const filteredQuestions = data.filter((response) => response.txHash);
-          // Set all questions for
-          setAllQuestionsFor(filteredQuestions);
-        } catch (error) {
-          console.error(error);
-        }
-      } else {
-        console.log("No ID");
-      }
-    };
-
-    getQuestionsFor();
-  }, [userInfo]);
-
   // Get all purchased questions
   useEffect(() => {
     if (userInfo) {
@@ -107,7 +81,7 @@ const Questions = ({ userInfo, accessToken, setAccessError }) => {
           setAllQuestionsPurchased(data);
         } catch (error) {
           if (error.response.status === 403) {
-            setAccessError(true);
+            dispatch(setAccessErrorTrue());
           }
           setLoading(false);
           console.log(error);
@@ -115,7 +89,7 @@ const Questions = ({ userInfo, accessToken, setAccessError }) => {
       };
       getPurchasedQuestions();
     } else {
-      console.log("No ID");
+      console.log("No User");
     }
   }, [userInfo]);
 
@@ -128,7 +102,7 @@ const Questions = ({ userInfo, accessToken, setAccessError }) => {
             ...user,
             profile: {
               ...user.profile,
-              imageUrl: `https://ipfs.io/ipfs/${
+              imageUrl: `https://gateway.pinata.cloud/ipfs/${
                 user.profile.imageUrl.split("/")[2]
               }`,
             },
@@ -221,8 +195,6 @@ const Questions = ({ userInfo, accessToken, setAccessError }) => {
                       twitterHandle={answerer && answerer[0]?.profile.handle}
                       waitingTime={waitingTime}
                       bountyId={content.bountyId}
-                      accessToken={accessToken}
-                      setAccessError={setAccessError}
                       questionId={content.questionId}
                       setOpenWithdraw={setOpenWithdraw}
                       setAskLoaderWithdrawText={setAskLoaderWithdrawText}

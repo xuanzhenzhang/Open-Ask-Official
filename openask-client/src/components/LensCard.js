@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import axios from "axios";
 import { Box, Typography } from "@mui/material";
+import { useSelector } from "react-redux";
 import { GaslessOnboarding } from "@gelatonetwork/gasless-onboarding";
 
 const { ApolloClient, InMemoryCache, gql } = require("@apollo/client");
@@ -81,7 +82,7 @@ const authenticateMutation = async (address, signature) => {
   return response.data;
 };
 
-const LensCard = ({ accessToken, setAccessError }) => {
+const LensCard = () => {
   const [currentAccount, setCurrentAccount] = useState(
     localStorage.getItem("walletAddress")
   );
@@ -93,6 +94,9 @@ const LensCard = ({ accessToken, setAccessError }) => {
   const [usedLensProfile, setUsedLensProfile] = useState(
     localStorage.getItem("usedLensProfile") === "true"
   );
+
+  const userInfo = useSelector((state) => state.userInfoSlice);
+  const { accessToken } = userInfo;
 
   useEffect(() => {
     window.addEventListener("storage", handleStorageUpdate);

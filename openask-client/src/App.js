@@ -14,6 +14,9 @@ import SenseiDetails from "./components/SenseiDetails";
 import TransactionHistory from "./components/TransactionHistory";
 import QuestionId from "./components/QuestionId";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { newUserInfo } from "./components/store/store";
+import { setAccessErrorFalse } from "./components/store/store";
 
 import {
   getAuth,
@@ -38,11 +41,11 @@ const provider = new TwitterAuthProvider();
 // var provider = new firebase.auth.TwitterAuthProvider();
 
 function App() {
-  const [accessError, setAccessError] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const { userInfo, setUserInfo } = useContext(AppContext);
-  const { accessToken } = userInfo;
+
+  const dispatch = useDispatch();
 
   const signInTwitter = async (reload) => {
     const auth = getAuth();
@@ -67,7 +70,7 @@ function App() {
           ...prevState,
           ...response.data,
         }));
-        setAccessError(false);
+        dispatch(setAccessErrorFalse());
         navigate("/feed");
         reload && window.location.reload();
       })
@@ -117,15 +120,15 @@ function App() {
     console.log(userInfo);
   }, []);
 
+  // Set userInfo to redux store
+  useEffect(() => {
+    dispatch(newUserInfo(userInfo));
+  }, [userInfo]);
+
   return (
     <>
       <Container>
-        {userInfo.userUid && (
-          <AccessErrorLogin
-            signInTwitter={signInTwitter}
-            accessError={accessError}
-          />
-        )}
+        {userInfo.userUid && <AccessErrorLogin signInTwitter={signInTwitter} />}
         <Box
           className="user-avatar-container"
           sx={{ display: { xs: "flex", sm: "flex", md: "none" } }}
@@ -142,9 +145,6 @@ function App() {
         </Box>
         {window.location.pathname !== "/" && (
           <Sidebar
-            userInfo={userInfo}
-            accessToken={accessToken}
-            setAccessError={setAccessError}
             onAvatarClick={onAvatarClick}
             mobileOpen={mobileOpen}
             setMobileOpen={setMobileOpen}
@@ -161,67 +161,13 @@ function App() {
               />
             }
           />
-          <Route
-            path="/feed"
-            element={
-              <Feed
-                userInfo={userInfo}
-                accessToken={accessToken}
-                setAccessError={setAccessError}
-              />
-            }
-          />
-          <Route
-            exact
-            path="/sensei"
-            element={
-              <Sensei
-                userInfo={userInfo}
-                accessToken={accessToken}
-                setAccessError={setAccessError}
-              />
-            }
-          />
-          <Route
-            path="/questions"
-            element={
-              <Questions
-                userInfo={userInfo}
-                accessToken={accessToken}
-                setAccessError={setAccessError}
-              />
-            }
-          />
-          <Route
-            path="/answers"
-            element={
-              <Answers
-                userInfo={userInfo}
-                accessToken={accessToken}
-                setAccessError={setAccessError}
-              />
-            }
-          />
-          <Route
-            path="/sensei/:twitter"
-            element={
-              <SenseiDetails
-                userInfo={userInfo}
-                accessToken={accessToken}
-                setAccessError={setAccessError}
-              />
-            }
-          />
+          <Route path="/feed" element={<Feed />} />
+          <Route exact path="/sensei" element={<Sensei />} />
+          <Route path="/questions" element={<Questions />} />
+          <Route path="/answers" element={<Answers />} />
+          <Route path="/sensei/:twitter" element={<SenseiDetails />} />
           <Route path="/transaction_history" element={<TransactionHistory />} />
-          <Route
-            path="/id/:id"
-            element={
-              <QuestionId
-                accessToken={accessToken}
-                setAccessError={setAccessError}
-              />
-            }
-          />
+          <Route path="/id/:id" element={<QuestionId />} />
         </Routes>
       </Container>
     </>

@@ -1,18 +1,25 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { Box, Card, CardContent, Avatar, Typography } from "@material-ui/core";
-import { Autocomplete, TextField, Chip, CircularProgress } from "@mui/material";
+import {
+  Autocomplete,
+  TextField,
+  CircularProgress,
+  Box,
+  Card,
+  CardContent,
+  Avatar,
+  Typography,
+} from "@mui/material";
 import { getUsers } from "../functions/getUsers";
 import { useNavigate } from "react-router-dom";
 import { ethBountyContract } from "../functions/smartContract/ethBountyContract";
 import AskButton from "./buttons/AskButton";
-import { ethers } from "ethers";
 import confetti from "canvas-confetti";
-import { ethereumSVG, homeFilled } from "../data/VectorSVGs";
 import axios from "axios";
+import { useSelector, useDispatch } from "react-redux";
+import { setAccessErrorTrue } from "../store/store";
 
 const AskQuestion = (props) => {
-  const { userInfo, accessToken, setAccessError } = props;
   const { handleCloseBackdrop } = props;
   const { askedSensei } = props;
 
@@ -32,6 +39,11 @@ const AskQuestion = (props) => {
 
   const navigate = useNavigate();
   const location = useLocation();
+
+  const dispatch = useDispatch();
+
+  const userInfo = useSelector((state) => state.userInfoSlice);
+  const { accessToken } = userInfo;
 
   // Set Sensei Name if Available
   useEffect(() => {
@@ -209,7 +221,7 @@ const AskQuestion = (props) => {
     } catch (error) {
       console.log(error);
       if (error.response.status === 403) {
-        setAccessError(true);
+        dispatch(setAccessErrorTrue());
       }
       throw new Error(error);
     }
@@ -231,7 +243,7 @@ const AskQuestion = (props) => {
     } catch (error) {
       console.log(error);
       if (error.response.status === 403) {
-        setAccessError(true);
+        dispatch(setAccessErrorTrue());
       }
       throw new Error(error);
     }

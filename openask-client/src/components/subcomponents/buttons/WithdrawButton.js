@@ -1,8 +1,11 @@
 import React from "react";
+import { useDispatch } from "react-redux";
+import { setAccessErrorTrue } from "../../store/store";
 import { Box, Typography, Backdrop } from "@mui/material";
 import { withdrawEthPayment } from "../../functions/smartContract/withdrawEthPayment";
 import axios from "axios";
 import confetti from "canvas-confetti";
+import { useSelector } from "react-redux";
 
 const WithdrawButton = (props) => {
   const {
@@ -10,12 +13,15 @@ const WithdrawButton = (props) => {
     bountyId,
     contributionId,
     questionId,
-    accessToken,
-    setAccessError,
     setOpenWithdraw,
     setAskLoaderWithdrawText,
     withdrawn,
   } = props;
+
+  const dispatch = useDispatch();
+
+  const userInfo = useSelector((state) => state.userInfoSlice);
+  const { accessToken } = userInfo;
 
   const withdraw = async () => {
     try {
@@ -63,7 +69,7 @@ const WithdrawButton = (props) => {
     } catch (error) {
       console.log(error);
       if (error.response.status === 403) {
-        setAccessError(true);
+        dispatch(setAccessErrorTrue());
       }
       throw new Error(error);
     }

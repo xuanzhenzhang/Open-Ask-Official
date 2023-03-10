@@ -1,9 +1,12 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import { Backdrop, Card, CardContent, Typography, Box } from "@mui/material";
 import TwitterButton from "./buttons/TwitterButton";
 import { accessErrorLogo } from "../data/VectorSVGs";
 
-const AccessErrorLogin = ({ signInTwitter, accessError }) => {
+const AccessErrorLogin = ({ signInTwitter }) => {
+  const accessError = useSelector((state) => state.accessErrorSlice);
+
   return (
     <>
       <Backdrop sx={{ zIndex: "5000" }} open={accessError}>

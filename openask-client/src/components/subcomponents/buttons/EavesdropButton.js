@@ -1,19 +1,20 @@
 import React from "react";
+import { useDispatch } from "react-redux";
+import { setAccessErrorTrue } from "../../store/store";
 import { Box, Typography } from "@mui/material";
 import { eavesdropContract } from "../../functions/smartContract/eavesdropContract";
 import axios from "axios";
 import confetti from "canvas-confetti";
+import { useSelector } from "react-redux";
 
 const EavesdropButton = (props) => {
-  const {
-    id,
-    payees,
-    setAskLoaderEavesdropText,
-    setOpenEavesdrop,
-    answerId,
-    accessToken,
-    setAccessError,
-  } = props;
+  const { id, payees, setAskLoaderEavesdropText, setOpenEavesdrop, answerId } =
+    props;
+
+  const dispatch = useDispatch();
+
+  const userInfo = useSelector((state) => state.userInfoSlice);
+  const { accessToken } = userInfo;
 
   const handleEavesdrop = async () => {
     try {
@@ -61,7 +62,7 @@ const EavesdropButton = (props) => {
     } catch (error) {
       console.log(error);
       if (error.response.status === 403) {
-        setAccessError(true);
+        dispatch(setAccessErrorTrue());
       }
       throw new Error(error);
     }

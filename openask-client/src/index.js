@@ -2,7 +2,9 @@ import React from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import AppProvider from "./components/context/AppProvider";
-import { ThemeProvider, createTheme } from "@material-ui/core/styles";
+import { Provider } from "react-redux";
+import { store } from "./components/store/store";
+// import { ThemeProvider, createTheme } from "@material-ui/core/styles";
 
 import { initializeApp } from "firebase/app";
 
@@ -28,30 +30,30 @@ const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 
 // Breakpoints
-const theme = createTheme({
-  breakpoints: {
-    values: {
-      xs: 0,
-      sm: 600,
-      md: 750,
-      lg: 1200,
-      xl: 1536,
-    },
-  },
-});
+// const theme = createTheme({
+//   breakpoints: {
+//     values: {
+//       xs: 0,
+//       sm: 600,
+//       md: 750,
+//       lg: 1200,
+//       xl: 1536,
+//     },
+//   },
+// });
 
 const App = require("./App").default;
 const root = createRoot(document.getElementById("root"));
 
 root.render(
   <AppProvider>
-    <ThemeProvider theme={theme}>
+    <Provider store={store}>
       <BrowserRouter
         basename={inIframe() ? window.location.pathname : undefined}
       >
         <App />
       </BrowserRouter>
-    </ThemeProvider>
+    </Provider>
   </AppProvider>
 );
 

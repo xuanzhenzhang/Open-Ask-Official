@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import Container from "@mui/material/Container";
 import Card from "@mui/material/Card";
 import Tabs from "@mui/material/Tabs";
@@ -18,7 +19,7 @@ import QuestionBody from "./subcomponents/card/QuestionBody";
 import QuestionFooter from "./subcomponents/card/QuestionFooter";
 import AnswerQuestion from "./subcomponents/AnswerQuestion";
 
-const Answers = ({ userInfo, accessToken, setAccessError }) => {
+const Answers = () => {
   const [loading, setLoading] = useState(false);
   const [value, setValue] = useState(0);
 
@@ -39,6 +40,8 @@ const Answers = ({ userInfo, accessToken, setAccessError }) => {
   const [answerBountyId, setAnswerBountyId] = useState();
 
   const navigate = useNavigate();
+
+  const userInfo = useSelector((state) => state.userInfoSlice);
 
   //   Get all Questions For User
   useEffect(() => {
@@ -317,9 +320,6 @@ const Answers = ({ userInfo, accessToken, setAccessError }) => {
               sx={{ ml: "0px !important" }}
             >
               <AnswerQuestion
-                userInfo={userInfo}
-                accessToken={accessToken}
-                setAccessError={setAccessError}
                 handle={answerHandle}
                 avatar={answerAvatar}
                 displayName={answerDisplayName}

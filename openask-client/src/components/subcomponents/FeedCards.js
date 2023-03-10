@@ -10,7 +10,7 @@ import QuestionFooter from "./card/QuestionFooter";
 
 const FeedCards = ({ data, price }) => {
   const [questions, setQuestions] = useState([]);
-  const [userInfo, setUserInfo] = useState([]);
+  const [allUsers, setAllUsers] = useState([]);
 
   const navigate = useNavigate();
 
@@ -32,7 +32,7 @@ const FeedCards = ({ data, price }) => {
             ...user,
             profile: {
               ...user.profile,
-              imageUrl: `https://ipfs.io/ipfs/${
+              imageUrl: `https://gateway.pinata.cloud/ipfs/${
                 user.profile.imageUrl.split("/")[2]
               }`,
             },
@@ -42,7 +42,7 @@ const FeedCards = ({ data, price }) => {
         }
       });
       if (isMounted) {
-        setUserInfo(modifiedUsers);
+        setAllUsers(modifiedUsers);
       }
     });
     return () => {
@@ -58,10 +58,10 @@ const FeedCards = ({ data, price }) => {
   return (
     <div>
       {questions?.map((content) => {
-        const user = userInfo?.filter((id) => {
+        const user = allUsers?.filter((id) => {
           return id.userId === content.questionerUid;
         });
-        const answerer = userInfo?.filter((id) => {
+        const answerer = allUsers?.filter((id) => {
           return id.userId === content.questioneeUid;
         });
 

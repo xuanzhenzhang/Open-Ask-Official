@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
-import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
-import Typography from "@mui/material/Typography";
 import Card from "@mui/material/Card";
 import Grid from "@mui/material/Grid";
-import Link from "@mui/material/Link";
 import {
   Autocomplete,
   TextField,
@@ -22,7 +20,7 @@ import QuestionHeader from "./subcomponents/card/QuestionHeader";
 import SenseiBody from "./subcomponents/SenseiBody";
 import AskQuestion from "./subcomponents/AskQuestion";
 
-const Sensei = ({ userInfo, accessToken, setAccessError }) => {
+const Sensei = () => {
   const [loading, setLoading] = useState(false);
   const [filteredSensei, setFilteredSensei] = useState();
   const [autocompleteSensei, setAutocompleteSensei] = useState([]);
@@ -41,6 +39,8 @@ const Sensei = ({ userInfo, accessToken, setAccessError }) => {
 
   const navigate = useNavigate();
 
+  const userInfo = useSelector((state) => state.userInfoSlice);
+
   // Get all users
   useEffect(() => {
     setLoading(true);
@@ -51,7 +51,7 @@ const Sensei = ({ userInfo, accessToken, setAccessError }) => {
             ...user,
             profile: {
               ...user.profile,
-              imageUrl: `https://ipfs.io/ipfs/${
+              imageUrl: `https://gateway.pinata.cloud/ipfs/${
                 user.profile.imageUrl.split("/")[2]
               }`,
             },
@@ -352,7 +352,6 @@ const Sensei = ({ userInfo, accessToken, setAccessError }) => {
             >
               <Grid>
                 {filteredSensei?.map((profile, index) => {
-                  const isSameUser = profile.userId === userInfo.userUid;
                   return (
                     <Card
                       onClick={() => onSenseiClick(profile.profile.handle)}
@@ -396,9 +395,6 @@ const Sensei = ({ userInfo, accessToken, setAccessError }) => {
 
         <Backdrop className="ask-question-backdrop" open={openBackdrop}>
           <AskQuestion
-            userInfo={userInfo}
-            accessToken={accessToken}
-            setAccessError={setAccessError}
             handleCloseBackdrop={handleCloseBackdrop}
             askedSensei={askedSensei}
           />

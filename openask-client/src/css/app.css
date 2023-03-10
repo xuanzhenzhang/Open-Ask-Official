@@ -607,6 +607,9 @@ body {
   color: var(--gray-2);
   border-radius: 20px;
 }
+.twitter-btn:hover {
+  opacity: 0.8;
+}
 .twitter-btn p {
   font-size: 20px !important;
 }

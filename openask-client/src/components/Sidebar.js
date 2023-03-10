@@ -4,15 +4,7 @@ import Drawer from "@mui/material/Drawer";
 import Box from "@mui/material/Box";
 
 const Sidebar = (props) => {
-  const {
-    userInfo,
-    accessToken,
-    setAccessError,
-    onAvatarClick,
-    mobileOpen,
-    setMobileOpen,
-    signInTwitter,
-  } = props;
+  const { onAvatarClick, mobileOpen, setMobileOpen, signInTwitter } = props;
 
   return (
     <>
@@ -35,10 +27,7 @@ const Sidebar = (props) => {
         <SidebarList
           setMobileOpen={setMobileOpen}
           mobileOpen={mobileOpen}
-          userInfo={userInfo}
           signInTwitter={signInTwitter}
-          accessToken={accessToken}
-          setAccessError={setAccessError}
         />
       </Drawer>
 
@@ -54,12 +43,7 @@ const Sidebar = (props) => {
         }}
         open
       >
-        <SidebarList
-          userInfo={userInfo}
-          signInTwitter={signInTwitter}
-          accessToken={accessToken}
-          setAccessError={setAccessError}
-        />
+        <SidebarList signInTwitter={signInTwitter} />
       </Drawer>
     </>
   );
