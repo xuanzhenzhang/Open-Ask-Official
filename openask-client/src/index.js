@@ -1,5 +1,5 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import AppProvider from "./components/context/AppProvider";
 import { ThemeProvider, createTheme } from "@material-ui/core/styles";
@@ -41,31 +41,31 @@ const theme = createTheme({
 });
 
 const App = require("./App").default;
+const root = createRoot(document.getElementById("root"));
 
-function renderApp() {
-  ReactDOM.render(
-    <AppProvider>
-      <ThemeProvider theme={theme}>
-        <BrowserRouter
-          basename={inIframe() ? window.location.pathname : undefined}>
-          <App />
-        </BrowserRouter>
-      </ThemeProvider>
-    </AppProvider>,
-    document.getElementById("root")
-  );
-}
+root.render(
+  <AppProvider>
+    <ThemeProvider theme={theme}>
+      <BrowserRouter
+        basename={inIframe() ? window.location.pathname : undefined}
+      >
+        <App />
+      </BrowserRouter>
+    </ThemeProvider>
+  </AppProvider>
+);
+
 function inIframe() {
   return window.self !== window.top;
 }
 
-async function run() {
-  if (inIframe()) {
-    console.log("in iframe");
-    await window.FBMiniapp?.initializeAsync();
-    await window.FBMiniapp?.startAppletAsync();
-  }
-  renderApp();
-}
+// async function run() {
+//   if (inIframe()) {
+//     console.log("in iframe");
+//     await window.FBMiniapp?.initializeAsync();
+//     await window.FBMiniapp?.startAppletAsync();
+//   }
+//   renderApp();
+// }
 
-run();
+// run();
