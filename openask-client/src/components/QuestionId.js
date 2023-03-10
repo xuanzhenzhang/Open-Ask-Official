@@ -16,9 +16,9 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { backSvg } from "./subcomponents/VectorSVGs";
-import QuestionHeader from "./subcomponents/QuestionHeader";
-import QuestionBody from "./subcomponents/QuestionBody";
-import QuestionFooter from "./subcomponents/QuestionFooter";
+import QuestionHeader from "./subcomponents/card/QuestionHeader";
+import QuestionBody from "./subcomponents/card/QuestionBody";
+import QuestionFooter from "./subcomponents/card/QuestionFooter";
 import EavesdropQuestion from "./subcomponents/EavesdropQuestion";
 
 import IconButton from "@mui/material/IconButton";

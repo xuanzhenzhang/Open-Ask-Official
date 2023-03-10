@@ -17,9 +17,9 @@ import { useNavigate } from "react-router-dom";
 import { withdrawPayment } from "./functions/withdrawPayment";
 import { withdrawEthPayment } from "./functions/withdrawEthPayment";
 
-import QuestionHeader from "./subcomponents/QuestionHeader";
-import QuestionBody from "./subcomponents/QuestionBody";
-import QuestionFooter from "./subcomponents/QuestionFooter";
+import QuestionHeader from "./subcomponents/card/QuestionHeader";
+import QuestionBody from "./subcomponents/card/QuestionBody";
+import QuestionFooter from "./subcomponents/card/QuestionFooter";
 import AnswerQuestion from "./AnswerQuestion";
 import WithdrawQuestion from "./subcomponents/WithdrawQuestion";
 
@@ -55,7 +55,6 @@ const Answers = ({ userInfo, accessToken, setAccessError }) => {
             `https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/questions-for/${userInfo.userUid}`
           );
           const filteredQuestions = data.filter((response) => response.txHash);
-          console.log(filteredQuestions);
 
           //   Set Questions To Be Answered
           const toBeAnswered = filteredQuestions.filter((question) => {

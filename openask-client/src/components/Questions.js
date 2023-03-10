@@ -7,7 +7,6 @@ import Box from "@mui/material/Box";
 import { Backdrop } from "@mui/material";
 
 import Loader from "./Loader";
-import SnackbarError from "./subcomponents/SnackbarError";
 
 import axios, * as others from "axios";
 
@@ -17,10 +16,9 @@ import { useNavigate } from "react-router-dom";
 import { withdrawPayment } from "./functions/withdrawPayment";
 import { withdrawEthPayment } from "./functions/withdrawEthPayment";
 
-import QuestionHeader from "./subcomponents/QuestionHeader";
-import QuestionBody from "./subcomponents/QuestionBody";
-import QuestionFooter from "./subcomponents/QuestionFooter";
-import AnswerQuestion from "./AnswerQuestion";
+import QuestionHeader from "./subcomponents/card/QuestionHeader";
+import QuestionBody from "./subcomponents/card/QuestionBody";
+import QuestionFooter from "./subcomponents/card/QuestionFooter";
 import WithdrawQuestion from "./subcomponents/WithdrawQuestion";
 
 const Questions = ({ userInfo, accessToken, setAccessError }) => {

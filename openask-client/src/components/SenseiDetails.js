@@ -10,9 +10,9 @@ import {
   Tabs,
   Tab,
 } from "@mui/material";
-import QuestionBody from "./subcomponents/QuestionBody.js";
-import QuestionHeader from "./subcomponents/QuestionHeader.js";
-import QuestionFooter from "./subcomponents/QuestionFooter.js";
+import QuestionBody from "./subcomponents/card/QuestionBody.js";
+import QuestionHeader from "./subcomponents/card/QuestionHeader.js";
+import QuestionFooter from "./subcomponents/card/QuestionFooter.js";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import axios, * as others from "axios";
 import Loader from "./Loader.js";

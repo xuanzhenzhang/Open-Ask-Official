@@ -4,9 +4,9 @@ import Card from "@mui/material/Card";
 
 import { getUsers } from "./functions/getUsers";
 
-import QuestionHeader from "./subcomponents/QuestionHeader";
-import QuestionBody from "./subcomponents/QuestionBody";
-import QuestionFooter from "./subcomponents/QuestionFooter";
+import QuestionHeader from "./subcomponents/card/QuestionHeader";
+import QuestionBody from "./subcomponents/card/QuestionBody";
+import QuestionFooter from "./subcomponents/card/QuestionFooter";
 
 const FeedCards = ({ data, price }) => {
   const [questions, setQuestions] = useState([]);

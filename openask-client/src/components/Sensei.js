@@ -18,7 +18,7 @@ import {
 } from "@mui/material";
 import { getUsers } from "./functions/getUsers";
 import Loader from "./Loader";
-import QuestionHeader from "./subcomponents/QuestionHeader";
+import QuestionHeader from "./subcomponents/card/QuestionHeader";
 import SenseiBody from "./subcomponents/SenseiBody";
 import AskQuestion from "./AskQuestion";
 
@@ -376,8 +376,9 @@ const Sensei = ({ userInfo, accessToken, setAccessError }) => {
                         senseiDisplayName={profile.profile.displayName}
                         askSensei={
                           profile &&
-                          profile?.profile.displayName !==
-                            userInfo?.profile.displayName
+                          userInfo &&
+                          profile?.profile?.displayName !==
+                            userInfo?.profile?.displayName
                         }
                       />
                       <SenseiBody

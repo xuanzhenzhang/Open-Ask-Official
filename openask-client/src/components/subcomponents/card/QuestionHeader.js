@@ -1,8 +1,8 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { CardHeader, Avatar, Typography, Link, Box } from "@mui/material";
-import PriceButton from "./buttons/PriceButton";
-import AskSenseiButton from "./buttons/AskSenseiButton";
+import PriceButton from "../buttons/PriceButton";
+import AskSenseiButton from "../buttons/AskSenseiButton";
 import { ethers } from "ethers";
 
 const BigNumber = require("bignumber.js");
