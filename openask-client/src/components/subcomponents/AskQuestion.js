@@ -2,13 +2,13 @@ import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { Box, Card, CardContent, Avatar, Typography } from "@material-ui/core";
 import { Autocomplete, TextField, Chip, CircularProgress } from "@mui/material";
-import { getUsers } from "./functions/getUsers";
+import { getUsers } from "../functions/getUsers";
 import { useNavigate } from "react-router-dom";
-import { ethBountyContract } from "./functions/ethBountyContract";
-import AskButton from "./subcomponents/buttons/AskButton";
+import { ethBountyContract } from "../functions/smartContract/ethBountyContract";
+import AskButton from "./buttons/AskButton";
 import { ethers } from "ethers";
 import confetti from "canvas-confetti";
-import { ethereumSVG, homeFilled } from "./subcomponents/VectorSVGs";
+import { ethereumSVG, homeFilled } from "../data/VectorSVGs";
 import axios from "axios";
 
 const AskQuestion = (props) => {

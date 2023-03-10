@@ -17,10 +17,10 @@ import {
   Backdrop,
 } from "@mui/material";
 import { getUsers } from "./functions/getUsers";
-import Loader from "./Loader";
+import Loader from "./subcomponents/Loader";
 import QuestionHeader from "./subcomponents/card/QuestionHeader";
 import SenseiBody from "./subcomponents/SenseiBody";
-import AskQuestion from "./AskQuestion";
+import AskQuestion from "./subcomponents/AskQuestion";
 
 const Sensei = ({ userInfo, accessToken, setAccessError }) => {
   const [loading, setLoading] = useState(false);

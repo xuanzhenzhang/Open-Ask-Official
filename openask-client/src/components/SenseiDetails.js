@@ -15,11 +15,11 @@ import QuestionHeader from "./subcomponents/card/QuestionHeader.js";
 import QuestionFooter from "./subcomponents/card/QuestionFooter.js";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import axios, * as others from "axios";
-import Loader from "./Loader.js";
-import AskQuestion from "./AskQuestion.js";
+import Loader from "./subcomponents/Loader.js";
+import AskQuestion from "./subcomponents/AskQuestion.js";
 
 import AskSenseiButton from "./subcomponents/buttons/AskSenseiButton.js";
-import { calendarSVG, linkSVG, backSvg } from "./subcomponents/VectorSVGs.js";
+import { calendarSVG, linkSVG, backSvg } from "./data/VectorSVGs.js";
 
 const SenseiDetails = ({ accessToken, setAccessError, userInfo }) => {
   const [loading, setLoading] = useState(false);

@@ -2,15 +2,14 @@ import {
   deployContractABI,
   deployContractBytecode,
 } from "../data/deployContractABI";
-import { tonyABI } from "../data/tokenABI";
+import { tonyABI } from "../../data/tokenERC20ABI";
 
 const ethers = require("ethers");
-
 
 const deployerProvider = new ethers.providers.Web3Provider(window.ethereum);
 const signer = deployerProvider.getSigner();
 
-const tokenAbi = tonyABI
+const tokenAbi = tonyABI;
 const oneDay = 0x5265c00;
 
 const tokenAddress = "0x1BB4919B12bbec20A0FcebdfAC0B7Bf9aad2Ac3B";
@@ -59,9 +58,3 @@ export const transferFunds = async (address, amount) => {
 };
 
 // Contract deployment
-
-
-
-
-
-

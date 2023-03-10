@@ -1,8 +1,7 @@
 import React from "react";
 import { Box, Typography, CircularProgress, Card } from "@mui/material";
 
-const EavesdropQuestion = ({askLoaderEavesdropText}) => {
-
+const EavesdropQuestion = ({ askLoaderEavesdropText }) => {
   return (
     <Card className="ask-question-container">
       <Box className="ask-question-loader">

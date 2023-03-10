@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
-import { eavesdropContract } from "../../functions/eavesdropContract";
+import { eavesdropContract } from "../../functions/smartContract/eavesdropContract";
 import axios from "axios";
 import confetti from "canvas-confetti";
 

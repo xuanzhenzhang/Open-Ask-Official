@@ -1,9 +1,9 @@
 import { ethers } from "ethers";
-import { ethBountyContractABI } from "../data/ethBountyContracyABI";
+import { ethBountyContractABI } from "../../data/ethBountyContracyABI";
 import { GaslessOnboarding } from "@gelatonetwork/gasless-onboarding";
 
-const contractAddress = "0x34141bE35aC2aB6568D9cD7a23281101Fe79edb3";
-
+// const provider = new ethers.providers.Web3Provider(window.ethereum);
+// const signer = provider.getSigner();
 const init = async () => {
   const gaslessWalletConfig = {
     apiKey: "Q7E6fPdBQmEA9ArUXXKP_wE_m_v_Y20WkCeU5WLsmxU_",
@@ -28,17 +28,16 @@ const init = async () => {
   return providerGelato;
 };
 
-export const ethBountyContract = async (
-  approvers,
-  deadline,
-  depositAmount,
-  questionId,
+export const ethBountyReceiveContract = async (
+  contractAddress,
+  bountyId,
+  answerId,
+  tokenAmounts,
   setText
 ) => {
   const gelato = await init();
   const provider = new ethers.providers.Web3Provider(gelato);
   const signer = provider.getSigner();
-
   try {
     const contract = new ethers.Contract(
       contractAddress,
@@ -47,25 +46,20 @@ export const ethBountyContract = async (
     );
 
     const sender = await signer.getAddress();
-    const issuers = ["0x0000000000000000000000000000000000000000"];
-    const data = questionId;
-    const token = "0x0000000000000000000000000000000000000000";
-    const tokenVersion = 0;
-    //   const depositAmount = ethers.utils.parseEther("1"); // deposit amount in ether
+    const approverId = 0;
 
-    const transaction = await contract.issueAndContribute(
+    const fulfillers = [sender];
+    const numbers = [tokenAmounts.toString()];
+
+    const transaction = await contract.fulfillAndAccept(
       sender,
-      issuers,
-      approvers,
-      data,
-      deadline,
-      token,
-      tokenVersion,
-      depositAmount,
-      {
-        value: depositAmount,
-      }
+      bountyId,
+      fulfillers,
+      answerId,
+      approverId,
+      numbers
     );
+
     console.log(`TX Hash: ${transaction.hash}`);
     setText(`TX in Progress...`);
 
@@ -73,11 +67,9 @@ export const ethBountyContract = async (
     const receipt = await transaction.wait();
     console.log(receipt);
 
-    const bountyId = receipt.events[0].args[0].toNumber();
-    console.log("Bounty ID:", bountyId);
     return transaction.hash;
   } catch (error) {
     console.log(error);
-    throw new Error("Question Failed");
+    throw new Error("Contract deployment failed");
   }
 };

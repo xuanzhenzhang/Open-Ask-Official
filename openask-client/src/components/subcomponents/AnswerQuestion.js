@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import React, { useState } from "react";
 import {
   Box,
   Card,
@@ -9,15 +8,12 @@ import {
   Divider,
 } from "@material-ui/core";
 import { TextField, CircularProgress } from "@mui/material";
-import { useNavigate } from "react-router-dom";
 import confetti from "canvas-confetti";
 import axios from "axios";
-import PriceButton from "./subcomponents/buttons/PriceButton";
-import SubmitAnswerButton from "./subcomponents/buttons/SubmitAnswerButton";
-import { ethBountyReceiveContract } from "./functions/ethBountyReceivePayment";
+import PriceButton from "./buttons/PriceButton";
+import SubmitAnswerButton from "./buttons/SubmitAnswerButton";
+import { ethBountyReceiveContract } from "../functions/smartContract/ethBountyReceivePayment";
 import { ethers } from "ethers";
-
-const BigNumber = require("bignumber.js");
 
 const AnswerQuestion = (props) => {
   const { userInfo, accessToken, setAccessError } = props;
@@ -35,7 +31,7 @@ const AnswerQuestion = (props) => {
   const [answer, setAnswer] = useState();
 
   const [askLoader, setAskLoader] = useState(false);
-  const [askLoaderText, setAskLoaderText] = useState("Continue on Metamask");
+  const [askLoaderText, setAskLoaderText] = useState("Continue on Wallet");
 
   let etherAmount = 0;
   if (rewardAmount) {

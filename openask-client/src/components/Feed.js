@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 import Container from "@mui/material/Container";
 import { Box } from "@mui/system";
 
-import FeedCards from "./FeedCards.js";
-import Loader from "./Loader.js";
+import FeedCards from "./subcomponents/FeedCards.js";
+import Loader from "./subcomponents/Loader.js";
 import axios, * as others from "axios";
 import FeedFilters from "./subcomponents/FeedFilters.js";
 

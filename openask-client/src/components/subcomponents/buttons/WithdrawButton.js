@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Typography, Backdrop } from "@mui/material";
-import { withdrawEthPayment } from "../../functions/withdrawEthPayment";
+import { withdrawEthPayment } from "../../functions/smartContract/withdrawEthPayment";
 import axios from "axios";
 import confetti from "canvas-confetti";
 

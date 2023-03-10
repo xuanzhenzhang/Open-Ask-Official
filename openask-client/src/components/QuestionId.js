@@ -1,33 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import {
-  Container,
-  Card,
-  CardHeader,
-  CardContent,
-  CardActions,
-  Typography,
-  Link,
-  Avatar,
-  Box,
-  Backdrop,
-  Button,
-  Divider,
-} from "@mui/material";
+import { Container, Card, CardContent, Box, Backdrop } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { backSvg } from "./subcomponents/VectorSVGs";
+import { backSvg } from "./data/VectorSVGs";
 import QuestionHeader from "./subcomponents/card/QuestionHeader";
 import QuestionBody from "./subcomponents/card/QuestionBody";
 import QuestionFooter from "./subcomponents/card/QuestionFooter";
 import EavesdropQuestion from "./subcomponents/EavesdropQuestion";
 
 import IconButton from "@mui/material/IconButton";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import Loader from "./Loader";
-import TweetBtn from "./TweetBtn";
+import Loader from "./subcomponents/Loader";
 
-import axios, * as others from "axios";
-import { payForAnswer } from "./functions/payForAnswer.js";
+import axios from "axios";
 import LensButton from "./subcomponents/buttons/LensButton";
 
 const QuestionId = ({ accessToken, setAccessError }) => {

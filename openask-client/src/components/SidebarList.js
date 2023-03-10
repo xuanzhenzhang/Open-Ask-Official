@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import Typography from "@mui/material/Typography";
 import { Box, Backdrop, Divider } from "@mui/material";
-import AskQuestion from "./AskQuestion";
+import AskQuestion from "./subcomponents/AskQuestion";
 import { WalletCard } from "./WalletCard";
 import LensCard from "./LensCard";
-import { openAskLogo } from "./subcomponents/VectorSVGs";
+import { openAskLogo } from "./data/VectorSVGs";
 import {
   homeFilled,
   homeOutlined,
@@ -18,8 +18,8 @@ import {
   profileFilled,
   profileOutlined,
   answersOutlined,
-  answersFilled
-} from "./subcomponents/VectorSVGs";
+  answersFilled,
+} from "./data/VectorSVGs";
 
 import { useNavigate, useParams } from "react-router-dom";
 import axios, * as others from "axios";
@@ -92,7 +92,11 @@ const SidebarList = ({
     {
       text: "Profile",
       // link: `/sensei/${userInfo && userInfo?.profile?.handle}`,
-      link: `/sensei/${getProfileHandle() ? getProfileHandle() : (userInfo && userInfo?.profile?.handle)}`,
+      link: `/sensei/${
+        getProfileHandle()
+          ? getProfileHandle()
+          : userInfo && userInfo?.profile?.handle
+      }`,
       svg: selectedIndex === 5 ? profileFilled : profileOutlined,
     },
   ];

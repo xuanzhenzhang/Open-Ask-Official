@@ -14,7 +14,6 @@ import SenseiDetails from "./components/SenseiDetails";
 import TransactionHistory from "./components/TransactionHistory";
 import QuestionId from "./components/QuestionId";
 import { useNavigate } from "react-router-dom";
-import reloadPage from "./components/functions/reloadPage";
 
 import {
   getAuth,
@@ -23,7 +22,7 @@ import {
   TwitterAuthProvider,
 } from "firebase/auth";
 import "./css/app.css";
-import AccessErrorLogin from "./components/AccessErrorLogin";
+import AccessErrorLogin from "./components/subcomponents/AccessErrorLogin";
 
 import axios, * as others from "axios";
 import { Avatar } from "@mui/material";
@@ -70,7 +69,7 @@ function App() {
         }));
         setAccessError(false);
         navigate("/feed");
-        reload && reloadPage();
+        reload && window.location.reload();
       })
       .catch((error) => {
         // Handle Errors here.

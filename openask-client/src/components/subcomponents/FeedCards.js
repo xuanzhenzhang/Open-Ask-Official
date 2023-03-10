@@ -1,12 +1,12 @@
-import React, { useEffect, useState, useMemo, useCallback } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import Card from "@mui/material/Card";
 
-import { getUsers } from "./functions/getUsers";
+import { getUsers } from "../functions/getUsers";
 
-import QuestionHeader from "./subcomponents/card/QuestionHeader";
-import QuestionBody from "./subcomponents/card/QuestionBody";
-import QuestionFooter from "./subcomponents/card/QuestionFooter";
+import QuestionHeader from "./card/QuestionHeader";
+import QuestionBody from "./card/QuestionBody";
+import QuestionFooter from "./card/QuestionFooter";
 
 const FeedCards = ({ data, price }) => {
   const [questions, setQuestions] = useState([]);
@@ -14,12 +14,6 @@ const FeedCards = ({ data, price }) => {
 
   const navigate = useNavigate();
 
-  const handleAvatarClick = useCallback(
-    (twitter) => {
-      navigate(`/sensei/${twitter}`);
-    },
-    [navigate]
-  );
   // Navigate to Question landing Page
   const handleCardClick = useCallback(
     (id) => {

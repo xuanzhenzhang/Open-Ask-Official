@@ -6,15 +6,12 @@ import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import { Backdrop } from "@mui/material";
 
-import Loader from "./Loader";
+import Loader from "./subcomponents/Loader";
 
-import axios, * as others from "axios";
+import axios from "axios";
 
 import { getUsers } from "./functions/getUsers";
 import { useNavigate } from "react-router-dom";
-
-import { withdrawPayment } from "./functions/withdrawPayment";
-import { withdrawEthPayment } from "./functions/withdrawEthPayment";
 
 import QuestionHeader from "./subcomponents/card/QuestionHeader";
 import QuestionBody from "./subcomponents/card/QuestionBody";
@@ -121,17 +118,6 @@ const Questions = ({ userInfo, accessToken, setAccessError }) => {
       console.log("No ID");
     }
   }, [userInfo]);
-
-  const handleWithdraw = async (contractAddress, tokenType) => {
-    try {
-      tokenType === "ETH"
-        ? await withdrawEthPayment(contractAddress)
-        : await withdrawPayment(contractAddress); //Need contract address
-    } catch (error) {
-      console.log(error);
-      throw new Error(error);
-    }
-  };
 
   // Get all users
   useEffect(() => {

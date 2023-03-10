@@ -2,7 +2,7 @@ import React from "react";
 import { CardContent, Typography } from "@mui/material";
 
 const SenseiBody = (props) => {
-    const { followers, questionsAsked, twitterDescription } = props;
+  const { followers, questionsAsked, twitterDescription } = props;
   return (
     <CardContent
       sx={{
@@ -18,8 +18,7 @@ const SenseiBody = (props) => {
         }}
       >
         <Typography className="sensei-subtext" component="p">
-          <span>{followers}</span>{" "}
-          Followers
+          <span>{followers}</span> Followers
         </Typography>
         <Typography className="sensei-subtext" component="p">
           <span>{questionsAsked}</span> Answered

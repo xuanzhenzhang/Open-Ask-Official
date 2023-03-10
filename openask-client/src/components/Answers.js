@@ -6,22 +6,17 @@ import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import { Backdrop } from "@mui/material";
 
-import Loader from "./Loader";
-import SnackbarError from "./subcomponents/SnackbarError";
+import Loader from "./subcomponents/Loader";
 
 import axios, * as others from "axios";
 
 import { getUsers } from "./functions/getUsers";
 import { useNavigate } from "react-router-dom";
 
-import { withdrawPayment } from "./functions/withdrawPayment";
-import { withdrawEthPayment } from "./functions/withdrawEthPayment";
-
 import QuestionHeader from "./subcomponents/card/QuestionHeader";
 import QuestionBody from "./subcomponents/card/QuestionBody";
 import QuestionFooter from "./subcomponents/card/QuestionFooter";
-import AnswerQuestion from "./AnswerQuestion";
-import WithdrawQuestion from "./subcomponents/WithdrawQuestion";
+import AnswerQuestion from "./subcomponents/AnswerQuestion";
 
 const Answers = ({ userInfo, accessToken, setAccessError }) => {
   const [loading, setLoading] = useState(false);
@@ -94,11 +89,14 @@ const Answers = ({ userInfo, accessToken, setAccessError }) => {
     getUsers().then((users) => {
       const modifiedUsers = users.map((user) => {
         if (user?.profile?.imageUrl?.startsWith("ipfs")) {
+          console.log(user);
+
           return {
             ...user,
             profile: {
               ...user.profile,
-              imageUrl: `https://ipfs.io/ipfs/${
+              // https://ipfs.io/ipfs/
+              imageUrl: `https://gateway.pinata.cloud/ipfs/${
                 user.profile.imageUrl.split("/")[2]
               }`,
             },

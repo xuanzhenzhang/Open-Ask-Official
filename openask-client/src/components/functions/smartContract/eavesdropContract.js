@@ -1,6 +1,8 @@
 import { ethers } from "ethers";
-import { ethBountyContractABI } from "../data/ethBountyContracyABI";
+import { eavesdropABI } from "../../data/eavesdropABI";
 import { GaslessOnboarding } from "@gelatonetwork/gasless-onboarding";
+
+const contractAddress = "0xD836288Df42e0Df860ec683F2c78702d05eceF02";
 
 const init = async () => {
   const gaslessWalletConfig = {
@@ -26,40 +28,38 @@ const init = async () => {
   return providerGelato;
 };
 
-export async function withdrawEthPayment(
-  contractAddress,
-  bountyId,
-  contributionId,
-  setAskLoaderWithdrawText
-) {
+export const eavesdropContract = async (
+  questionId,
+  payees,
+  setAskLoaderEavesdropText
+) => {
   // if (window.ethereum) {
   const gelato = await init();
   const provider = new ethers.providers.Web3Provider(gelato);
   const signer = provider.getSigner();
   try {
-    const contract = new ethers.Contract(
-      contractAddress,
-      ethBountyContractABI,
-      signer
-    );
+    const contract = new ethers.Contract(contractAddress, eavesdropABI, signer);
 
-    const sender = await signer.getAddress();
+    let shares = [5000, 5000];
+    console.log(questionId, payees, shares);
 
-    const tx = await contract.refundMyContributions(sender, bountyId, [
-      contributionId,
-    ]);
-    setAskLoaderWithdrawText("TX in Progress...");
-    console.log(`Transaction in Progress: ${tx.hash}`);
+    const tx = await contract.eavesdropETH(1, payees, shares, {
+      value: 1000000000000000,
+    });
 
+    console.log(`TX Hash: ${tx.hash}`);
+    setAskLoaderEavesdropText(`TX in Progress...`);
+
+    // Handle the receipt
     const receipt = await tx.wait();
-
     console.log(receipt);
+
     return tx.hash;
   } catch (error) {
     console.log(error);
-    throw new Error("Withdraw failed");
+    throw new Error("Contract deployment failed");
   }
   // } else {
   //   console.log("Please install MetaMask");
   // }
-}
+};

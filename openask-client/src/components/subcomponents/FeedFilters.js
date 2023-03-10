@@ -4,7 +4,6 @@ import axios from "axios";
 
 const FeedFilters = ({ questions, setQuestions }) => {
   const [lastClicked, setLastClicked] = useState("joined");
-  const [filteredSensei, setFilteredSensei] = useState();
 
   const [questionsByPriceHigh, setQuestionsByPriceHigh] = useState();
   const [questionsByPriceLow, setQuestionsByPriceLow] = useState();
