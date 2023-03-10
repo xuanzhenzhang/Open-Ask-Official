@@ -4,7 +4,7 @@ import { Backdrop, Card, CardContent, Typography, Box } from "@mui/material";
 import TwitterButton from "./buttons/TwitterButton";
 import { accessErrorLogo } from "../data/VectorSVGs";
 
-const AccessErrorLogin = ({ signInTwitter }) => {
+const AccessErrorLogin = () => {
   const accessError = useSelector((state) => state.accessErrorSlice);
 
   return (
@@ -22,7 +22,7 @@ const AccessErrorLogin = ({ signInTwitter }) => {
           </CardContent>
           <CardContent>
             <Box className="access-error-btn">
-              <TwitterButton signInTwitter={signInTwitter} />
+              <TwitterButton />
             </Box>
           </CardContent>
         </Card>

@@ -2,8 +2,11 @@ import React from "react";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import TwitterIcon from "@mui/icons-material/Twitter";
+import { useTwitterSignIn } from "./functions/useTwitterSignIn";
 
-const LoginPage = ({ signInTwitter, signInGuest }) => {
+const LoginPage = () => {
+  const { signInTwitter } = useTwitterSignIn();
+
   return (
     <>
       <Container
@@ -22,7 +25,7 @@ const LoginPage = ({ signInTwitter, signInGuest }) => {
           {" "}
           Sign in
         </Button>
-        <Button
+        {/* <Button
           className="btn-guest"
           onClick={signInGuest}
           variant="contained"
@@ -31,7 +34,7 @@ const LoginPage = ({ signInTwitter, signInGuest }) => {
         >
           {" "}
           Continue as Guest
-        </Button>
+        </Button> */}
       </Container>
     </>
   );

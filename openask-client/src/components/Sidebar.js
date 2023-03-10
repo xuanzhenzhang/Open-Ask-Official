@@ -1,10 +1,9 @@
 import React from "react";
 import SidebarList from "./SidebarList";
 import Drawer from "@mui/material/Drawer";
-import Box from "@mui/material/Box";
 
 const Sidebar = (props) => {
-  const { onAvatarClick, mobileOpen, setMobileOpen, signInTwitter } = props;
+  const { onAvatarClick, mobileOpen, setMobileOpen } = props;
 
   return (
     <>
@@ -24,11 +23,7 @@ const Sidebar = (props) => {
           },
         }}
       >
-        <SidebarList
-          setMobileOpen={setMobileOpen}
-          mobileOpen={mobileOpen}
-          signInTwitter={signInTwitter}
-        />
+        <SidebarList setMobileOpen={setMobileOpen} mobileOpen={mobileOpen} />
       </Drawer>
 
       <Drawer
@@ -43,7 +38,7 @@ const Sidebar = (props) => {
         }}
         open
       >
-        <SidebarList signInTwitter={signInTwitter} />
+        <SidebarList />
       </Drawer>
     </>
   );
