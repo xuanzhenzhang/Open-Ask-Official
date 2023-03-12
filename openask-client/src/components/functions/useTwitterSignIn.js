@@ -37,7 +37,7 @@ export const useTwitterSignIn = () => {
           ...response.data,
         }));
         dispatch(setAccessErrorFalse());
-        !reload && navigate("/feed");
+        !reload && navigate("/");
         reload && window.location.reload();
       })
       .catch((error) => {

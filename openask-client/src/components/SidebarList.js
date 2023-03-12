@@ -21,6 +21,7 @@ import {
   answersOutlined,
   answersFilled,
 } from "./data/VectorSVGs";
+import TwitterButton from "./subcomponents/buttons/TwitterButton";
 
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -44,7 +45,7 @@ const SidebarList = ({ setMobileOpen, mobileOpen }) => {
   const location = useLocation();
 
   useEffect(() => {
-    if (location.pathname === "/feed") {
+    if (location.pathname === "/") {
       setSelectedIndex(0);
     } else if (location.pathname === "/sensei") {
       setSelectedIndex(1);
@@ -64,7 +65,7 @@ const SidebarList = ({ setMobileOpen, mobileOpen }) => {
   const sidebarItems = [
     {
       text: "Home",
-      link: "/feed",
+      link: "/",
       svg: selectedIndex === 0 ? homeFilled : homeOutlined,
     },
     {
@@ -174,6 +175,7 @@ const SidebarList = ({ setMobileOpen, mobileOpen }) => {
           ))}
         </Box>
         <Box className="ask-btn-container">
+          {!userInfo || (userInfo.user === "none" && <TwitterButton sidebar />)}
           {!hidden && (
             <button className="ask-btn" onClick={onAskQuestion} size="large">
               Ask Question

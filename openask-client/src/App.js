@@ -32,7 +32,7 @@ function App() {
   return (
     <>
       <Container>
-        {userInfo.userUid && <AccessErrorLogin />}
+        {userInfo && userInfo.userUid && <AccessErrorLogin />}
         <Box
           className="user-avatar-container"
           sx={{ display: { xs: "flex", sm: "flex", md: "none" } }}
@@ -47,15 +47,14 @@ function App() {
             }}
           ></Avatar>
         </Box>
-        {window.location.pathname !== "/" && (
-          <Sidebar
-            onAvatarClick={onAvatarClick}
-            mobileOpen={mobileOpen}
-            setMobileOpen={setMobileOpen}
-          />
-        )}
+        <Sidebar
+          onAvatarClick={onAvatarClick}
+          mobileOpen={mobileOpen}
+          setMobileOpen={setMobileOpen}
+        />
+
         <Routes>
-          <Route path="/" element={<LoginPage />} />
+          <Route path="/" element={<Feed />} />
           <Route path="/feed" element={<Feed />} />
           <Route exact path="/sensei" element={<Sensei />} />
           <Route path="/questions" element={<Questions />} />

@@ -66,10 +66,14 @@ const WalletCard = () => {
 
   // Web3Auth Logout
   const web3Logout = async () => {
-    await web3auth.logout();
-    setCurrentAccount();
-    dispatch(ethereumProvider());
-    console.log("Logged out");
+    try {
+      await web3auth.logout();
+      setCurrentAccount();
+      dispatch(ethereumProvider());
+      console.log("Logged out");
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
   };
 
   // Web3Auth Event Listeners
