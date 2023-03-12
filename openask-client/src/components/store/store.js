@@ -27,7 +27,6 @@ export const providerSlice = createSlice({
   initialState: null,
   reducers: {
     ethereumProvider: (state, action) => {
-      console.log(action);
       return action.payload;
     },
   },
@@ -39,6 +38,19 @@ export const store = configureStore({
     accessErrorSlice: accessErrorSlice.reducer,
     providerSlice: providerSlice.reducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      immutableCheck: false,
+      serializableCheck: false,
+      serializableCheck: {
+        // Ignore these action types
+        ignoredActions: ["provider/ethereumProvider"],
+        // Ignore these field paths in all actions
+        ignoredActionPaths: ["meta.arg", "payload.timestamp"],
+        // Ignore these paths in the state
+        ignoredPaths: ["provider", "providerSlice"],
+      },
+    }),
 });
 
 export const { newUserInfo } = userInfoSlice.actions;

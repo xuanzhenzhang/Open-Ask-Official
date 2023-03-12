@@ -34,15 +34,7 @@ const web3auth = new Web3Auth({
 });
 
 const WalletCard = () => {
-  const [userBalance, setUserBalance] = useState(null);
-
   const [currentAccount, setCurrentAccount] = useState();
-  const [errorMessage, setErrorMessage] = useState();
-  // const [provider, setProvider] = useState();
-  const [deployer, setDeployer] = useState();
-  const [signer, setSigner] = useState();
-  const [lensProfile, setLensProfile] = useState();
-  const [isModalConnected, setIsModalConnected] = useState(false);
 
   const dispatch = useDispatch();
   const userInfo = useSelector((state) => state.userInfoSlice);
@@ -50,14 +42,6 @@ const WalletCard = () => {
 
   const currentAccountString = (account) =>
     account?.slice(0, 4) + "..." + account?.slice(-4);
-
-  // Web3Auth Logout
-  const web3Logout = async () => {
-    await web3auth.logout();
-    setCurrentAccount();
-    dispatch(ethereumProvider());
-    console.log("Logged out");
-  };
 
   // Web3Auth Initialize Modal
   const web3Init = async () => {
@@ -71,16 +55,24 @@ const WalletCard = () => {
     const userWallet = await web3auth.connect();
 
     const provider = await new ethers.providers.Web3Provider(userWallet);
-    console.log(provider);
     dispatch(ethereumProvider(provider));
 
     const signer = await provider.getSigner();
 
     const address = await signer.getAddress();
-    console.log(address);
     setCurrentAccount(currentAccountString(address));
+    postUserWallet(address);
   };
 
+  // Web3Auth Logout
+  const web3Logout = async () => {
+    await web3auth.logout();
+    setCurrentAccount();
+    dispatch(ethereumProvider());
+    console.log("Logged out");
+  };
+
+  // Web3Auth Event Listeners
   const subscribeAuthEvents = async (web3auth) => {
     web3auth.on(ADAPTER_EVENTS.CONNECTING, () => {
       console.log("connecting");
@@ -96,19 +88,6 @@ const WalletCard = () => {
       console.log("error", error);
     });
   };
-
-  // Check Blockchain Network
-  // const checkNetwork = async () => {
-  //   const { ethereum } = window;
-
-  //   let chainId = await ethereum.request({ method: "eth_chainId" });
-  //   console.log("Connected to chain " + chainId);
-
-  //   const goerliChainId = "0x1";
-  //   if (chainId !== goerliChainId) {
-  //     alert("You are not connected to the Ethereum Network!");
-  //   }
-  // };
 
   // Check if wallet is connected
   const checkIfWalletIsConnected = async () => {
@@ -135,7 +114,6 @@ const WalletCard = () => {
       const deployerProvider = await new ethers.providers.Web3Provider(
         window.ethereum
       );
-      console.log(deployerProvider);
       dispatch(ethereumProvider(deployerProvider));
 
       //   // localStorage.setItem("walletAddress", account);
@@ -145,7 +123,7 @@ const WalletCard = () => {
     }
   };
 
-  // Wallet Change Event Listener
+  // Ethereum Wallet Change Event Listener
   const checkWalletChange = async () => {
     const { ethereum } = window;
 
@@ -160,6 +138,7 @@ const WalletCard = () => {
       console.log("Wallet Connected");
       setCurrentAccount(currentAccountString(accounts[0]));
       postUserWallet(accounts[0]);
+      dispatch(ethereumProvider(accounts[0]));
     }
   };
 
