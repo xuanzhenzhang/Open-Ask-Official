@@ -16,10 +16,13 @@ const EavesdropButton = (props) => {
   const userInfo = useSelector((state) => state.userInfoSlice);
   const { accessToken } = userInfo;
 
+  const provider = useSelector((state) => state.providerSlice);
+
   const handleEavesdrop = async () => {
     try {
       setOpenEavesdrop(true);
       const txHash = await eavesdropContract(
+        provider,
         id,
         payees,
         setAskLoaderEavesdropText

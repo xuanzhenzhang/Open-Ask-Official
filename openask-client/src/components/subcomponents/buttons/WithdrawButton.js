@@ -23,10 +23,13 @@ const WithdrawButton = (props) => {
   const userInfo = useSelector((state) => state.userInfoSlice);
   const { accessToken } = userInfo;
 
+  const provider = useSelector((state) => state.providerSlice);
+
   const withdraw = async () => {
     try {
       setOpenWithdraw(true);
       const txHash = await withdrawEthPayment(
+        provider,
         contractAddress,
         bountyId,
         contributionId,

@@ -39,6 +39,8 @@ const AnswerQuestion = (props) => {
   const userInfo = useSelector((state) => state.userInfoSlice);
   const { accessToken } = userInfo;
 
+  const provider = useSelector((state) => state.providerSlice);
+
   let etherAmount = 0;
   if (rewardAmount) {
     etherAmount = ethers.utils.formatEther(rewardAmount.toString());
@@ -54,6 +56,7 @@ const AnswerQuestion = (props) => {
 
       // Receive Bounty
       const txHash = await ethBountyReceiveContract(
+        provider,
         contractAddress,
         bountyId,
         data.data.answerId,

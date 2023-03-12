@@ -26,7 +26,7 @@ const AskQuestion = (props) => {
   const [allSenseis, setAllSenseis] = useState([]);
 
   const [askLoader, setAskLoader] = useState(false);
-  const [askLoaderText, setAskLoaderText] = useState("Continue on Metamask");
+  const [askLoaderText, setAskLoaderText] = useState("Continue on Wallet");
 
   const [question, setQuestion] = useState("");
   const [sensei, setSensei] = useState();
@@ -44,6 +44,8 @@ const AskQuestion = (props) => {
 
   const userInfo = useSelector((state) => state.userInfoSlice);
   const { accessToken } = userInfo;
+
+  const provider = useSelector((state) => state.providerSlice);
 
   // Set Sensei Name if Available
   useEffect(() => {
@@ -156,6 +158,7 @@ const AskQuestion = (props) => {
 
         // Add Bounty
         const txHash = await ethBountyContract(
+          provider, // Provider
           [`${paymentSensei.walletAddress}`], // Sensei Address
           futureTimestamp, //48 Hours
           bountyToken, // Token Amount

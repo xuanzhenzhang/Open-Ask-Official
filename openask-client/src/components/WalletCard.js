@@ -1,25 +1,19 @@
 import { Web3Auth } from "@web3auth/modal";
+import { ADAPTER_EVENTS } from "@web3auth/base";
 import React, { useState, useEffect } from "react";
 import { ethers } from "ethers";
-import Button from "@mui/material/Button";
 import axios from "axios";
 import { Box, Typography } from "@mui/material";
-import { LensCard } from "./LensCard";
 import { useSelector, useDispatch } from "react-redux";
 import { setAccessErrorTrue } from "./store/store";
-
-// import {
-//   GaslessOnboarding,
-//   GaslessWalletConfig,
-//   GaslessWalletInterface,
-//   LoginConfig,
-// } from "@gelatonetwork/gasless-onboarding";
+import { openAskLogo } from "./data/VectorSVGs";
+import { ethereumProvider } from "./store/store";
 
 const web3auth = new Web3Auth({
   uiConfig: {
-    appLogo: "https://images.web3auth.io/web3auth-logo-w.svg",
+    appLogo: openAskLogo,
     theme: "light",
-    loginMethodsOrder: ["twitter"],
+    loginMethodsOrder: ["twitter", "discord", "github"],
     defaultLanguage: "en",
   },
   clientId:
@@ -44,7 +38,8 @@ const WalletCard = () => {
 
   const [currentAccount, setCurrentAccount] = useState();
   const [errorMessage, setErrorMessage] = useState();
-  const [provider, setProvider] = useState();
+  // const [provider, setProvider] = useState();
+  const [deployer, setDeployer] = useState();
   const [signer, setSigner] = useState();
   const [lensProfile, setLensProfile] = useState();
   const [isModalConnected, setIsModalConnected] = useState(false);
@@ -56,73 +51,71 @@ const WalletCard = () => {
   const currentAccountString = (account) =>
     account?.slice(0, 4) + "..." + account?.slice(-4);
 
+  // Web3Auth Logout
   const web3Logout = async () => {
     await web3auth.logout();
+    setCurrentAccount();
+    dispatch(ethereumProvider());
+    console.log("Logged out");
   };
 
+  // Web3Auth Initialize Modal
+  const web3Init = async () => {
+    await web3auth.initModal();
+    console.log("Modal Initialized");
+    await subscribeAuthEvents(web3auth);
+  };
+
+  // Web3Auth Connect
   const web3Connect = async () => {
-    if (!isModalConnected) {
-      await web3auth.initModal();
-      setIsModalConnected(true);
-    }
-
     const userWallet = await web3auth.connect();
-    console.log(userWallet);
 
-    const web3Provider = new ethers.providers.Web3Provider(web3auth.provider);
-    console.log(web3Provider);
+    const provider = await new ethers.providers.Web3Provider(userWallet);
+    console.log(provider);
+    dispatch(ethereumProvider(provider));
+
+    const signer = await provider.getSigner();
+
+    const address = await signer.getAddress();
+    console.log(address);
+    setCurrentAccount(currentAccountString(address));
   };
 
-  // Connect wallet method
-  // const connectWallet = async () => {
-  //   try {
-  //     const { ethereum } = window;
-
-  //     if (!ethereum) {
-  //       console.log("Need to install MetaMask");
-  //       setErrorMessage(
-  //         "Please install MetaMask browser extension to interact."
-  //       );
-  //       return;
-  //     }
-  //     // Request account access
-  //     const accounts = await ethereum.request({
-  //       method: "eth_requestAccounts",
-  //     });
-  //     console.log("Connected", accounts[0]);
-  //     checkNetwork();
-  //     setCurrentAccount(currentAccountString(accounts[0]));
-  //     // const profileResponse = await profileQuery(
-  //     //   currentAccountString(accounts[0])
-  //     // );
-  //     // console.log("profileResponse:1!! ", profileResponse);
-  //     // setLensProfile(profileResponse.defaultProfile);
-  //     setupEventListener();
-  //     setUserWallet(accounts[0]);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
+  const subscribeAuthEvents = async (web3auth) => {
+    web3auth.on(ADAPTER_EVENTS.CONNECTING, () => {
+      console.log("connecting");
+    });
+    web3auth.on(ADAPTER_EVENTS.CONNECTED, (data) => {
+      console.log("connected to wallet", data);
+      // web3auth.provider will be available here after user is connected
+    });
+    web3auth.on(ADAPTER_EVENTS.DISCONNECTED, () => {
+      console.log("disconnected");
+    });
+    web3auth.on(ADAPTER_EVENTS.ERRORED, (error) => {
+      console.log("error", error);
+    });
+  };
 
   // Check Blockchain Network
-  const checkNetwork = async () => {
-    const { ethereum } = window;
+  // const checkNetwork = async () => {
+  //   const { ethereum } = window;
 
-    let chainId = await ethereum.request({ method: "eth_chainId" });
-    console.log("Connected to chain " + chainId);
+  //   let chainId = await ethereum.request({ method: "eth_chainId" });
+  //   console.log("Connected to chain " + chainId);
 
-    const goerliChainId = "0x1";
-    if (chainId !== goerliChainId) {
-      alert("You are not connected to the Ethereum Network!");
-    }
-  };
+  //   const goerliChainId = "0x1";
+  //   if (chainId !== goerliChainId) {
+  //     alert("You are not connected to the Ethereum Network!");
+  //   }
+  // };
 
   // Check if wallet is connected
   const checkIfWalletIsConnected = async () => {
     const { ethereum } = window;
 
     if (!ethereum) {
-      console.log("Please install metamask!");
+      console.log("No wallet found.");
       return;
     } else {
       console.log("We have the ethereum object", ethereum);
@@ -131,56 +124,47 @@ const WalletCard = () => {
     // Check access to user's wallet
     const accounts = await ethereum.request({ method: "eth_accounts" });
 
+    // Wallet Change Event Listener
+    ethereum.on("accountsChanged", checkWalletChange);
+
     // Use first account if multiple authorized accounts
     if (accounts.length !== 0) {
       const account = accounts[0];
-      console.log("Found an authorized account:", account);
       setCurrentAccount(currentAccountString(account));
-      setupEventListener();
-      setUserWallet(account);
-      localStorage.setItem("walletAddress", account);
+      postUserWallet(account);
+      const deployerProvider = await new ethers.providers.Web3Provider(
+        window.ethereum
+      );
+      console.log(deployerProvider);
+      dispatch(ethereumProvider(deployerProvider));
+
+      //   // localStorage.setItem("walletAddress", account);
     } else {
       console.log("No authorized account found");
+      dispatch(ethereumProvider());
     }
   };
 
-  // Disconnect Wallet
-  const handleDisconnect = async () => {
+  // Wallet Change Event Listener
+  const checkWalletChange = async () => {
     const { ethereum } = window;
 
     const accounts = await ethereum.request({ method: "eth_accounts" });
+    console.log("Event Listener Set");
 
     if (accounts.length === 0) {
       console.log("Wallet Disconnected");
       setCurrentAccount();
+      dispatch(ethereumProvider());
     } else if (accounts.length > 0) {
+      console.log("Wallet Connected");
       setCurrentAccount(currentAccountString(accounts[0]));
-    }
-  };
-
-  // Set Event
-  const setupEventListener = async () => {
-    try {
-      const { ethereum } = window;
-
-      if (ethereum) {
-        const provider = new ethers.providers.Web3Provider(ethereum);
-        // const signer = provider.getSigner();
-        setProvider(provider);
-
-        ethereum.on("accountsChanged", handleDisconnect);
-
-        console.log("Successfully setup event listener.");
-      } else {
-        console.log("Ethereum object doesn't exist");
-      }
-    } catch (error) {
-      console.log(error);
+      postUserWallet(accounts[0]);
     }
   };
 
   // POST Wallet Address to Backend
-  const setUserWallet = async (userWallet) => {
+  const postUserWallet = async (userWallet) => {
     try {
       await axios.post(
         `https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/user-wallet`,
@@ -193,7 +177,7 @@ const WalletCard = () => {
           },
         }
       );
-      console.log(`Wallet Address Set: ${userWallet}`);
+      console.log(`Wallet Address Posted to Backend: ${userWallet}`);
     } catch (error) {
       if (error.response.status === 403) {
         dispatch(setAccessErrorTrue());
@@ -202,54 +186,17 @@ const WalletCard = () => {
     }
   };
 
-  // Get wallet balance
-  // useEffect(() => {
-  //   if (currentAccount) {
-  //     provider?.getBalance(currentAccount).then((balanceResult) => {
-  //       setUserBalance(ethers.utils.formatEther(balanceResult));
-  //     });
-  //   }
-  // }, [provider]);
-
   useEffect(() => {
-    console.log("Checking Wallet Connection");
     checkIfWalletIsConnected();
+    web3Init();
   }, []);
-
-  // const init = async () => {
-  //   const gaslessWalletConfig = {
-  //     apiKey: "Q7E6fPdBQmEA9ArUXXKP_wE_m_v_Y20WkCeU5WLsmxU_",
-  //   };
-
-  //   const loginConfig = {
-  //     domains: [window.location.origin],
-  //     chain: {
-  //       id: 84531,
-  //       rpcUrl: "https://goerli.base.org",
-  //     },
-  //     openLogin: {
-  //       redirectUrl: `${window.location.origin}`,
-  //     },
-  //   };
-
-  //   const gelatoLogin = new GaslessOnboarding(loginConfig, gaslessWalletConfig);
-
-  //   await gelatoLogin.init();
-
-  //   await gelatoLogin.login();
-
-  //   const gelato = gelatoLogin.getProvider();
-
-  //   const provider = new ethers.providers.Web3Provider(gelato);
-  //   const signer = provider.getSigner();
-  //   const addr = await signer.getAddress();
-  //   localStorage.setItem("walletAddress", addr);
-  //   window.location.reload();
-  // };
 
   return (
     <>
-      <Box onClick={web3Connect} className="wallet-btn">
+      <Box
+        onClick={currentAccount ? web3Logout : web3Connect}
+        className="wallet-btn"
+      >
         <Typography sx={{ display: "flex", justifyContent: "center" }}>
           {" "}
           {currentAccount ? currentAccount : "Connect Wallet"}
