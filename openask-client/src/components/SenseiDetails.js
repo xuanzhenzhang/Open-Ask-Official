@@ -45,7 +45,7 @@ const SenseiDetails = () => {
 
   // Set My Page
   useEffect(() => {
-    if (userInfo.profile.handle === twitter) {
+    if (userInfo?.profile?.handle === twitter) {
       setMyPage(true);
     } else {
       setMyPage(false);

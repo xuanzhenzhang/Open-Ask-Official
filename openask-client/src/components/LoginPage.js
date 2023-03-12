@@ -17,7 +17,7 @@ const LoginPage = () => {
       >
         <Button
           className="btn-login"
-          onClick={signInTwitter}
+          onClick={() => signInTwitter(false)}
           variant="contained"
           size="large"
           startIcon={<TwitterIcon />}

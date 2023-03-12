@@ -55,7 +55,7 @@ const SidebarList = ({ setMobileOpen, mobileOpen }) => {
     } else if (location.pathname === "/transaction_history") {
       setSelectedIndex(4);
     } else if (
-      location.pathname === `/sensei/${userInfo && userInfo?.profile.handle}`
+      location.pathname === `/sensei/${userInfo && userInfo?.profile?.handle}`
     ) {
       setSelectedIndex(5);
     }

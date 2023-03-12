@@ -27,9 +27,8 @@ const QuestionId = () => {
   const [answerExists, setAnswerExists] = useState(true);
   const [open, setOpen] = useState(false);
 
-  const [askLoaderEavesdropText, setAskLoaderEavesdropText] = useState(
-    "Continue on Metamask"
-  );
+  const [askLoaderEavesdropText, setAskLoaderEavesdropText] =
+    useState("Continue on Wallet");
   const [openEavesdrop, setOpenEavesdrop] = useState(false);
 
   const params = useParams();
