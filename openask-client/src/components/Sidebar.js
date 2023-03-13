@@ -26,6 +26,7 @@ const Sidebar = (props) => {
             display: { xs: "flex", sm: "flex", md: "none" },
             "& .MuiDrawer-paper": {
               width: "200px",
+              backgroundColor: "#f2f2f2",
             },
           }}
         >
@@ -42,6 +43,7 @@ const Sidebar = (props) => {
             display: { xs: "none", sm: "none", md: "flex" },
             "& .MuiDrawer-paper": {
               width: "300px",
+              backgroundColor: "#f2f2f2",
             },
           }}
           open
