@@ -19,15 +19,17 @@ const QuestionHeader = (props) => {
     navigate(`/sensei/${twitter}`);
   };
 
-  // const etherAmount = Number(tokenAmount / 10 / Math.pow(10, 17));
-  let etherAmount = 0;
-  // const gweiValue = ethers.utils.parseUnits(tokenAmount.toString(), "gwei");
-  // const etherAmount = ethers.utils.formatEther(gweiValue);
+  // Format token amount
+  let roundedTokenAmount;
   if (tokenAmount) {
-    etherAmount = ethers.utils.formatEther(tokenAmount.toString());
+    const formattedTokenAmount = ethers.utils.formatEther(
+      tokenAmount?.toString()
+    );
+    roundedTokenAmount = Math.min(
+      parseFloat(formattedTokenAmount).toFixed(3),
+      parseFloat(formattedTokenAmount)
+    );
   }
-  // const etherAmount = BigNumber(tokenAmount).div(BigNumber(Math.pow(10, 18)));
-  // const etherAmount = 10;
 
   const tokenSymbol = (tokenType) => {
     if (tokenType === "0x0000000000000000000000000000000000000000") {
@@ -80,7 +82,7 @@ const QuestionHeader = (props) => {
 
             {price && (
               <PriceButton
-                tokenAmount={etherAmount}
+                tokenAmount={roundedTokenAmount}
                 tokenType={tokenSymbol(tokenType)}
               />
             )}

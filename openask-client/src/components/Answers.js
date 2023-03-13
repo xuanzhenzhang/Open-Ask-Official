@@ -92,8 +92,6 @@ const Answers = () => {
     getUsers().then((users) => {
       const modifiedUsers = users.map((user) => {
         if (user?.profile?.imageUrl?.startsWith("ipfs")) {
-          console.log(user);
-
           return {
             ...user,
             profile: {

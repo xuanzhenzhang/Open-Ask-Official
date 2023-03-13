@@ -41,9 +41,16 @@ const AnswerQuestion = (props) => {
 
   const provider = useSelector((state) => state.providerSlice);
 
-  let etherAmount = 0;
+  // Format token amount
+  let roundedTokenAmount;
   if (rewardAmount) {
-    etherAmount = ethers.utils.formatEther(rewardAmount.toString());
+    const formattedTokenAmount = ethers.utils.formatEther(
+      rewardAmount?.toString()
+    );
+    const roundedTokenAmount = Math.min(
+      parseFloat(formattedTokenAmount).toFixed(3),
+      parseFloat(formattedTokenAmount)
+    );
   }
 
   const handleEthBountyReceive = async () => {
@@ -201,7 +208,7 @@ const AnswerQuestion = (props) => {
             <Typography className="ask-question-text">from: </Typography>
             <Avatar className="ask-question-avatar" alt={handle} src={avatar} />
             <Typography> {displayName}</Typography>
-            <PriceButton tokenAmount={etherAmount} tokenType="ETH" />
+            <PriceButton tokenAmount={roundedTokenAmount} tokenType="ETH" />
           </CardContent>
           <CardContent className="answer-question-question">
             <Typography>{answerQuestion}</Typography>
