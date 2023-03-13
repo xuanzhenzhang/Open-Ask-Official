@@ -22,7 +22,7 @@ import QuestionFooter from "./subcomponents/card/QuestionFooter";
 import WithdrawQuestion from "./subcomponents/WithdrawQuestion";
 
 const Questions = () => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [value, setValue] = useState(0);
 
   const [allUsers, setAllUsers] = useState();
@@ -42,7 +42,6 @@ const Questions = () => {
 
   // Get all questions asked by user
   useEffect(() => {
-    setLoading(true);
     const getQuestionsBy = async () => {
       if (userInfo?.userUid) {
         try {
@@ -52,9 +51,10 @@ const Questions = () => {
           const filteredQuestions = response.data.filter((data) => data.txHash);
           // Set all questions
           setAllQuestionsAsked(filteredQuestions);
-          setLoading(false);
         } catch (error) {
           console.error(error);
+        } finally {
+          setLoading(false);
         }
       } else {
         setLoading(false);
@@ -67,7 +67,6 @@ const Questions = () => {
   // Get all purchased questions
   useEffect(() => {
     if (userInfo) {
-      setLoading(true);
       // Get all info for purchased questions
       const getPurchasedQuestions = async () => {
         try {
@@ -81,7 +80,6 @@ const Questions = () => {
           if (error.response.status === 403) {
             dispatch(setAccessErrorTrue());
           }
-          setLoading(false);
           console.log(error);
         }
       };

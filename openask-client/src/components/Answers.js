@@ -21,7 +21,7 @@ import QuestionFooter from "./subcomponents/card/QuestionFooter";
 import AnswerQuestion from "./subcomponents/AnswerQuestion";
 
 const Answers = () => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [value, setValue] = useState(0);
 
   const [allUsers, setAllUsers] = useState();
@@ -46,7 +46,6 @@ const Answers = () => {
 
   //   Get all Questions For User
   useEffect(() => {
-    setLoading(true);
     const getQuestionsFor = async () => {
       if (userInfo) {
         try {
@@ -79,8 +78,11 @@ const Answers = () => {
           setAllQuestionsFor(filteredQuestions);
         } catch (error) {
           console.error(error);
+        } finally {
+          setLoading(false);
         }
       } else {
+        setLoading(false);
         console.log("No ID");
       }
     };
@@ -136,11 +138,11 @@ const Answers = () => {
   };
 
   //   Set loading to false when allUsers and allQuestionsFor are loaded
-  useEffect(() => {
-    if (allUsers && allQuestionsFor && loading) {
-      setLoading(false);
-    }
-  }, [allUsers, allQuestionsFor, loading]);
+  // useEffect(() => {
+  //   if (allUsers && allQuestionsFor && loading) {
+  //     setLoading(false);
+  //   }
+  // }, [allUsers, allQuestionsFor, loading]);
 
   return (
     <>

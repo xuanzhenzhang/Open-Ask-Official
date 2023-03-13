@@ -21,7 +21,7 @@ import SenseiBody from "./subcomponents/SenseiBody";
 import AskQuestion from "./subcomponents/AskQuestion";
 
 const Sensei = () => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [filteredSensei, setFilteredSensei] = useState();
   const [autocompleteSensei, setAutocompleteSensei] = useState([]);
 
@@ -43,7 +43,6 @@ const Sensei = () => {
 
   // Get all users
   useEffect(() => {
-    setLoading(true);
     getUsers().then((users) => {
       const modifiedUsers = users.map((user) => {
         if (user?.profile?.imageUrl?.startsWith("ipfs")) {

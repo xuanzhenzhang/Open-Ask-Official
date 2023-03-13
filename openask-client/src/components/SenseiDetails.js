@@ -24,7 +24,7 @@ import AskSenseiButton from "./subcomponents/buttons/AskSenseiButton.js";
 import { calendarSVG, linkSVG, backSvg } from "./data/VectorSVGs.js";
 
 const SenseiDetails = () => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState([]);
   const [allUsers, setAllUsers] = useState();
   const [openBackdrop, setOpenBackdrop] = useState(false);
@@ -66,7 +66,6 @@ const SenseiDetails = () => {
 
   // Get Sensei
   useEffect(() => {
-    setLoading(true);
     const getUsers = async () => {
       try {
         const { data } = await axios.get(`${endpoint}/users`);
@@ -118,10 +117,10 @@ const SenseiDetails = () => {
 
         setAllQuestions(questions);
         setAllAnswers(answers);
-        setLoading(false);
       } catch (error) {
-        setLoading(false);
         console.error(error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -133,10 +132,6 @@ const SenseiDetails = () => {
   // Navigate to question landing page
   const handleCardClick = (id) => {
     navigate(`/id/${id}`);
-  };
-
-  const onBtnClick = () => {
-    navigate("/sensei/ask");
   };
 
   // Go Back Function
