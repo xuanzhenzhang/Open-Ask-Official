@@ -1,17 +1,12 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import Card from "@mui/material/Card";
-
-import { getUsers } from "../functions/getUsers";
 
 import QuestionHeader from "./card/QuestionHeader";
 import QuestionBody from "./card/QuestionBody";
 import QuestionFooter from "./card/QuestionFooter";
 
-const FeedCards = ({ data, price }) => {
-  const [questions, setQuestions] = useState([]);
-  const [allUsers, setAllUsers] = useState([]);
-
+const FeedCards = ({ questions, allUsers }) => {
   const navigate = useNavigate();
 
   // Navigate to Question landing Page
@@ -21,39 +16,6 @@ const FeedCards = ({ data, price }) => {
     },
     [navigate]
   );
-
-  // Get all users
-  useEffect(() => {
-    let isMounted = true;
-    getUsers().then((users) => {
-      const modifiedUsers = users.map((user) => {
-        if (user?.profile?.imageUrl?.startsWith("ipfs")) {
-          return {
-            ...user,
-            profile: {
-              ...user.profile,
-              imageUrl: `https://gateway.pinata.cloud/ipfs/${
-                user.profile.imageUrl.split("/")[2]
-              }`,
-            },
-          };
-        } else {
-          return user;
-        }
-      });
-      if (isMounted) {
-        setAllUsers(modifiedUsers);
-      }
-    });
-    return () => {
-      isMounted = false;
-    };
-  }, []);
-
-  // Set imported data as question set
-  useEffect(() => {
-    setQuestions(data);
-  }, [data]);
 
   return (
     <div>
