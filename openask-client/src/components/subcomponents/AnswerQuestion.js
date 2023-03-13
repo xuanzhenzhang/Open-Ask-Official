@@ -17,6 +17,7 @@ import PriceButton from "./buttons/PriceButton";
 import SubmitAnswerButton from "./buttons/SubmitAnswerButton";
 import { ethBountyReceiveContract } from "../functions/smartContract/ethBountyReceivePayment";
 import { ethers } from "ethers";
+import { endpoint } from "../data/endpoint";
 
 const AnswerQuestion = (props) => {
   const { handleCloseBackdrop } = props;
@@ -102,7 +103,7 @@ const AnswerQuestion = (props) => {
   const postAnswer = async (questionId) => {
     try {
       const data = await axios.post(
-        `https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/answer/${questionId}`,
+        `${endpoint}/answer/${questionId}`,
         {
           body: answer,
         },
@@ -127,7 +128,7 @@ const AnswerQuestion = (props) => {
   const putAnswer = async (txHash) => {
     try {
       const data = await axios.put(
-        `https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/answer/${txHash}`,
+        `${endpoint}/answer/${txHash}`,
         {},
         {
           headers: {

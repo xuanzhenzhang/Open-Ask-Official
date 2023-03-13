@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { newUserInfo } from "../store/store";
 import { setAccessErrorFalse } from "../store/store";
+import { endpoint } from "../data/endpoint";
 // var provider = new firebase.auth.TwitterAuthProvider();
 
 const provider = new TwitterAuthProvider();
@@ -52,7 +53,7 @@ export const useTwitterSignIn = () => {
   const addUser = async (accessToken) => {
     try {
       const user = await axios.post(
-        `https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/login`,
+        `${endpoint}/login`,
         {},
         {
           headers: {

@@ -6,6 +6,7 @@ import { withdrawEthPayment } from "../../functions/smartContract/withdrawEthPay
 import axios from "axios";
 import confetti from "canvas-confetti";
 import { useSelector } from "react-redux";
+import { endpoint } from "../../data/endpoint";
 
 const WithdrawButton = (props) => {
   const {
@@ -59,7 +60,7 @@ const WithdrawButton = (props) => {
   const putWithdraw = async (questionId) => {
     try {
       const data = await axios.put(
-        `https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/question-withdrawn/${questionId}`,
+        `${endpoint}/question-withdrawn/${questionId}`,
         {},
         {
           headers: {

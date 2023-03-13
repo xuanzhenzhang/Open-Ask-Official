@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Box, Button, Menu, MenuItem, Typography } from "@mui/material";
 import axios from "axios";
+import { endpoint } from "../data/endpoint";
 
 const FeedFilters = ({ questions, setQuestions }) => {
   const [lastClicked, setLastClicked] = useState("joined");
@@ -18,9 +19,7 @@ const FeedFilters = ({ questions, setQuestions }) => {
     const questionByPrice = async () => {
       try {
         const { data } = await axios
-          .get(
-            "https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/questions-by-price"
-          )
+          .get(`${endpoint}/questions-by-price`)
           .catch((error) => {
             console.log(error);
           });

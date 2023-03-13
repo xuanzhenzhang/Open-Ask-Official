@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
+import { endpoint } from "./data/endpoint";
 import Container from "@mui/material/Container";
 import Card from "@mui/material/Card";
 import Tabs from "@mui/material/Tabs";
@@ -50,7 +51,7 @@ const Answers = () => {
       if (userInfo) {
         try {
           const { data } = await axios.get(
-            `https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/questions-for/${userInfo.userUid}`
+            `${endpoint}/questions-for/${userInfo.userUid}`
           );
           const filteredQuestions = data.filter((response) => response.txHash);
 

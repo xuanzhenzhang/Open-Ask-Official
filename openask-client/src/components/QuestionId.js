@@ -9,6 +9,7 @@ import QuestionHeader from "./subcomponents/card/QuestionHeader";
 import QuestionBody from "./subcomponents/card/QuestionBody";
 import QuestionFooter from "./subcomponents/card/QuestionFooter";
 import EavesdropQuestion from "./subcomponents/EavesdropQuestion";
+import { endpoint } from "./data/endpoint";
 
 import IconButton from "@mui/material/IconButton";
 import Loader from "./subcomponents/Loader";
@@ -44,9 +45,7 @@ const QuestionId = () => {
     setLoading(true);
     const getQuestion = async () => {
       try {
-        const { data } = await axios.get(
-          `https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/question/${id}`
-        );
+        const { data } = await axios.get(`${endpoint}/question/${id}`);
         console.log(data);
         setQuestion(data);
       } catch (error) {
@@ -63,7 +62,7 @@ const QuestionId = () => {
       try {
         if (question) {
           const { data } = await axios.get(
-            `https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/user/${question?.questionerUid}`
+            `${endpoint}/user/${question?.questionerUid}`
           );
 
           let modifiedUser = data?.profile?.imageUrl?.startsWith("ipfs")
@@ -94,7 +93,7 @@ const QuestionId = () => {
       try {
         if (question) {
           const { data } = await axios.get(
-            `https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/user/${question?.questioneeUid}`
+            `${endpoint}/user/${question?.questioneeUid}`
           );
           setAnswerer(data);
         }
@@ -112,7 +111,7 @@ const QuestionId = () => {
       if (question.answerId) {
         try {
           const { data } = await axios.get(
-            `https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/answer-to-question/${id}`,
+            `${endpoint}/answer-to-question/${id}`,
             {
               headers: {
                 Authorization: `Bearer ${accessToken}`,

@@ -6,6 +6,7 @@ import AskQuestion from "./subcomponents/AskQuestion";
 import { WalletCard } from "./WalletCard";
 import LensCard from "./LensCard";
 import { useSelector } from "react-redux";
+import { endpoint } from "./data/endpoint";
 import {
   openAskLogo,
   homeFilled,
@@ -106,7 +107,7 @@ const SidebarList = ({ setMobileOpen, mobileOpen }) => {
       if (userInfo) {
         try {
           const { data } = await axios.get(
-            `https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/questions-for/${userInfo.userUid}`
+            `${endpoint}/questions-for/${userInfo.userUid}`
           );
           const waiting = data.filter((question) => {
             return !question.answerId;

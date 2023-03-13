@@ -14,6 +14,7 @@ import { getUsers } from "./functions/getUsers";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { setAccessErrorTrue } from "./store/store";
+import { endpoint } from "./data/endpoint";
 
 import QuestionHeader from "./subcomponents/card/QuestionHeader";
 import QuestionBody from "./subcomponents/card/QuestionBody";
@@ -46,7 +47,7 @@ const Questions = () => {
       if (userInfo?.userUid) {
         try {
           const response = await axios.get(
-            `https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/questions-by/${userInfo.userUid}`
+            `${endpoint}/questions-by/${userInfo.userUid}`
           );
           const filteredQuestions = response.data.filter((data) => data.txHash);
           // Set all questions
@@ -70,14 +71,11 @@ const Questions = () => {
       // Get all info for purchased questions
       const getPurchasedQuestions = async () => {
         try {
-          const { data } = await axios.get(
-            "https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/questions-purchased",
-            {
-              headers: {
-                Authorization: `Bearer ${accessToken}`,
-              },
-            }
-          );
+          const { data } = await axios.get(`${endpoint}/questions-purchased`, {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          });
           setAllQuestionsPurchased(data);
         } catch (error) {
           if (error.response.status === 403) {

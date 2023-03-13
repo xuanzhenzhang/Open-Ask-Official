@@ -3,6 +3,7 @@ import { ethers } from "ethers";
 import axios from "axios";
 import { Box, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
+import { endpoint } from "./data/endpoint";
 import { GaslessOnboarding } from "@gelatonetwork/gasless-onboarding";
 
 const { ApolloClient, InMemoryCache, gql } = require("@apollo/client");
@@ -187,7 +188,7 @@ const LensCard = () => {
   const useLensProfile = async () => {
     axios
       .put(
-        "https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/user/lens",
+        `${endpoint}/user/lens`,
         {
           profile: lensProfile,
         },

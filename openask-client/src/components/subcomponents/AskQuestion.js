@@ -18,6 +18,7 @@ import confetti from "canvas-confetti";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { setAccessErrorTrue } from "../store/store";
+import { endpoint } from "../data/endpoint";
 
 const AskQuestion = (props) => {
   const { handleCloseBackdrop } = props;
@@ -206,7 +207,7 @@ const AskQuestion = (props) => {
   const askQuestion = async (tokenAmountBackend) => {
     try {
       const data = await axios.post(
-        `https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/question`,
+        `${endpoint}/question`,
         {
           body: question,
           questioneeUid: senseiId,
@@ -233,7 +234,7 @@ const AskQuestion = (props) => {
   const updateQuestion = async (txHash) => {
     try {
       const data = await axios.put(
-        `https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/question/${txHash}`,
+        `${endpoint}/question/${txHash}`,
         {},
         {
           headers: {

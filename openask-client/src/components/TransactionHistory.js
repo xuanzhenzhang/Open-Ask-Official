@@ -20,6 +20,7 @@ import { getUsers } from "./functions/getUsers";
 import axios from "axios";
 import { ethers } from "../../node_modules/ethers/lib/index";
 import Loader from "./subcomponents/Loader";
+import { endpoint } from "./data/endpoint";
 
 const TransactionHistory = () => {
   const [loading, setLoading] = useState(true);
@@ -31,9 +32,7 @@ const TransactionHistory = () => {
     const getQuestions = async () => {
       try {
         const { data } = await axios
-          .get(
-            "https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/questions"
-          )
+          .get(`${endpoint}/questions`)
           .catch((error) => {
             console.log(error);
           });

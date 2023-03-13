@@ -3,7 +3,6 @@ import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 
 import { Routes, Route } from "react-router-dom";
-import LoginPage from "./components/LoginPage";
 import Sensei from "./components/Sensei";
 import Feed from "./components/Feed";
 import Sidebar from "./components/Sidebar";

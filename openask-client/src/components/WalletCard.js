@@ -8,6 +8,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { setAccessErrorTrue } from "./store/store";
 import { openAskLogo } from "./data/VectorSVGs";
 import { ethereumProvider } from "./store/store";
+import { endpoint } from "./data/endpoint";
 
 const web3auth = new Web3Auth({
   uiConfig: {
@@ -150,7 +151,7 @@ const WalletCard = () => {
   const postUserWallet = async (userWallet) => {
     try {
       await axios.post(
-        `https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/user-wallet`,
+        `${endpoint}/user-wallet`,
         {
           body: userWallet,
         },

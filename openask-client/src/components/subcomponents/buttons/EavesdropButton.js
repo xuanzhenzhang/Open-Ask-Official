@@ -6,6 +6,7 @@ import { eavesdropContract } from "../../functions/smartContract/eavesdropContra
 import axios from "axios";
 import confetti from "canvas-confetti";
 import { useSelector } from "react-redux";
+import { endpoint } from "../../data/endpoint";
 
 const EavesdropButton = (props) => {
   const { id, payees, setAskLoaderEavesdropText, setOpenEavesdrop, answerId } =
@@ -52,7 +53,7 @@ const EavesdropButton = (props) => {
   const putEavesdrop = async (answerId) => {
     try {
       const data = await axios.put(
-        `https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/answer/payment/${answerId}`,
+        `${endpoint}/answer/payment/${answerId}`,
         {},
         {
           headers: {

@@ -1,5 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import Container from "@mui/material/Container";
 import { Box } from "@mui/system";
 
@@ -7,6 +6,7 @@ import FeedCards from "./subcomponents/FeedCards.js";
 import Loader from "./subcomponents/Loader.js";
 import axios, * as others from "axios";
 import FeedFilters from "./subcomponents/FeedFilters.js";
+import { endpoint } from "./data/endpoint.js";
 
 const Feed = () => {
   const [loading, setLoading] = useState(true);
@@ -17,9 +17,7 @@ const Feed = () => {
     const getQuestions = async () => {
       try {
         const { data } = await axios
-          .get(
-            "https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/questions"
-          )
+          .get(`${endpoint}/questions`)
           .catch((error) => {
             console.log(error);
           });

@@ -18,6 +18,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Loader from "./subcomponents/Loader.js";
 import AskQuestion from "./subcomponents/AskQuestion.js";
+import { endpoint } from "./data/endpoint";
 
 import AskSenseiButton from "./subcomponents/buttons/AskSenseiButton.js";
 import { calendarSVG, linkSVG, backSvg } from "./data/VectorSVGs.js";
@@ -68,9 +69,7 @@ const SenseiDetails = () => {
     setLoading(true);
     const getUsers = async () => {
       try {
-        const { data } = await axios.get(
-          `https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/users`
-        );
+        const { data } = await axios.get(`${endpoint}/users`);
         const modifiedUsers = data.map((user) => {
           if (user?.profile?.imageUrl?.startsWith("ipfs")) {
             return {
@@ -104,10 +103,10 @@ const SenseiDetails = () => {
     const getUserQuestions = async () => {
       try {
         const { data: questionsBy } = await axios.get(
-          `https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/questions-by/${profile[0]?.userId}`
+          `${endpoint}/questions-by/${profile[0]?.userId}`
         );
         const { data: questionsFor } = await axios.get(
-          `https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/questions-for/${profile[0]?.userId}`
+          `${endpoint}/questions-for/${profile[0]?.userId}`
         );
 
         const questions = questionsBy.filter((question) => {
