@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Container,
   Table,
@@ -16,8 +16,68 @@ import {
 import { useNavigate } from "react-router-dom";
 import questions from "./data/questionsData";
 import PriceButton from "./subcomponents/buttons/PriceButton";
+import { getUsers } from "./functions/getUsers";
+import axios from "axios";
+import { ethers } from "../../node_modules/ethers/lib/index";
+import Loader from "./subcomponents/Loader";
 
 const TransactionHistory = () => {
+  const [loading, setLoading] = useState(true);
+  const [allUsers, setAllUsers] = useState([]);
+  const [questions, setQuestions] = useState();
+
+  // Get Completed Questions and Answers
+  useEffect(() => {
+    const getQuestions = async () => {
+      try {
+        const { data } = await axios
+          .get(
+            "https://us-central1-open-ask-dbbe2.cloudfunctions.net/api/questions"
+          )
+          .catch((error) => {
+            console.log(error);
+          });
+
+        // Filter out questions without answers
+        const filteredData = data?.filter((question) => {
+          return question.answerId;
+        });
+
+        // Set feed data
+        setQuestions(filteredData);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    getQuestions();
+  }, []);
+
+  // Get all users
+  useEffect(() => {
+    getUsers().then((users) => {
+      const modifiedUsers = users.map((user) => {
+        if (user?.profile?.imageUrl?.startsWith("ipfs")) {
+          return {
+            ...user,
+            profile: {
+              ...user.profile,
+              // https://ipfs.io/ipfs/
+              imageUrl: `https://gateway.pinata.cloud/ipfs/${
+                user.profile.imageUrl.split("/")[2]
+              }`,
+            },
+          };
+        } else {
+          return user;
+        }
+      });
+      setAllUsers(modifiedUsers);
+    });
+  }, []);
+
   const navigate = useNavigate();
 
   const handleQuestionClick = (id) => {
@@ -26,6 +86,7 @@ const TransactionHistory = () => {
   const handleSenseiClick = (sensei) => {
     navigate(`/sensei/${sensei}`);
   };
+
   return (
     <Container
       className="main-container"
@@ -35,70 +96,100 @@ const TransactionHistory = () => {
         mt: "24px",
       }}
     >
-      <TableContainer
-        sx={{ maxWidth: "100%" }}
-        component={Paper}
-        className="table-container"
-      >
-        <Table stickyHeader>
-          <TableHead>
-            <TableRow>
-              <TableCell align="left">Question</TableCell>
-              <TableCell align="left">Asked</TableCell>
-              <TableCell align="left">Answered</TableCell>
-              <TableCell align="left">Price</TableCell>
-              <TableCell align="left">TX Hash</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {questions?.map((row) => (
-              <TableRow key={row.id}>
-                <TableCell
-                  sx={{ cursor: "pointer" }}
-                  component="th"
-                  scope="row"
-                  onClick={() => handleQuestionClick(row.id)}
-                >
-                  {row.question}
-                </TableCell>
-                <TableCell align="left">
-                  <Box className="tx-sensei">
-                    <Avatar
-                      src={row.userAvatar}
-                      onClick={() => handleSenseiClick(row.questionUser)}
-                    ></Avatar>
-                  </Box>
-                </TableCell>
-                <TableCell align="left">
-                  <Box className="tx-sensei">
-                    <Avatar
-                      src={row.answerAvatar}
-                      onClick={() => handleSenseiClick(row.answerUser)}
-                    ></Avatar>
-                  </Box>
-                </TableCell>
-                <TableCell align="left">
-                  <PriceButton
-                    tokenAmount={row.price}
-                    tokenType={row.paymentType}
-                    txPrice
-                  />
-                </TableCell>
-                <TableCell align="left">
-                  <Link
-                    className="tx-link"
-                    underline="none"
-                    href={`https://etherscan.io/tx/${row.txHash}`}
-                    target="_blank"
-                  >
-                    Etherscan
-                  </Link>
-                </TableCell>
+      {loading ? (
+        <Loader />
+      ) : (
+        <TableContainer
+          sx={{ maxWidth: "100%", height: "calc(100vh - 24px)" }}
+          component={Paper}
+          className="content-container table-container"
+        >
+          <Table stickyHeader>
+            <TableHead>
+              <TableRow>
+                <TableCell align="left">Question</TableCell>
+                <TableCell align="left">Asked</TableCell>
+                <TableCell align="left">Answered</TableCell>
+                <TableCell align="left">Price</TableCell>
+                <TableCell align="left">TX Hash</TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+            </TableHead>
+            <TableBody>
+              {questions?.map((content) => {
+                const rewardTokenAmount = content.rewardTokenAmount.toString();
+                const formattedTokenAmount =
+                  ethers.utils.formatEther(rewardTokenAmount);
+                const roundedTokenAmount = Math.min(
+                  parseFloat(formattedTokenAmount).toFixed(3),
+                  parseFloat(formattedTokenAmount)
+                );
+
+                const user = allUsers.find(
+                  (questioner) => questioner.userId === content.questionerUid
+                );
+                const answer = allUsers.find(
+                  (answerer) => answerer.userId === content.questioneeUid
+                );
+
+                return (
+                  <TableRow key={content.questionId}>
+                    <TableCell
+                      sx={{ cursor: "pointer" }}
+                      component="th"
+                      scope="row"
+                      onClick={() => handleQuestionClick(content.questionId)}
+                    >
+                      {content.body}
+                    </TableCell>
+                    <TableCell align="left">
+                      <Box className="tx-sensei">
+                        <Avatar
+                          src={user && user.profile.imageUrl}
+                          onClick={() =>
+                            handleSenseiClick(user && user.profile.handle)
+                          }
+                        ></Avatar>
+                      </Box>
+                    </TableCell>
+                    <TableCell align="left">
+                      <Box className="tx-sensei">
+                        <Avatar
+                          src={answer && answer.profile.imageUrl}
+                          onClick={() =>
+                            handleSenseiClick(answer && answer.profile.handle)
+                          }
+                        ></Avatar>
+                      </Box>
+                    </TableCell>
+                    <TableCell align="left">
+                      <PriceButton
+                        tokenAmount={roundedTokenAmount}
+                        tokenType={
+                          content.rewardTokenType ===
+                          "0x0000000000000000000000000000000000000000"
+                            ? "ETH"
+                            : "N/A"
+                        }
+                        txPrice
+                      />
+                    </TableCell>
+                    <TableCell align="left">
+                      <Link
+                        className="tx-link"
+                        underline="none"
+                        href={`https://goerli.basescan.org/tx/${content.txHash}`}
+                        target="_blank"
+                      >
+                        Etherscan
+                      </Link>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      )}
     </Container>
   );
 };
